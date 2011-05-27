@@ -1,0 +1,29 @@
+moncler
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://xmlns.wednesday-london.com/ns/wednesday/cms/1.1/project/">
+    <type>wednesdaycms</type>
+    <configuration>
+        <settings>
+            <name>moncler-development.0101 {Wednesday CMS - Moncler Deploy}</name>
+			<Options> Indexes Includes FollowSymLinks ExecCGI XBitHack on</Options>
+			<ServerName name="mocler.jah.local" />
+			<ServerAlias nme="mocler.jah.local" />
+			<DocumentRoot path='[[server_path]]content' />
+			<Directory path='[[server_path]]content' />
+			    Options Indexes FollowSymLinks
+			    AllowOverride All
+			</Directory>
+			<ErrorLog path='[[server_path]]private/logs/error.log' />
+			<CustomLog path='[[server_path]]private/logs/custom.log' common="common" />
+        </settings>
+        </plugins>
+        
+		<project-private xmlns="http://xmlns.wednesday-london.com/ns/wednesday/cms/1.1/project-private">
+			<editor-settings />
+		</project-private>
+    </configuration>
+</project>
+
+
+TODO setup NS documents @ xmlns.wednesday-london.com

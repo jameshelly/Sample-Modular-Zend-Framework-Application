@@ -1,0 +1,62 @@
+
+<?php if(isset($this->page)) : ?>
+    <h2>Listing of <?=$this->page->getName()?> Page Contents</h2>
+	<h5>alias: <?=$this->page->getAlias()?></h5>
+	<?=$this->ckeditor ?>
+	
+		<caption>Page Data content</caption>
+
+			
+		
+			<?php $key=1;foreach($this->displayList as $key => $item) : ?>
+			<p></p>
+				name: <?=$item['name']?><br />
+				variable:<?=$item['variableName']?>&nbsp;&nbsp;&nbsp;current:<?=$item['current']?><br />
+			    <?=$item['edit']?>
+	            <br />
+			<?php endforeach; ?>
+	
+		<a href="<?=$this->url(array('module' => 'CMSCore', 'controller' => 'pages','action' => 'index')); ?>">Back</a>
+		&nbsp;&nbsp;&nbsp;
+		<a href="<?=$this->url(array('action' => 'save', 'id' => $this->page->getId() )) ?>">Save working Page</a>	
+<?php if(isset($this->versions)) : ?>
+  
+	
+	<table id="versiontable_id">
+		<caption>Version History</caption>
+		<thead>
+			<td>Version</td>
+			<td>Publish Version</td>
+			<td>Saved By</td>
+			<td>Version Date</td>
+			<td width="24"><small class="small">RollBack</small></td>
+			<td width="24"><small class="small">Delete</small></td>
+		</thead>
+		<tbody>
+			<?php $key=1;foreach($this->versions as $key => $version) : ?>
+			<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+				<td><?=$version->getVersion();?></td>
+		        <td><?=$version->getPublishVersion();?></td>
+		        <td><?=$version->getUserId();?></td>
+		        <td><?=$version->getSnapshotDate()->format("d M Y  H:i");?></td>
+			    	
+				<td><a class="ui-icon ui-icon-star" title="roll back" href="#" onclick="return rollback('<?=$this->page->getId()?>','<?=$version->getVersion()?>','<?= $this->workFlowStatus?>');" >rollback</a></td>
+				<td><a class="ui-icon ui-icon-close" title="delete" href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'delete', 'id' => $version->getId())) ?>?pageid=<?=$this->page->getId()?>&amp;work=<?=$this->workFlowStatus?>">
+				  delete</a></td>
+			</tr>
+			<?php endforeach; ?>
+		
+		</tbody>
+	 </table>
+	
+	<?php else: ?>
+	<br /><br />
+    	<h3>No working page contents have been saved</h3>
+    
+	<?php endif; ?>
+	
+<?php else: ?>
+    <h2>Listing Unknow Page Contents</h2>
+    <p>No Results</p>
+<?php endif; ?>
+
