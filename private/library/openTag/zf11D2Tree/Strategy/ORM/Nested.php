@@ -1,11 +1,11 @@
 <?php
 
-namespace openTag\Tree\Strategy\ORM;
+namespace Opentag\Tree\Strategy\ORM;
 
 use Doctrine\ORM\Proxy\Proxy;
-use openTag\Tree\Strategy,
+use Opentag\Tree\Strategy,
     Doctrine\ORM\EntityManager,
-    openTag\Tree\TreeListener,
+    Opentag\Tree\TreeListener,
     Doctrine\ORM\Mapping\ClassMetadataInfo,
     Doctrine\ORM\Query;
 
@@ -17,7 +17,7 @@ use openTag\Tree\Strategy,
  * since nested set trees are slow on inserts and updates.
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Tree.Strategy.ORM
+ * @package Opentag.Tree.Strategy.ORM
  * @subpackage Nested
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -99,7 +99,7 @@ class Nested implements Strategy
             self::PREV_SIBLING
         );
         if (!in_array($position, $valid, false)) {
-            throw new \openTag\Exception\InvalidArgumentException("Position: {$position} is not valid in nested set tree");
+            throw new \Opentag\Exception\InvalidArgumentException("Position: {$position} is not valid in nested set tree");
         }
         $this->nodePositions[$oid] = $position;
     }
@@ -133,7 +133,7 @@ class Nested implements Strategy
 
         $changeSet = $uow->getEntityChangeSet($node);
         if (isset($config['root']) && isset($changeSet[$config['root']])) {
-            throw new \openTag\Exception\UnexpectedValueException("Root cannot be changed manualy, change parent instead");
+            throw new \Opentag\Exception\UnexpectedValueException("Root cannot be changed manualy, change parent instead");
         }
         if (isset($changeSet[$config['parent']])) {
             $this->updateNode($em, $node, $changeSet[$config['parent']][1]);
@@ -223,7 +223,7 @@ class Nested implements Strategy
      * @param object $node - target node
      * @param object $parent - destination node
      * @param string $position
-     * @throws openTag\Exception\UnexpectedValueException
+     * @throws Opentag\Exception\UnexpectedValueException
      * @return void
      */
     public function updateNode(EntityManager $em, $node, $parent, $position = 'FirstChild')
@@ -260,7 +260,7 @@ class Nested implements Strategy
             $parentLeft = $meta->getReflectionProperty($config['left'])->getValue($parent);
             $parentRight = $meta->getReflectionProperty($config['right'])->getValue($parent);
             if (!$isNewNode && $rootId === $parentRootId && $parentLeft >= $left && $parentRight <= $right) {
-                throw new \openTag\Exception\UnexpectedValueException("Cannot set child as parent to node: {$nodeId}");
+                throw new \Opentag\Exception\UnexpectedValueException("Cannot set child as parent to node: {$nodeId}");
             }
             if (isset($config['level'])) {
                 $level = $meta->getReflectionProperty($config['level'])->getValue($parent);

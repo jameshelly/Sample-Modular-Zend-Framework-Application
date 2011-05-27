@@ -1,11 +1,11 @@
 <?php
 
-namespace openTag\Loggable\Document;
+namespace Opentag\Loggable\Document;
 
 /**
- * openTag\Loggable\Document\LogEntry
+ * Opentag\Loggable\Document\LogEntry
  *
- * @Document(repositoryClass="openTag\Loggable\Document\Repository\LogEntryRepository")
+ * @Document(repositoryClass="Opentag\Loggable\Document\Repository\LogEntryRepository")
  */
 class LogEntry extends AbstractLogEntry
 {

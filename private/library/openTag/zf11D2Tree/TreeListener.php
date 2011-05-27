@@ -1,9 +1,9 @@
 <?php
 
-namespace openTag\Tree;
+namespace Opentag\Tree;
 
 use Doctrine\Common\EventArgs,
-    openTag\Mapping\MappedEventSubscriber;
+    Opentag\Mapping\MappedEventSubscriber;
 
 
 /**
@@ -12,7 +12,7 @@ use Doctrine\Common\EventArgs,
  * strategies on handling the tree.
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Tree
+ * @package Opentag.Tree
  * @subpackage TreeListener
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -61,7 +61,7 @@ class TreeListener extends MappedEventSubscriber
         if (!isset($this->strategies[$class])) {
             $config = $this->getConfiguration($om, $class);
             if (!$config) {
-                throw new \openTag\Exception\UnexpectedValueException("Tree object class: {$class} must have tree metadata at this point");
+                throw new \Opentag\Exception\UnexpectedValueException("Tree object class: {$class} must have tree metadata at this point");
             }
             $managerName = 'UnsupportedManager';
             if ($om instanceof \Doctrine\ORM\EntityManager) {
@@ -72,7 +72,7 @@ class TreeListener extends MappedEventSubscriber
             if (!isset($this->strategyInstances[$config['strategy']])) {
                 $class = $this->getNamespace().'\\Strategy\\'.$managerName.'\\'.ucfirst($config['strategy']);
                 if (!class_exists($class)) {
-                    throw new \openTag\Exception\InvalidArgumentException($managerName." TreeListener does not support tree type: {$config['strategy']}");
+                    throw new \Opentag\Exception\InvalidArgumentException($managerName." TreeListener does not support tree type: {$config['strategy']}");
                 }
                 $this->strategyInstances[$config['strategy']] = new $class($this);
             }

@@ -1,9 +1,9 @@
 <?php
 
-namespace openTag\Loggable\Entity;
+namespace Opentag\Loggable\Entity;
 
 /**
- * openTag\Loggable\Entity\LogEntry
+ * Opentag\Loggable\Entity\LogEntry
  *
  * @Table(
  *     name="ext_log_entries",
@@ -13,7 +13,7 @@ namespace openTag\Loggable\Entity;
  *      @index(name="log_user_lookup_idx", columns={"username"})
  *  }
  * )
- * @Entity(repositoryClass="openTag\Loggable\Entity\Repository\LogEntryRepository")
+ * @Entity(repositoryClass="Opentag\Loggable\Entity\Repository\LogEntryRepository")
  */
 class LogEntry extends AbstractLogEntry
 {

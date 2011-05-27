@@ -1,9 +1,9 @@
 <?php
 
-namespace openTag\Loggable;
+namespace Opentag\Loggable;
 
-use openTag\Mapping\MappedEventSubscriber,
-    openTag\Loggable\Mapping\Event\LoggableAdapter,
+use Opentag\Mapping\MappedEventSubscriber,
+    Opentag\Loggable\Mapping\Event\LoggableAdapter,
     Doctrine\Common\EventArgs;
 
 /**
@@ -11,7 +11,7 @@ use openTag\Mapping\MappedEventSubscriber,
  *
  * @author Boussekeyt Jules <jules.boussekeyt@gmail.com>
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Loggable
+ * @package Opentag.Loggable
  * @subpackage LoggableListener
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -71,7 +71,7 @@ class LoggableListener extends MappedEventSubscriber
         } elseif (is_object($username) && method_exists($username, 'getUsername')) {
             $this->username = (string)$username->getUsername();
         } else {
-            throw new \openTag\Exception\InvalidArgumentException("Username must be a string, or object should have method: getUsername");
+            throw new \Opentag\Exception\InvalidArgumentException("Username must be a string, or object should have method: getUsername");
         }
     }
 

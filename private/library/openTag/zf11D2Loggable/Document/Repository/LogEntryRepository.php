@@ -1,8 +1,8 @@
 <?php
 
-namespace openTag\Loggable\Document\Repository;
+namespace Opentag\Loggable\Document\Repository;
 
-use openTag\Loggable\LoggableListener;
+use Opentag\Loggable\LoggableListener;
 use Doctrine\ODM\MongoDB\DocumentRepository,
     Doctrine\ODM\MongoDB\Cursor;
 
@@ -11,7 +11,7 @@ use Doctrine\ODM\MongoDB\DocumentRepository,
  * to interact with log entries.
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag\Loggable\Document\Repository
+ * @package Opentag\Loggable\Document\Repository
  * @subpackage LogEntryRepository
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -59,7 +59,7 @@ class LogEntryRepository extends DocumentRepository
      *
      * @param object $document
      * @param integer $version
-     * @throws \openTag\Exception\UnexpectedValueException
+     * @throws \Opentag\Exception\UnexpectedValueException
      * @return void
      */
     public function revert($document, $version = 1)
@@ -100,17 +100,17 @@ class LogEntryRepository extends DocumentRepository
                 $filled = count($fields) === 0;
             }
             if (count($fields)) {
-                throw new \openTag\Exception\UnexpectedValueException('Cound not fully revert the document to version: '.$version);
+                throw new \Opentag\Exception\UnexpectedValueException('Cound not fully revert the document to version: '.$version);
             }
         } else {
-            throw new \openTag\Exception\UnexpectedValueException('Count not find any log entries under version: '.$version);
+            throw new \Opentag\Exception\UnexpectedValueException('Count not find any log entries under version: '.$version);
         }
     }
 
     /**
      * Get the currently used LoggableListener
      *
-     * @throws \openTag\Exception\RuntimeException - if listener is not found
+     * @throws \Opentag\Exception\RuntimeException - if listener is not found
      * @return LoggableListener
      */
     private function getLoggableListener()
@@ -129,7 +129,7 @@ class LogEntryRepository extends DocumentRepository
             }
 
             if (is_null($this->listener)) {
-                throw new \openTag\Exception\RuntimeException('The loggable listener could not be found');
+                throw new \Opentag\Exception\RuntimeException('The loggable listener could not be found');
             }
         }
         return $this->listener;

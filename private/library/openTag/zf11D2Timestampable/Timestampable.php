@@ -1,6 +1,6 @@
 <?php
 
-namespace openTag\Timestampable;
+namespace Opentag\Timestampable;
 
 /**
  * This interface is not necessary but can be implemented for
@@ -8,7 +8,7 @@ namespace openTag\Timestampable;
  * Timestampable
  * 
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Timestampable
+ * @package Opentag.Timestampable
  * @subpackage Timestampable
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -18,17 +18,17 @@ interface Timestampable
     // timestampable expects annotations on properties
     
     /**
-     * @openTag:Timestampable(on="create")
+     * @Opentag:Timestampable(on="create")
      * dates which should be updated on insert only
      */
     
     /**
-     * @openTag:Timestampable(on="update")
+     * @Opentag:Timestampable(on="update")
      * dates which should be updated on update and insert
      */
     
     /**
-     * @openTag:Timestampable(on="change", field="field", value="value")
+     * @Opentag:Timestampable(on="change", field="field", value="value")
      * dates which should be updated on changed "property" 
      * value and become equal to given "value"
      */
@@ -36,7 +36,7 @@ interface Timestampable
     /**
      * example
      * 
-     * @openTag:Timestampable(on="create")
+     * @Opentag:Timestampable(on="create")
      * @Column(type="date")
      * $created
      */

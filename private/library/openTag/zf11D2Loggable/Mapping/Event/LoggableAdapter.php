@@ -1,15 +1,15 @@
 <?php
 
-namespace openTag\Loggable\Mapping\Event;
+namespace Opentag\Loggable\Mapping\Event;
 
-use openTag\Mapping\Event\AdapterInterface;
+use Opentag\Mapping\Event\AdapterInterface;
 
 /**
  * Doctrine event adapter interface
  * for Loggable behavior
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag\Loggable\Mapping\Event
+ * @package Opentag\Loggable\Mapping\Event
  * @subpackage LoggableAdapter
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)

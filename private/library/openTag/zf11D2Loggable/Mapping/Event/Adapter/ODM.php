@@ -1,16 +1,16 @@
 <?php
 
-namespace openTag\Loggable\Mapping\Event\Adapter;
+namespace Opentag\Loggable\Mapping\Event\Adapter;
 
-use openTag\Mapping\Event\Adapter\ODM as BaseAdapterODM;
-use openTag\Loggable\Mapping\Event\LoggableAdapter;
+use Opentag\Mapping\Event\Adapter\ODM as BaseAdapterODM;
+use Opentag\Loggable\Mapping\Event\LoggableAdapter;
 
 /**
  * Doctrine event adapter for ODM adapted
  * for Loggable behavior
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag\Loggable\Mapping\Event\Adapter
+ * @package Opentag\Loggable\Mapping\Event\Adapter
  * @subpackage ODM
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -22,7 +22,7 @@ final class ODM extends BaseAdapterODM implements LoggableAdapter
      */
     public function getDefaultLogEntryClass()
     {
-        return 'openTag\\Loggable\\Document\\LogEntry';
+        return 'Opentag\\Loggable\\Document\\LogEntry';
     }
 
     /**

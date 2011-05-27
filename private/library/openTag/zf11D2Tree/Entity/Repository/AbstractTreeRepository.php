@@ -1,6 +1,6 @@
 <?php
 
-namespace openTag\Tree\Entity\Repository;
+namespace Opentag\Tree\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository,
     Doctrine\ORM\EntityManager,
@@ -24,7 +24,7 @@ abstract class AbstractTreeRepository extends EntityRepository
         $treeListener = null;
         foreach ($em->getEventManager()->getListeners() as $event => $listeners) {
             foreach ($listeners as $hash => $listener) {
-                if ($listener instanceof \openTag\Tree\TreeListener) {
+                if ($listener instanceof \Opentag\Tree\TreeListener) {
                     $treeListener = $listener;
                     break;
                 }
@@ -35,12 +35,12 @@ abstract class AbstractTreeRepository extends EntityRepository
         }
 
         if (is_null($treeListener)) {
-            throw new \openTag\Exception\InvalidMappingException('This repository can be attached only to ORM tree listener');
+            throw new \Opentag\Exception\InvalidMappingException('This repository can be attached only to ORM tree listener');
         }
 
         $this->listener = $treeListener;
         if (!$this->validates()) {
-            throw new \openTag\Exception\InvalidMappingException('This repository cannot be used for tree type: ' . $treeListener->getStrategy($em, $class->name)->getName());
+            throw new \Opentag\Exception\InvalidMappingException('This repository cannot be used for tree type: ' . $treeListener->getStrategy($em, $class->name)->getName());
         }
     }
 

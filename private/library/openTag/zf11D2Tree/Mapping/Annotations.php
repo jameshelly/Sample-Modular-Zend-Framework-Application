@@ -1,6 +1,6 @@
 <?php
 
-namespace openTag\Tree\Mapping;
+namespace Opentag\Tree\Mapping;
 
 use Doctrine\Common\Annotations\Annotation;
 
@@ -9,7 +9,7 @@ use Doctrine\Common\Annotations\Annotation;
  * on proper Tree Node Entity to activate the Tree listener
  * 
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Tree.Mapping
+ * @package Opentag.Tree.Mapping
  * @subpackage Annotations
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)

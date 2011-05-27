@@ -1,11 +1,11 @@
 <?php
 
-namespace openTag\Tree\Entity\Repository;
+namespace Opentag\Tree\Entity\Repository;
 
 use Doctrine\ORM\Query,
-    openTag\Tree\Strategy,
-    openTag\Tree\Strategy\ORM\Nested,
-    openTag\Exception\InvalidArgumentException,
+    Opentag\Tree\Strategy,
+    Opentag\Tree\Strategy\ORM\Nested,
+    Opentag\Exception\InvalidArgumentException,
     Doctrine\ORM\Proxy\Proxy;
 
 /**
@@ -14,7 +14,7 @@ use Doctrine\ORM\Query,
  * the strategy used by listener
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Tree.Entity.Repository
+ * @package Opentag.Tree.Entity.Repository
  * @subpackage NestedTreeRepository
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -71,7 +71,7 @@ class NestedTreeRepository extends AbstractTreeRepository
     {
         if (substr($method, 0, 9) === 'persistAs') {
             if (!isset($args[0])) {
-                throw new \openTag\Exception\InvalidArgumentException('Node to persist must be available as first argument');
+                throw new \Opentag\Exception\InvalidArgumentException('Node to persist must be available as first argument');
             }
             $node = $args[0];
             $meta = $this->getClassMetadata();
@@ -79,7 +79,7 @@ class NestedTreeRepository extends AbstractTreeRepository
             $position = substr($method, 9);
             if (substr($method, -2) === 'Of') {
                 if (!isset($args[1])) {
-                    throw new \openTag\Exception\InvalidArgumentException('If "Of" is specified you must provide parent or sibling as the second argument');
+                    throw new \Opentag\Exception\InvalidArgumentException('If "Of" is specified you must provide parent or sibling as the second argument');
                 }
                 $parent = $args[1];
                 $meta->getReflectionProperty($config['parent'])->setValue($node, $parent);
@@ -333,7 +333,7 @@ class NestedTreeRepository extends AbstractTreeRepository
      *
      * @param object $node
      * @param bool $includeSelf - include the node itself
-     * @throws \openTag\Exception\InvalidArgumentException - if input is invalid
+     * @throws \Opentag\Exception\InvalidArgumentException - if input is invalid
      * @return Query
      */
     public function getNextSiblingsQuery($node, $includeSelf = false)
@@ -380,7 +380,7 @@ class NestedTreeRepository extends AbstractTreeRepository
      *
      * @param object $node
      * @param bool $includeSelf - include the node itself
-     * @throws \openTag\Exception\InvalidArgumentException - if input is invalid
+     * @throws \Opentag\Exception\InvalidArgumentException - if input is invalid
      * @return Query
      */
     public function getPrevSiblingsQuery($node, $includeSelf = false)
@@ -586,7 +586,7 @@ class NestedTreeRepository extends AbstractTreeRepository
             } catch (\Exception $e) {
                 $this->_em->close();
                 $this->_em->getConnection()->rollback();
-                throw new \openTag\Exception\RuntimeException('Transaction failed', null, $e);
+                throw new \Opentag\Exception\RuntimeException('Transaction failed', null, $e);
             }
         } else {
             throw new InvalidArgumentException("Node is not related to this repository");

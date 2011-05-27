@@ -1,6 +1,6 @@
 <?php
 
-namespace openTag\Tree\Entity;
+namespace Opentag\Tree\Entity;
 
 /**
  * @MappedSuperclass

@@ -1,16 +1,16 @@
 <?php
 
-namespace openTag\Timestampable;
+namespace Opentag\Timestampable;
 
 use Doctrine\Common\EventArgs,
-    openTag\Mapping\MappedEventSubscriber;
+    Opentag\Mapping\MappedEventSubscriber;
 
 /**
  * The Timestampable listener handles the update of
  * dates on creation and update.
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Timestampable
+ * @package Opentag.Timestampable
  * @subpackage TimestampableListener
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -90,7 +90,7 @@ class TimestampableListener extends MappedEventSubscriber
                             if (isset($trackedChild)) {
                                 $changingObject = $changes[1];
                                 if (!is_object($changingObject)) {
-                                    throw new \openTag\Exception\UnexpectedValueException("Field - [{$field}] is expected to be object in class - {$meta->name}");
+                                    throw new \Opentag\Exception\UnexpectedValueException("Field - [{$field}] is expected to be object in class - {$meta->name}");
                                 }
                                 $objectMeta = $om->getClassMetadata(get_class($changingObject));
                                 $trackedChild instanceof Proxy && $om->refresh($trackedChild);

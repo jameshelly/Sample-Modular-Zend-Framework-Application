@@ -1,10 +1,10 @@
 <?php
 
-namespace openTag\Loggable\Mapping\Driver;
+namespace Opentag\Loggable\Mapping\Driver;
 
-use openTag\Mapping\Driver,
+use Opentag\Mapping\Driver,
     Doctrine\Common\Annotations\AnnotationReader,
-    openTag\Exception\InvalidMappingException;
+    Opentag\Exception\InvalidMappingException;
 
 /**
  * This is an annotation mapping driver for Loggable
@@ -14,7 +14,7 @@ use openTag\Mapping\Driver,
  *
  * @author Boussekeyt Jules <jules.boussekeyt@gmail.com>
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Loggable.Mapping.Driver
+ * @package Opentag.Loggable.Mapping.Driver
  * @subpackage Annotation
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -24,12 +24,12 @@ class Annotation implements Driver
     /**
      * Annotation to define that this object is loggable
      */
-    const LOGGABLE = 'openTag\\Loggable\\Mapping\\Loggable';
+    const LOGGABLE = 'Opentag\\Loggable\\Mapping\\Loggable';
 
     /**
      * Annotation to define that this property is versioned
      */
-    const VERSIONED = 'openTag\\Loggable\\Mapping\\Versioned';
+    const VERSIONED = 'Opentag\\Loggable\\Mapping\\Versioned';
 
     /**
      * {@inheritDoc}
@@ -51,7 +51,7 @@ class Annotation implements Driver
     {
         require_once __DIR__ . '/../Annotations.php';
         $reader = new AnnotationReader();
-        $reader->setAnnotationNamespaceAlias('openTag\\Loggable\\Mapping\\', 'openTag');
+        $reader->setAnnotationNamespaceAlias('Opentag\\Loggable\\Mapping\\', 'Opentag');
 
         $class = $meta->getReflectionClass();
         // class annotations

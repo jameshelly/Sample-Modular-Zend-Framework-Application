@@ -1,9 +1,9 @@
 <?php
 
-namespace openTag\Loggable\Entity;
+namespace Opentag\Loggable\Entity;
 
 /**
- * openTag\Loggable\Entity\AbstractLog
+ * Opentag\Loggable\Entity\AbstractLog
  *
  * @MappedSuperclass
  */

@@ -1,16 +1,16 @@
 <?php
 
-namespace openTag\Loggable\Mapping\Event\Adapter;
+namespace Opentag\Loggable\Mapping\Event\Adapter;
 
-use openTag\Mapping\Event\Adapter\ORM as BaseAdapterORM;
-use openTag\Loggable\Mapping\Event\LoggableAdapter;
+use Opentag\Mapping\Event\Adapter\ORM as BaseAdapterORM;
+use Opentag\Loggable\Mapping\Event\LoggableAdapter;
 
 /**
  * Doctrine event adapter for ORM adapted
  * for Loggable behavior
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag\Loggable\Mapping\Event\Adapter
+ * @package Opentag\Loggable\Mapping\Event\Adapter
  * @subpackage ORM
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -22,7 +22,7 @@ final class ORM extends BaseAdapterORM implements LoggableAdapter
      */
     public function getDefaultLogEntryClass()
     {
-        return 'openTag\\Loggable\\Entity\\LogEntry';
+        return 'Opentag\\Loggable\\Entity\\LogEntry';
     }
 
     /**

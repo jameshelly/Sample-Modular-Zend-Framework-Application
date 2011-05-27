@@ -1,9 +1,9 @@
 <?php
 
-namespace openTag\Loggable\Document;
+namespace Opentag\Loggable\Document;
 
 /**
- * openTag\Loggable\Document\AbstractLogEntry
+ * Opentag\Loggable\Document\AbstractLogEntry
  *
  * @MappedSuperclass
  */

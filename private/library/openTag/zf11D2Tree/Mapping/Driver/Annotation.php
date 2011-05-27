@@ -1,10 +1,10 @@
 <?php
 
-namespace openTag\Tree\Mapping\Driver;
+namespace Opentag\Tree\Mapping\Driver;
 
-use openTag\Mapping\Driver,
+use Opentag\Mapping\Driver,
     Doctrine\Common\Annotations\AnnotationReader,
-    openTag\Exception\InvalidMappingException;
+    Opentag\Exception\InvalidMappingException;
 
 /**
  * This is an annotation mapping driver for Tree
@@ -13,7 +13,7 @@ use openTag\Mapping\Driver,
  * extension.
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Tree.Mapping.Driver
+ * @package Opentag.Tree.Mapping.Driver
  * @subpackage Annotation
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -23,37 +23,37 @@ class Annotation implements Driver
     /**
      * Annotation to define the tree type
      */
-    const ANNOTATION_TREE = 'openTag\Tree\Mapping\Tree';
+    const ANNOTATION_TREE = 'Opentag\Tree\Mapping\Tree';
 
     /**
      * Annotation to mark field as one which will store left value
      */
-    const ANNOTATION_LEFT = 'openTag\Tree\Mapping\TreeLeft';
+    const ANNOTATION_LEFT = 'Opentag\Tree\Mapping\TreeLeft';
 
     /**
      * Annotation to mark field as one which will store right value
      */
-    const ANNOTATION_RIGHT = 'openTag\Tree\Mapping\TreeRight';
+    const ANNOTATION_RIGHT = 'Opentag\Tree\Mapping\TreeRight';
 
     /**
      * Annotation to mark relative parent field
      */
-    const ANNOTATION_PARENT = 'openTag\Tree\Mapping\TreeParent';
+    const ANNOTATION_PARENT = 'Opentag\Tree\Mapping\TreeParent';
 
     /**
      * Annotation to mark node level
      */
-    const ANNOTATION_LEVEL = 'openTag\Tree\Mapping\TreeLevel';
+    const ANNOTATION_LEVEL = 'Opentag\Tree\Mapping\TreeLevel';
 
     /**
      * Annotation to mark field as tree root
      */
-    const ANNOTATION_ROOT = 'openTag\Tree\Mapping\TreeRoot';
+    const ANNOTATION_ROOT = 'Opentag\Tree\Mapping\TreeRoot';
 
     /**
      * Annotation to specify closure tree class
      */
-    const ANNOTATION_CLOSURE = 'openTag\Tree\Mapping\TreeClosure';
+    const ANNOTATION_CLOSURE = 'Opentag\Tree\Mapping\TreeClosure';
 
     /**
      * List of types which are valid for tree fields
@@ -98,7 +98,7 @@ class Annotation implements Driver
     public function readExtendedMetadata($meta, array &$config) {
         require_once __DIR__ . '/../Annotations.php';
         $reader = new AnnotationReader();
-        $reader->setAnnotationNamespaceAlias('openTag\Tree\Mapping\\', 'openTag');
+        $reader->setAnnotationNamespaceAlias('Opentag\Tree\Mapping\\', 'Opentag');
 
         $class = $meta->getReflectionClass();
         // class annotations

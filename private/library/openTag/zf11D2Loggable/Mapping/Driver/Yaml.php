@@ -1,10 +1,10 @@
 <?php
 
-namespace openTag\Loggable\Mapping\Driver;
+namespace Opentag\Loggable\Mapping\Driver;
 
-use openTag\Mapping\Driver\File,
-    openTag\Mapping\Driver,
-    openTag\Exception\InvalidMappingException;
+use Opentag\Mapping\Driver\File,
+    Opentag\Mapping\Driver,
+    Opentag\Exception\InvalidMappingException;
 
 /**
  * This is a yaml mapping driver for Loggable
@@ -14,7 +14,7 @@ use openTag\Mapping\Driver\File,
  *
  * @author Boussekeyt Jules <jules.boussekeyt@gmail.com>
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Loggable.Mapping.Driver
+ * @package Opentag.Loggable.Mapping.Driver
  * @subpackage Yaml
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -48,8 +48,8 @@ class Yaml extends File implements Driver
         $yaml = $this->_loadMappingFile($this->_findMappingFile($meta->name));
         $mapping = $yaml[$meta->name];
 
-        if (isset($mapping['openTag'])) {
-            $classMapping = $mapping['openTag'];
+        if (isset($mapping['Opentag'])) {
+            $classMapping = $mapping['Opentag'];
             if (isset($classMapping['loggable'])) {
                 $config['loggable'] = true;
                 if (isset ($classMapping['loggable']['logEntryClass'])) {
@@ -62,8 +62,8 @@ class Yaml extends File implements Driver
         }
         if (isset($mapping['fields'])) {
             foreach ($mapping['fields'] as $field => $fieldMapping) {
-                if (isset($fieldMapping['openTag'])) {
-                    if (in_array('versioned', $fieldMapping['openTag'])) {
+                if (isset($fieldMapping['Opentag'])) {
+                    if (in_array('versioned', $fieldMapping['Opentag'])) {
                         if ($meta->isCollectionValuedAssociation($field)) {
                             throw new InvalidMappingException("Cannot versioned [{$field}] as it is collection in object - {$meta->name}");
                         }

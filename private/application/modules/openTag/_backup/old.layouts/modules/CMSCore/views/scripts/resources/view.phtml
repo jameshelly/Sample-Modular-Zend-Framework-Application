@@ -1,6 +1,0 @@
-
-		<?php if(isset($this->action)) : ?>
-			<h5><?=$this->action->getName()?> (<a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'edit', 'id' => $this->action->getId())); ?>">edit</a>) <small class="right"><?=$this->action->getDescription()?></small></h5>
-		<?php else: ?>
-			<p>No Results</p>
-		<?php endif; ?>

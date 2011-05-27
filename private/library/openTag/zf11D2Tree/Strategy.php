@@ -1,6 +1,6 @@
 <?php
 
-namespace openTag\Tree;
+namespace Opentag\Tree;
 
 interface Strategy
 {

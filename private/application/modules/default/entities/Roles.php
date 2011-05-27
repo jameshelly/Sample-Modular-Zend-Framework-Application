@@ -41,7 +41,6 @@ class Roles
      */
     private $parent;
     
-    
      /**
      * @var integer $buildorder
      *
@@ -49,8 +48,6 @@ class Roles
      */
     private $buildorder;
     
-    
-
     /**
      * @var Permissions
      *

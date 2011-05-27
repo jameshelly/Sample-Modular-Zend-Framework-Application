@@ -1,16 +1,16 @@
 <?php
 
-namespace openTag\Loggable\Entity\Repository;
+namespace Opentag\Loggable\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use openTag\Loggable\LoggableListener;
+use Opentag\Loggable\LoggableListener;
 
 /**
  * The LogEntryRepository has some useful functions
  * to interact with log entries.
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag\Loggable\Entity\Repository
+ * @package Opentag\Loggable\Entity\Repository
  * @subpackage LogEntryRepository
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -68,7 +68,7 @@ class LogEntryRepository extends EntityRepository
      *
      * @param object $entity
      * @param integer $version
-     * @throws \openTag\Exception\UnexpectedValueException
+     * @throws \Opentag\Exception\UnexpectedValueException
      * @return void
      */
     public function revert($entity, $version = 1)
@@ -108,17 +108,17 @@ class LogEntryRepository extends EntityRepository
                 $filled = count($fields) === 0;
             }
             if (count($fields)) {
-                throw new \openTag\Exception\UnexpectedValueException('Cound not fully revert the entity to version: '.$version);
+                throw new \Opentag\Exception\UnexpectedValueException('Cound not fully revert the entity to version: '.$version);
             }
         } else {
-            throw new \openTag\Exception\UnexpectedValueException('Count not find any log entries under version: '.$version);
+            throw new \Opentag\Exception\UnexpectedValueException('Count not find any log entries under version: '.$version);
         }
     }
 
     /**
      * Get the currently used LoggableListener
      *
-     * @throws \openTag\Exception\RuntimeException - if listener is not found
+     * @throws \Opentag\Exception\RuntimeException - if listener is not found
      * @return LoggableListener
      */
     private function getLoggableListener()
@@ -137,7 +137,7 @@ class LogEntryRepository extends EntityRepository
             }
 
             if (is_null($this->listener)) {
-                throw new \openTag\Exception\RuntimeException('The loggable listener could not be found');
+                throw new \Opentag\Exception\RuntimeException('The loggable listener could not be found');
             }
         }
         return $this->listener;

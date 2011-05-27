@@ -1,13 +1,13 @@
 <?php
 
-namespace openTag\Tree\Strategy\ORM;
+namespace Opentag\Tree\Strategy\ORM;
 
-use openTag\Exception\RuntimeException;
+use Opentag\Exception\RuntimeException;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use openTag\Tree\Strategy;
+use Opentag\Tree\Strategy;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Proxy\Proxy;
-use openTag\Tree\TreeListener;
+use Opentag\Tree\TreeListener;
 
 /**
  * This strategy makes tree act like
@@ -15,7 +15,7 @@ use openTag\Tree\TreeListener;
  *
  * @author Gustavo Adrian <comfortablynumb84@gmail.com>
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Tree.Strategy.ORM
+ * @package Opentag.Tree.Strategy.ORM
  * @subpackage Closure
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -244,7 +244,7 @@ class Closure implements Strategy
             $q = $em->createQuery($dql);
             $q->setParameters(compact('node', 'parent'));
             if ($q->getSingleScalarResult()) {
-                throw new \openTag\Exception\UnexpectedValueException("Cannot set child as parent to node: {$nodeId}");
+                throw new \Opentag\Exception\UnexpectedValueException("Cannot set child as parent to node: {$nodeId}");
             }
         }
 

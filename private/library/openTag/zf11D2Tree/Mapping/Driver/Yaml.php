@@ -1,10 +1,10 @@
 <?php
 
-namespace openTag\Tree\Mapping\Driver;
+namespace Opentag\Tree\Mapping\Driver;
 
-use openTag\Mapping\Driver\File,
-    openTag\Mapping\Driver,
-    openTag\Exception\InvalidMappingException;
+use Opentag\Mapping\Driver\File,
+    Opentag\Mapping\Driver,
+    Opentag\Exception\InvalidMappingException;
 
 /**
  * This is a yaml mapping driver for Tree
@@ -13,7 +13,7 @@ use openTag\Mapping\Driver\File,
  * extension.
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Tree.Mapping.Driver
+ * @package Opentag.Tree.Mapping.Driver
  * @subpackage Yaml
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -70,8 +70,8 @@ class Yaml extends File implements Driver
         $yaml = $this->_loadMappingFile($this->_findMappingFile($meta->name));
         $mapping = $yaml[$meta->name];
 
-        if (isset($mapping['openTag'])) {
-            $classMapping = $mapping['openTag'];
+        if (isset($mapping['Opentag'])) {
+            $classMapping = $mapping['Opentag'];
             if (isset($classMapping['tree']['type'])) {
                 $strategy = $classMapping['tree']['type'];
                 if (!in_array($strategy, $this->strategies)) {
@@ -89,23 +89,23 @@ class Yaml extends File implements Driver
         }
         if (isset($mapping['fields'])) {
             foreach ($mapping['fields'] as $field => $fieldMapping) {
-                if (isset($fieldMapping['openTag'])) {
-                    if (in_array('treeLeft', $fieldMapping['openTag'])) {
+                if (isset($fieldMapping['Opentag'])) {
+                    if (in_array('treeLeft', $fieldMapping['Opentag'])) {
                         if (!$this->isValidField($meta, $field)) {
                             throw new InvalidMappingException("Tree left field - [{$field}] type is not valid and must be 'integer' in class - {$meta->name}");
                         }
                         $config['left'] = $field;
-                    } elseif (in_array('treeRight', $fieldMapping['openTag'])) {
+                    } elseif (in_array('treeRight', $fieldMapping['Opentag'])) {
                         if (!$this->isValidField($meta, $field)) {
                             throw new InvalidMappingException("Tree right field - [{$field}] type is not valid and must be 'integer' in class - {$meta->name}");
                         }
                         $config['right'] = $field;
-                    } elseif (in_array('treeLevel', $fieldMapping['openTag'])) {
+                    } elseif (in_array('treeLevel', $fieldMapping['Opentag'])) {
                         if (!$this->isValidField($meta, $field)) {
                             throw new InvalidMappingException("Tree level field - [{$field}] type is not valid and must be 'integer' in class - {$meta->name}");
                         }
                         $config['level'] = $field;
-                    } elseif (in_array('treeRoot', $fieldMapping['openTag'])) {
+                    } elseif (in_array('treeRoot', $fieldMapping['Opentag'])) {
                         if (!$this->isValidField($meta, $field)) {
                             throw new InvalidMappingException("Tree root field - [{$field}] type is not valid and must be 'integer' in class - {$meta->name}");
                         }
@@ -116,8 +116,8 @@ class Yaml extends File implements Driver
         }
         if (isset($mapping['manyToOne'])) {
             foreach ($mapping['manyToOne'] as $field => $relationMapping) {
-                if (isset($relationMapping['openTag'])) {
-                    if (in_array('treeParent', $relationMapping['openTag'])) {
+                if (isset($relationMapping['Opentag'])) {
+                    if (in_array('treeParent', $relationMapping['Opentag'])) {
                         if ($relationMapping['targetEntity'] != $meta->name) {
                             throw new InvalidMappingException("Unable to find ancestor/parent child relation through ancestor field - [{$field}] in class - {$meta->name}");
                         }

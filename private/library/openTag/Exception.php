@@ -1,6 +1,6 @@
 <?php
 
-namespace openTag;
+namespace Opentag;
 
 /**
  * Common package exception interface to allow
@@ -8,7 +8,7 @@ namespace openTag;
  * exceptions thrown
  * 
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag
+ * @package Opentag
  * @subpackage Exception
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)

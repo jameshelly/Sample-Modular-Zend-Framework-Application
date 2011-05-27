@@ -1,9 +1,9 @@
 <?php
 
-namespace openTag;
+namespace Opentag;
 
-use openTag\Exception\DependentComponentNotFoundException;
-use openTag\Exception\IncompatibleComponentVersionException;
+use Opentag\Exception\DependentComponentNotFoundException;
+use Opentag\Exception\IncompatibleComponentVersionException;
 
 /**
  * Version class allows to checking the dependencies required
@@ -11,7 +11,7 @@ use openTag\Exception\IncompatibleComponentVersionException;
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  * @subpackage Version
- * @package openTag
+ * @package Opentag
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */

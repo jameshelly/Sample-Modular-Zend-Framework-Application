@@ -1,9 +1,5 @@
 SetEnv APPLICATION_ENV development
 
-#Options -Indexes
-#DirectoryIndex index.php
-#ErrorDocument 404 /http404.php
-
 #Force PHP Flags.
 <IfModule mod_php5.c>
 	php_flag display_errors On
@@ -19,12 +15,14 @@ SetEnv APPLICATION_ENV development
     php_flag zend.ze1_compatibility_mode Off
     #php_flag allow_call_time_pass_reference On
 </IfModule>
-	
 
-#Force server to recognise
-AddType image/svg+xml svg
-AddType image/svg+xml svgz
-
+#Force server to recognise certain files as PHP.
+#AddType image/svg+xml svg
+#AddType image/svg+xml svgz
+#<Files ~ "\.svg$">
+#	AddHandler application/x-httpd-php .svg
+#	php_value default_mimetype "image/svg+xml"
+#</Files>
 #<Files ~ "\.xml$">
 #	AddHandler application/x-httpd-php .xml
 #	php_value default_mimetype "text/xml"
@@ -44,7 +42,7 @@ AddType image/svg+xml svgz
 
 #Rewrite rules
 <IfModule mod_rewrite.c>
-	#XBitHack on
+	XBitHack on
 	Options +Includes +FollowSymlinks
 	RewriteEngine On
 	RewriteBase /
@@ -56,23 +54,23 @@ AddType image/svg+xml svgz
 </IfModule>
 
 #Expire headers
-<IfModule mod_expires.c>
-	Header unset ETag
-	FileETag None
-	
-	<FilesMatch "(?i)^.*\.(ico|flv|jpg|jpeg|png|gif|js|css|ico)$">
-		Header unset Last-Modified
-		Header set Expires "Fri, 21 Dec 2012 00:00:00 GMT"
-		Header set Cache-Control "public, no-transform"
-	</FilesMatch>
-	
-	AddOutputFilterByType DEFLATE text/plain
-	AddOutputFilterByType DEFLATE text/html
-	AddOutputFilterByType DEFLATE text/xml
-	AddOutputFilterByType DEFLATE text/css
-	AddOutputFilterByType DEFLATE application/xml
-	AddOutputFilterByType DEFLATE application/xhtml+xml
-	AddOutputFilterByType DEFLATE application/rss+xml
-	AddOutputFilterByType DEFLATE application/javascript
-	AddOutputFilterByType DEFLATE application/x-javascript
-</IfModule>
+#<IfModule mod_expires.c>
+#	Header unset ETag
+#	FileETag None
+#	
+#	<FilesMatch "(?i)^.*\.(ico|flv|jpg|jpeg|png|gif|js|css|ico)$">
+#		Header unset Last-Modified
+#		Header set Expires "Fri, 21 Dec 2012 00:00:00 GMT"
+#		Header set Cache-Control "public, no-transform"
+#	</FilesMatch>
+#	
+#	AddOutputFilterByType DEFLATE text/plain
+#	AddOutputFilterByType DEFLATE text/html
+#	AddOutputFilterByType DEFLATE text/xml
+#	AddOutputFilterByType DEFLATE text/css
+#	AddOutputFilterByType DEFLATE application/xml
+#	AddOutputFilterByType DEFLATE application/xhtml+xml
+#	AddOutputFilterByType DEFLATE application/rss+xml
+#	AddOutputFilterByType DEFLATE application/javascript
+#	AddOutputFilterByType DEFLATE application/x-javascript
+#</IfModule>

@@ -1,11 +1,11 @@
 <?php
 
-namespace openTag\Tree\Entity\Repository;
+namespace Opentag\Tree\Entity\Repository;
 
-use openTag\Exception\InvalidArgumentException;
+use Opentag\Exception\InvalidArgumentException;
 use Doctrine\ORM\Query;
-use openTag\Tree\Strategy;
-use openTag\Tree\Strategy\ORM\Closure;
+use Opentag\Tree\Strategy;
+use Opentag\Tree\Strategy\ORM\Closure;
 use Doctrine\ORM\Proxy\Proxy;
 
 /**
@@ -15,7 +15,7 @@ use Doctrine\ORM\Proxy\Proxy;
  *
  * @author Gustavo Adrian <comfortablynumb84@gmail.com>
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Tree.Entity.Repository
+ * @package Opentag.Tree.Entity.Repository
  * @subpackage ClosureRepository
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -271,7 +271,7 @@ class ClosureTreeRepository extends AbstractTreeRepository
         } catch (\Exception $e) {
             $this->_em->close();
             $this->_em->getConnection()->rollback();
-            throw new \openTag\Exception\RuntimeException('Transaction failed', null, $e);
+            throw new \Opentag\Exception\RuntimeException('Transaction failed', null, $e);
         }
         // remove from identity map
         $this->_em->getUnitOfWork()->removeFromIdentityMap($node);

@@ -1,10 +1,10 @@
 <?php
 
-namespace openTag\Timestampable\Mapping\Driver;
+namespace Opentag\Timestampable\Mapping\Driver;
 
-use openTag\Mapping\Driver\File,
-    openTag\Mapping\Driver,
-    openTag\Exception\InvalidMappingException;
+use Opentag\Mapping\Driver\File,
+    Opentag\Mapping\Driver,
+    Opentag\Exception\InvalidMappingException;
 
 /**
  * This is a yaml mapping driver for Timestampable
@@ -13,7 +13,7 @@ use openTag\Mapping\Driver\File,
  * extension.
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Timestampable.Mapping.Driver
+ * @package Opentag.Timestampable.Mapping.Driver
  * @subpackage Yaml
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -52,8 +52,8 @@ class Yaml extends File implements Driver
 
         if (isset($mapping['fields'])) {
             foreach ($mapping['fields'] as $field => $fieldMapping) {
-                if (isset($fieldMapping['openTag']['timestampable'])) {
-                    $mappingProperty = $fieldMapping['openTag']['timestampable'];
+                if (isset($fieldMapping['Opentag']['timestampable'])) {
+                    $mappingProperty = $fieldMapping['Opentag']['timestampable'];
                     if (!$this->isValidField($meta, $field)) {
                         throw new InvalidMappingException("Field - [{$field}] type is not valid and must be 'date', 'datetime' or 'time' in class - {$meta->name}");
                     }

@@ -25,21 +25,18 @@ class Permissions
     private $allowed;
 
     /**
+     * @var text $action
+     *
+     * @Column(name="action", type="text", nullable=true)
+     */
+    private $action;
+
+    /**
      * @var Roles
      *
      * @ManyToMany(targetEntity="Roles", mappedBy="permission")
      */
     private $role;
-
-    /**
-     * @var Actions
-     *
-     * @ManyToOne(targetEntity="Actions", inversedBy="permissions")
-     * @JoinColumns({
-     *   @JoinColumn(name="action_id", referencedColumnName="id")
-     * })
-     */
-    private $action;
 
     /**
      * Get id
@@ -96,7 +93,7 @@ class Permissions
      *
      * @param Actions $action
      */
-    public function setAction(\Actions $action)
+    public function setAction($action)
     {
         $this->action = $action;
     }

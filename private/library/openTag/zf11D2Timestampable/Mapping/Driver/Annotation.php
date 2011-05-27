@@ -1,10 +1,10 @@
 <?php
 
-namespace openTag\Timestampable\Mapping\Driver;
+namespace Opentag\Timestampable\Mapping\Driver;
 
-use openTag\Mapping\Driver,
+use Opentag\Mapping\Driver,
     Doctrine\Common\Annotations\AnnotationReader,
-    openTag\Exception\InvalidMappingException;
+    Opentag\Exception\InvalidMappingException;
 
 /**
  * This is an annotation mapping driver for Timestampable
@@ -13,7 +13,7 @@ use openTag\Mapping\Driver,
  * extension.
  *
  * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @package openTag.Translatable.Mapping.Driver
+ * @package Opentag.Translatable.Mapping.Driver
  * @subpackage Annotation
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -23,7 +23,7 @@ class Annotation implements Driver
     /**
      * Annotation field is timestampable
      */
-    const ANNOTATION_TIMESTAMPABLE = 'openTag\Timestampable\Mapping\Timestampable';
+    const ANNOTATION_TIMESTAMPABLE = 'Opentag\Timestampable\Mapping\Timestampable';
 
     /**
      * List of types which are valid for timestamp
@@ -48,7 +48,7 @@ class Annotation implements Driver
     public function readExtendedMetadata($meta, array &$config) {
         require_once __DIR__ . '/../Annotations.php';
         $reader = new AnnotationReader();
-        $reader->setAnnotationNamespaceAlias('openTag\Timestampable\Mapping\\', 'openTag');
+        $reader->setAnnotationNamespaceAlias('Opentag\Timestampable\Mapping\\', 'Opentag');
 
         $class = $meta->getReflectionClass();
         // property annotations
