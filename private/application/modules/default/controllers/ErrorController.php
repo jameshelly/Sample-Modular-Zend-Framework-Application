@@ -1,5 +1,11 @@
 <?php
+//namespace Application\Controller;
 
+use Opentag,
+    \Doctrine\ORM\EntityManager,
+    \Zend_Controller_Action,
+    \Zend_Auth_Adapter_Interface,
+    \Zend_Auth_Result;
 /**
  * ErrorController - The default error controller class
  * 
@@ -7,7 +13,15 @@
  * @version 
  */
 
-class ErrorController extends Zend_Controller_Action {
+class ErrorController extends \Zend_Controller_Action {
+
+    public function init() {
+        //$this->_loginForm = new Application_Form_Login();
+        //$this->view->form = $this->_loginForm;
+        // get auth service from bootstrap
+        $bootstrap = $this->getInvokeArg('bootstrap');
+        $this->_auth = $bootstrap->getResource('auth');
+    }
 
     /**
      * This action handles  
@@ -59,8 +73,7 @@ class ErrorController extends Zend_Controller_Action {
 		
     }
     
-    public function getLog()
-    {
+    public function getLog() {
         $bootstrap = $this->getInvokeArg('bootstrap');
         if (!$bootstrap->hasResource('Log')) {
             return false;

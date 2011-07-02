@@ -1,4 +1,11 @@
 <?php
+//namespace Application\Controller;
+
+use Opentag\Auth\Adapter\Doctrine,
+    \Doctrine\ORM\EntityManager,
+    \Zend_Controller_Action,
+    \Zend_Auth_Adapter_Interface,
+    \Zend_Auth_Result;
 
 /**
  * ErrorController - The default error controller class
@@ -7,7 +14,7 @@
  * @version
  */
 
-class AuthController extends Zend_Controller_Action
+class AuthController extends \Zend_Controller_Action
 {
 
     /**
@@ -15,18 +22,15 @@ class AuthController extends Zend_Controller_Action
      */
     protected $_auth = null;
 
-    public function init()
-    {
+    public function init() {
         //$this->_loginForm = new Application_Form_Login();
         //$this->view->form = $this->_loginForm;
-        
         // get auth service from bootstrap
         $bootstrap = $this->getInvokeArg('bootstrap');
         $this->_auth = $bootstrap->getResource('auth');
     }
 
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->_forward('login');
     }
 
@@ -38,11 +42,11 @@ class AuthController extends Zend_Controller_Action
     public function loginAction() {
     	$loginForm = new Default_Form_Login();
         $request = $this->getRequest();
-        $adapter = new Wednesday_Auth_Adapter_Doctrine(
+        $adapter = new \Opentag\Auth\Adapter\Doctrine(
             $this->em,
-            'Users',
-            'getUsername',
-            'getPassword',
+            'Application\Entities\Users',
+            'username',
+            'password',
             "checkPassword"
         );
         $content ="";
@@ -78,8 +82,8 @@ class AuthController extends Zend_Controller_Action
      *    -
      */
     public function logoutAction() {
-		$auth = Zend_Auth::getInstance();
-		$auth->clearIdentity();
+	$auth = Zend_Auth::getInstance();
+	$auth->clearIdentity();
         $this->view->title = "Users";
         $this->view->message = "Logged out";
     }

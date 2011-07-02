@@ -1,4 +1,10 @@
 <?php
+namespace Opentag\Auth\Adapter;
+
+use Opentag,
+    \Doctrine\ORM\EntityManager,
+    \Zend_Auth_Adapter_Interface,
+    \Zend_Auth_Result;
 /**
  * Zend Framework
  *
@@ -22,13 +28,13 @@
 
 /**
  * @see Zend_Auth_Adapter_Interface
- */
 require_once 'Zend/Auth/Adapter/Interface.php';
+ */
 
 /**
  * @see Zend_Auth_Result
- */
 require_once 'Zend/Auth/Result.php';
+ */
 
 /**
  * @category   Wednesday
@@ -37,7 +43,7 @@ require_once 'Zend/Auth/Result.php';
  * @copyright  Copyright (c) 2011 Wednesday London. (http://www.wednesday-london.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Opentag_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface {
+class Doctrine implements \Zend_Auth_Adapter_Interface {
 
     /**
      * $entityManager - Entity Manager
@@ -99,7 +105,7 @@ class Opentag_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface {
      * @return void
      */
     public function __construct(
-    	\Doctrine\ORM\EntityManager $DoctrineEM = null,
+    	EntityManager $DoctrineEM = null,
     	$entityName = null,
     	$identityGetter = null,
     	$credentialGetter = null,
@@ -158,11 +164,11 @@ class Opentag_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface {
 	            );
 	            return $authResult;
 			} else {
-				$authResult = new Zend_Auth_Result(
-			           Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,
-			           $this->_identity,
-			           array('Authentication fail.')
-				);
+			    $authResult = new Zend_Auth_Result(
+			       Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,
+			       $this->_identity,
+			       array('Authentication fail.')
+			    );
 			}
 		} if(count($user)>1) {
 			$authResult = new Zend_Auth_Result(
