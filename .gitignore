@@ -1,0 +1,7 @@
+._auth/*
+.DStor*
+source/*
+/private/library/_backup*
+/private/library/alias2ln
+/private/library/Doctrine/.project*
+/private/library/Doctrine/.settings*
