@@ -1,0 +1,38 @@
+
+					<table>
+						<caption><?= $this->message ?></caption>
+						<thead>
+						  <tr>
+							<td>Type</td>
+							<td>Resource</td>
+							<td>Parent</td>
+							<td width="24"><small class="small">Edit</small></td>
+							<td width="24"><small class="small">Delete</small></td>
+							</tr>
+						</thead>
+						<?php $endClass='';foreach($this->resources as $key => $resource) : ?>
+						<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+							<td><a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'view', 'id' => $resource->getId())); ?>"><?=$resource->getType(); ?></a></td>
+							<td><a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'view', 'id' => $resource->getId())); ?>"><?=$resource->getName(); ?></a></td>
+						
+						<?php 
+						    $parent=$resource->getParent();
+						    if(!empty($parent)){
+						    	$parentName=$parent->getType().":".$parent->getName();
+						    	
+						    }else{
+						    	$parentName='root';
+						    }
+						
+						?>
+							<td><a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'view', 'id' => $resource->getId())); ?>"><?=$parentName?></a></td>
+									
+							<td><a class="ui-icon ui-icon-pencil" href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'edit', 'id' => $resource->getId())); ?>">Edit</a></td>
+							<td><a class="ui-icon ui-icon-close" href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'delete', 'id' => $resource->getId())); ?>">delete</a></td>
+						</tr>
+						<?php $endClass=($key%2 == 1)?'class="even"':''; endforeach; ?>
+						<tr <?php echo $endClass; ?>>
+							<td colspan="4"><a href="<?=$this->url(array('module' => 'CMSCore', 'controller' => 'index','action' => 'index')); ?>">Back</a></td>
+							<td><a href="<?=$this->url(array('action' => 'create')); ?>">new</a></td>
+						</tr>
+					</table>

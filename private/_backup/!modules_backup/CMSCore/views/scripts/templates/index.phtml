@@ -1,0 +1,23 @@
+
+					<table>
+						<caption><?= $this->message ?></caption>
+						<thead>
+							<td>Name</td>
+							<td>Type</td>
+							<td width="24"><small class="small">Edit</small></td>
+							<td width="24"><small class="small">Delete</small></td>
+						</thead>
+						<?php $key=1;foreach($this->templates as $key => $template) : ?>
+						<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+							<td><?=$template->getName()?></td>
+							<td><?=$template->getType()?></td>
+							
+							<td><a class="ui-icon ui-icon-pencil" href="<?=$this->baseUrl().$this->url(array('action' => 'edit','id' => $template->getId())) ?>">Edit</a></td>
+							<td><a class="ui-icon ui-icon-close" href="<?=$this->baseUrl().$this->url(array('action' => 'delete','id' => $template->getId())) ?>">delete</a></td>
+						</tr>
+						<?php endforeach; ?>
+						<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+							<td colspan="3"><a href="<?=$this->url(array('module' => 'CMSCore', 'controller' => 'index','action' => 'index')); ?>">Back</a></td>
+							<td><a href="<?=$this->url(array('action' => 'create')); ?>">new</a></td>
+						</tr>
+					</table>

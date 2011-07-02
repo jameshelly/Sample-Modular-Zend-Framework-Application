@@ -1,0 +1,6 @@
+
+		<?php if(isset($this->route)) : ?>
+			<h5><?=$this->route->getName()?> (<a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'edit', 'id' => $this->route->getId())); ?>">edit</a>) <small class="right"><?=$this->route->getDescription()?></small></h5>
+		<?php else: ?>
+			<p>No Results</p>
+		<?php endif; ?>

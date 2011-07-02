@@ -1,0 +1,9 @@
+
+		<?php if(isset($this->page)) : ?>
+			<h5><?=$this->page->getName()?> (<a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'edit', 'id' => $this->page->getId())); ?>">edit</a>) <small class="right"><?=$this->page->getAlias()?></small></h5>
+	
+	Page view / Aloha editor ?
+		
+		<?php else: ?>
+			<p>No Results</p>
+		<?php endif; ?>

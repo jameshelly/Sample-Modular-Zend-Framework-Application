@@ -1,0 +1,10 @@
+
+		<?php if(isset($this->permission)) : ?>
+		<?php
+			$action = $this->permission->getAction();
+			$allowed = ($this->permission->getAllowed()==1)?'allowed':'denied';
+		?>
+			<h5><?=$action->getName()?> (<a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'edit', 'id' => $this->permission->getId())); ?>">edit</a>) is <small class="right"><?=$allowed?></small></h5>
+		<?php else: ?>
+			<p>No Results</p>
+		<?php endif; ?>

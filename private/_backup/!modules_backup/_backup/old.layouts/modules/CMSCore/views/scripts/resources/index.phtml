@@ -1,0 +1,20 @@
+
+					<table>
+						<caption><?= $this->message ?></caption>
+						<thead>
+							<td>Name</td>
+							<td width="24"><small class="small">Edit</small></td>
+							<td width="24"><small class="small">Delete</small></td>
+						</thead>
+						<?php foreach($this->actions as $key => $site) : ?>
+						<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+							<td><a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'view', 'id' => $site->getId())); ?>"><?=$site->getName()?></a></td>
+							<td><a class="ui-icon ui-icon-pencil" href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'edit', 'id' => $site->getId())); ?>">Edit</a></td>
+							<td><a class="ui-icon ui-icon-close" href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'delete', 'id' => $site->getId())); ?>">delete</a></td>
+						</tr>
+						<?php endforeach; ?>
+						<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+							<td colspan="2"><a href="<?=$this->url(array('module' => 'CMSCore', 'controller' => 'index', 'action' => 'index')); ?>">Back</a></td>
+							<td><a href="<?=$this->url(array('action' => 'create')); ?>">new</a></td>
+						</tr>
+					</table>

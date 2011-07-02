@@ -1,0 +1,39 @@
+
+<?php if(isset($this->page)) : ?>
+    <h2>Listing of <?=$this->page->getName()?> Page Contents</h2>
+	<h5>alias: <?=$this->page->getAlias()?></h5>
+	
+	<table>
+		<caption>Page Data content</caption>
+		<thead>
+			<td>Name</td>
+			<td>Variable</td>
+			<td>In Template</td>
+			<td width="24"><small class="small">Edit</small></td>
+			<td width="24"><small class="small">Delete</small></td>
+		</thead>
+			<?php $key=1;foreach($this->datacontents as $key => $datacontent) : ?>
+			<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+				<td><?=$datacontent->getName()?></td>
+				<td><?=$datacontent->getVariable()->getName()?></td>
+			<td><?php
+			     //$templateAssigned=$this->templatevariableassign->findOneBy(array('variable'=>$datacontent->getVariable()->getId(),'template'=>$this->pageTemplate->getId())); 
+			     echo($datacontent->getCurrent()==0)?'no':'yes';
+			    
+			
+			?></td>
+				<td><a class="ui-icon ui-icon-pencil" href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'edit', 'id' => $datacontent->getId()))."?pageid={$this->pageId}"; ?>">Edit</a></td>
+				<td><a class="ui-icon ui-icon-close" href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'delete', 'id' => $datacontent->getId()))."?pageid={$this->pageId}"; ?>">delete</a></td>
+			</tr>
+			<?php endforeach; ?>
+			<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+				<td colspan="4"><a href="<?=$this->url(array('module' => 'CMSCore', 'controller' => 'pages','action' => 'index')); ?>">Back</a></td>
+				<td></a></td>
+			</tr>
+	 </table>
+	
+<?php else: ?>
+    <h2>Listing Unknow Page Contents</h2>
+    <p>No Results</p>
+<?php endif; ?>
+
