@@ -37,7 +37,7 @@ require_once 'Zend/Auth/Result.php';
  * @copyright  Copyright (c) 2011 Wednesday London. (http://www.wednesday-london.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Wednesday_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface {
+class Opentag_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface {
 
     /**
      * $entityManager - Entity Manager
