@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://xmlns.wednesday-london.com/ns/wednesday/cms/1.1/project/">
+    <type>zf11d2</type>
+    <configuration>
+        <settings>
+            <name>zf11d2-dev.0101 {Zend 1.1 + Doctrine 2.0.x application }</name>
+			<Options> Indexes Includes FollowSymLinks ExecCGI XBitHack</Options>
+			<ServerName name="zfdoc2.jah.local" />
+			<ServerAlias nme="zfdoc2.local" />
+			<DocumentRoot path='/Users/mrhelly/Documents/Work/freelance/zfdoc2.jah/deploy/content' />
+			<Directory path='/Users/mrhelly/Documents/Work/freelance/zfdoc2.jah/deploy/content' />
+			    Options Indexes FollowSymLinks
+			    AllowOverride All
+			</Directory>
+			<ErrorLog path='/Users/mrhelly/Documents/Work/freelance/zfdoc2.jah/deploy/private/logs/error.log' />
+			<CustomLog path='/Users/mrhelly/Documents/Work/freelance/zfdoc2.jah/deploy/private/logs/custom.log' common="common" />
+			<Database>
+				<param name="host">localhost</param>
+				<param name="user">alpha_zf11d2</param>
+				<param name="pass">alphaZf11d2User</param>
+				<param name="dbname">zf11d2_alpha</param>
+				<param name="socket"></param>
+			</Database>
+        </settings>
+        <plugins>
+        	<plugin namespace="Gedmo" name="Tree" version="2.0.x" enabled="true" />
+        	<plugin namespace="Gedmo" name="Translatable" version="2.0.x" enabled="true" />
+        	<plugin namespace="Opentag" name="Restable" version="1.0.1" enabled="true" />
+        	<plugin namespace="Opentag" name="Cache" version="1.0.1" enabled="true" />
+        </plugins>
+		<project-private xmlns="http://xmlns.wednesday-london.com/ns/wednesday/cms/1.1/project-private">
+			<editor-settings />
+		</project-private>
+    </configuration>
+</project>

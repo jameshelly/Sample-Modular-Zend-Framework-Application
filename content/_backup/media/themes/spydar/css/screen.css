@@ -1,0 +1,292 @@
+@charset "utf-8";
+
+/*--------------------------------------------------------------------------------------------------------------------------------
+Core CSS For Gucci Group
+----------------------------------------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------
+UNIVERSAL
+----------------------------------------------------------------------------------------------------------------------------------*/
+*
+{
+	margin:0;
+	padding:0;
+}
+
+br
+{
+	display:block;
+}
+
+hr
+{
+	margin-top:2em;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+IMAGES
+----------------------------------------------------------------------------------------------------------------------------------*/
+img
+{
+/*
+	background:#fff url('../img/interface/preloaders/img-preloader.gif') no-repeat scroll center center;
+	color:#999;
+*/
+	display:block;
+}
+
+a img
+{
+	border:0;
+}
+
+.google-map img
+{
+	background:none;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+BRANDING
+----------------------------------------------------------------------------------------------------------------------------------*/
+body {
+	font-family: Helvetica, Verdana, Arial, sans-serif;
+	background: #000;
+	color: #fff;
+}
+
+a {
+	color: #ccc;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #e6e6e6;
+	text-decoration: underline;
+}
+
+#header {
+	height:81px;
+}
+
+#header p.logo,
+#header p.logo object,
+#header p.logo span,
+#header p.logo a
+{
+	overflow:hidden;
+	height:71px;
+	width:150px;
+}
+
+#header p.logo
+{
+	/* margin:0 auto; */
+	position:relative;
+	top:5px;
+	left:5px;
+}
+
+#header .logo span  /*ie6.css*/
+{
+	background-image:url('../guccigroup/Logo.png');
+}
+
+/*
+#header p.logo a
+{
+	position:absolute;
+	top:0;
+	left:0;
+}
+
+#footer p.legal
+{
+	background:transparent url('../img/branding/MR_PORTER_legal.gif') scroll no-repeat left 90%;
+	padding-left:66px;
+	padding-top:20px;
+}
+*/
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+PRIMARY NAVIGATION
+----------------------------------------------------------------------------------------------------------------------------------*/
+#primary-navigation ul.navigation {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 150px;
+	list-style: none;
+	margin: 0;
+	padding: 0 20px;
+}
+
+#primary-navigation ul.navigation li {
+	display: block;
+	float: left;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	height: 75px;
+ /*	background-color: rgba(32,32,32,0.75); */
+	border-left: 1px solid silver;
+}
+#primary-navigation ul.navigation li:last-child {
+	border-right: 1px solid silver;
+}
+
+#primary-navigation ul.navigation li:hover {
+ /*	background-color: rgba(16,16,16,0.75); */
+}
+
+#primary-navigation ul.navigation li a {
+	display: block;
+	text-transform: uppercase;
+	margin: 0 5px;
+	padding: 55px 0 0 0;	
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+STRUCTURE
+----------------------------------------------------------------------------------------------------------------------------------*/
+article#content {
+	width: auto;
+}
+
+div.brand-site {
+	/* display: block; */
+	position: absolute;
+}
+
+#content-branda, #content-gucci {
+	left:0;
+}
+#content-brandb, #content-balenciaga {
+	left: 1280px;
+}
+#content-brandc {
+	left: 2560px;
+}
+#content-brandd {
+	left: 3740px;
+}
+#content-brande {
+	left: 4920px;
+}
+#content-brandf {
+	left: 6200px;
+}
+#content-brandg {
+	left: 7480px;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+CURSOR CONTROL
+----------------------------------------------------------------------------------------------------------------------------------*/
+abbr,
+acronym,
+dfn
+{
+	cursor:help;
+}
+
+#wrapper a,
+label,
+input.checkbox,
+input.radio,
+.submit input,
+select
+{
+	cursor:pointer;
+}
+
+input.text,
+textarea
+{
+	cursor:text;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+SKIP LINKS
+----------------------------------------------------------------------------------------------------------------------------------*/
+#wrapper .skip-links li a
+{
+	background:rgb(43,43,43);
+	color:rgb(255,255,255);
+	display:block;
+	left:0;
+	position:absolute;
+	text-align:center;
+	top:-20000em;
+	width:100%;
+}
+
+#wrapper .skip-links-pre li a:focus,
+#wrapper .skip-links-pre li a.focus
+{
+	top:0;
+}
+
+#wrapper .skip-links-post li a:focus,
+#wrapper .skip-links-post li a.focus
+{
+	bottom:0;
+	left:auto;
+	top:auto;
+	margin-top:-1em;
+	position:static;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+CLEARFIX http://perishablepress.com/press/2009/12/06/new-clearfix-hack/
+----------------------------------------------------------------------------------------------------------------------------------*/
+.clearfix:after /*ie6.css*/ /*ie7.css*/
+{
+	clear:both;
+	content:" ";
+	display:block;
+	font-size:0;
+	height:0;
+	visibility:hidden;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+PRINT
+----------------------------------------------------------------------------------------------------------------------------------*/
+.print, .hide
+{
+	display:none;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+REPLACED
+----------------------------------------------------------------------------------------------------------------------------------*/
+body #wrapper .replaced /*ie6.css*/
+{
+	background-attachment:scroll;
+	background-position:top left;
+	background-repeat:no-repeat;
+	display:block;
+	overflow:hidden;
+	text-indent:-5000px;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------------
+VIEWPORT OFFSET
+----------------------------------------------------------------------------------------------------------------------------------*/
+#wrapper .screen-offset
+{
+	background:transparent;
+	display:block;
+	height:1px;
+	line-height:0;
+	margin:0;
+	overflow:hidden;
+	padding:0;
+	position:absolute;
+	text-indent:-5000px;
+	top:-5000px;
+	width:1px;
+}
