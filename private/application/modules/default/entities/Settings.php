@@ -1,17 +1,19 @@
 <?php
+namespace Application\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection, Gedmo\Timestampable\Timestampable;
 /**
  * Permissions
  *
- * @Table(name="permissions")
+ * @Table(name="settings")
  * @Entity
  */
-class Permissions
+class Settings implements Timestampable
 {
     /**
      * @var integer $id
      *
-     * @Column(name="id", type="integer", nullable=false)
+     * @Column(type="integer", nullable=false)
      * @Id
      * @GeneratedValue(strategy="IDENTITY")
      */
@@ -20,91 +22,58 @@ class Permissions
     /**
      * @var boolean $allowed
      *
-     * @Column(name="allowed", type="boolean", nullable=true)
+     * @Column(type="boolean", nullable=true)
      */
     private $allowed;
 
     /**
+     * @var string $action
+     *
+     * @Column(type="string", length="128", nullable=true)
+     */
+    private $type;
+    
+    /**
      * @var text $action
      *
-     * @Column(name="action", type="text", nullable=true)
+     * @Column(type="text", nullable=true)
      */
-    private $action;
+    private $parameters;
+    
+    /**
+     * @gedmo:Timestampable(on="update")
+     * dates which should be updated on update and insert
+     * @var timestamp $action
+     *
+     * @Column(type="datetime", nullable=false)
+     */
+    private $modified;
+    
+    /**
+     * @gedmo:Timestampable(on="create")
+     * dates which should be updated on insert only
+     * @var timestamp $action
+     *
+     * @Column(type="datetime", nullable=false)
+     */
+    private $created;
 
     /**
-     * @var Roles
      *
-     * @ManyToMany(targetEntity="Roles", mappedBy="permission")
+     * @param type $name
+     * @param type $value 
      */
-    private $role;
-
+    public function __set($name, $value) {
+        $this->$name = $value;
+    }
+    
     /**
-     * Get id
      *
-     * @return integer $id
+     * @param type $name
+     * @return type 
      */
-    public function getId()
-    {
-        return $this->id;
+    public function __get($name) {
+        return $this->$name;
     }
 
-    /**
-     * Set allowed
-     *
-     * @param boolean $allowed
-     */
-    public function setAllowed($allowed)
-    {
-        $this->allowed = $allowed;
-    }
-
-    /**
-     * Get allowed
-     *
-     * @return boolean $allowed
-     */
-    public function getAllowed()
-    {
-        return $this->allowed;
-    }
-
-    /**
-     * Add role
-     *
-     * @param Roles $role
-     */
-    public function addRole(\Roles $role)
-    {
-        $this->role[] = $role;
-    }
-
-    /**
-     * Get role
-     *
-     * @return Doctrine\Common\Collections\Collection $role
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
-     * Set action
-     *
-     * @param Actions $action
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-    }
-
-    /**
-     * Get action
-     *
-     * @return Actions $action
-     */
-    public function getAction()
-    {
-        return $this->action;
-    }
 }

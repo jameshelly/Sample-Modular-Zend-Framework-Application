@@ -1,13 +1,15 @@
 <?php
 
-require_once realpath(__DIR__ . '/../library') . '/Doctrine/Common/ClassLoader.php';
-$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\ORM', realpath(__DIR__ . '/../library'));
+define('LIB_PATH', realpath('/Users/mrhelly/Documents/Server/Libraries'));
+
+require_once  LIB_PATH.'/Doctrine/Common/ClassLoader.php';
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\ORM', LIB_PATH);
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\DBAL', realpath(__DIR__ . '/../library'));
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\DBAL', LIB_PATH);
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common',  realpath(__DIR__ . '/../library'));
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common',  LIB_PATH);
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('Symfony',  realpath(__DIR__ . '/../library/Doctrine'));
+$classLoader = new \Doctrine\Common\ClassLoader('Symfony',  realpath( LIB_PATH . '/Doctrine'));
 $classLoader->register();
 $classLoader = new \Doctrine\Common\ClassLoader('Entities', realpath(__DIR__ . '/../application/models/entities'));
 $classLoader->register();

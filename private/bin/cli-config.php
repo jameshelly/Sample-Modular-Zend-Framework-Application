@@ -1,4 +1,5 @@
 <?php
+define('LIB_PATH', realpath('/Users/mrhelly/Documents/Server/Libraries'));
 
 // Define path to application directory
 defined('APPLICATION_PATH')
@@ -10,10 +11,11 @@ defined('APPLICATION_ENV')
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
-	realpath(APPLICATION_PATH . '/../library/Opentag'),
-	realpath(APPLICATION_PATH . '/../library/Doctrine'),
-	realpath(APPLICATION_PATH . '/../library/DoctrineExtensions'),
-	realpath(APPLICATION_PATH . '/../library/Zend'),
+    realpath('/Users/mrhelly/Documents/Server/Libraries'),
+//	realpath(APPLICATION_PATH . '/../library/Opentag'),
+//	realpath(APPLICATION_PATH . '/../library/Doctrine'),
+//	realpath(APPLICATION_PATH . '/../library/DoctrineExtensions'),
+//	realpath(APPLICATION_PATH . '/../library/Zend'),
     realpath(APPLICATION_PATH . '/../library'),
     realpath(APPLICATION_PATH),
     get_include_path()
@@ -21,15 +23,17 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 require_once 'Doctrine/Common/ClassLoader.php';
 
-$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\ORM', realpath(__DIR__ . '/../library'));
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\ORM', LIB_PATH);
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\DBAL',  realpath(__DIR__ . '/../library'));
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\DBAL', LIB_PATH);
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common',  realpath(__DIR__ . '/../library'));
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common', LIB_PATH);
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('DoctrineExtensions',  realpath(__DIR__ . '/../library'));
+$classLoader = new \Doctrine\Common\ClassLoader('Gedmo',  LIB_PATH);
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('Symfony',  realpath(__DIR__ . '/../library/Doctrine'));
+$classLoader = new \Doctrine\Common\ClassLoader('DoctrineExtensions', LIB_PATH);
+$classLoader->register();
+$classLoader = new \Doctrine\Common\ClassLoader('Symfony',  realpath(LIB_PATH . '/Doctrine'));
 $classLoader->register();
 
 $config = new \Doctrine\ORM\Configuration();
@@ -56,7 +60,7 @@ $config->setProxyNamespace('Proxies');
 // get Zend Ini
 require_once 'Zend/Config/Ini.php';
 //TODO Work out a way of getting the server name without having to hard code it.
-$zfconfig = new Zend_Config_Ini( APPLICATION_PATH . '/configs/default.ini', 'zfdoc2_jah_local');
+$zfconfig = new Zend_Config_Ini( APPLICATION_PATH . '/configs/default.ini', 'jah_zfdoc2_local');
 
 /*
 $zfconfig->resources->doctrine->dbal->default

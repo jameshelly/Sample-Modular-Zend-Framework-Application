@@ -1,12 +1,14 @@
 <?php
+namespace Application\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection, Gedmo\Timestampable\Timestampable;
 /**
  * Users
  *
  * @Table(name="users")
  * @Entity
  */
-class Users
+class Users implements Timestampable
 {
     /**
      * @var integer $id
@@ -20,28 +22,14 @@ class Users
     /**
      * @var string $email
      *
-     * @Column(name="email", type="string", length=128, nullable=true)
+     * @Column(name="email", type="text", nullable=true)
      */
     private $email;
 
     /**
-     * @var string $firstname
-     *
-     * @Column(name="firstname", type="string", length=128, nullable=true)
-     */
-    private $firstname;
-
-    /**
-     * @var string $lastname
-     *
-     * @Column(name="lastname", type="string", length=128, nullable=true)
-     */
-    private $lastname;
-
-    /**
      * @var string $username
      *
-     * @Column(name="username", type="string", length=128, nullable=true)
+     * @Column(name="username", type="text", nullable=true)
      */
     private $username;
 
@@ -60,6 +48,45 @@ class Users
     private $salt;
 
     /**
+     * @var Roles
+     *
+     * @ManyToOne(targetEntity="Roles")
+     */
+    private $role;
+
+    /**
+     * @var string $firstname
+     *
+     * @Column(name="firstname", type="string", length=128, nullable=true)
+     */
+    private $firstname;
+
+    /**
+     * @var string $lastname
+     *
+     * @Column(name="lastname", type="string", length=128, nullable=true)
+     */
+    private $lastname;
+    
+    /**
+     * @gedmo:Timestampable(on="update")
+     * dates which should be updated on update and insert
+     * @var timestamp $action
+     *
+     * @Column(type="datetime", nullable=false)
+     */
+    private $modified;
+    
+    /**
+     * @gedmo:Timestampable(on="create")
+     * dates which should be updated on insert only
+     * @var timestamp $action
+     *
+     * @Column(type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
      * @var integer $logins
      *
      * @Column(name="logins", type="integer", nullable=true)
@@ -73,102 +100,22 @@ class Users
      */
     private $lastLogin;
     
-    /**
-     * @var Roles
+     /**
      *
-     * @ManyToOne(targetEntity="Roles")
+     * @param type $name
+     * @param type $value 
      */
-    private $role;
-
-    /**
-     * Get id
-     *
-     * @return integer $id
-     */
-    public function getId()
-    {
-        return $this->id;
+    public function __set($name, $value) {
+        $this->$name = $value;
     }
-
+    
     /**
-     * Set username
      *
-     * @param string $email
+     * @param type $name
+     * @return type 
      */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    /**
-     * Get username
-     *
-     * @return string $email
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Set username
-     *
-     * @param string $firstname
-     */
-    public function setFirstname($firstname)
-    {
-        $this->firstname = $firstname;
-    }
-
-    /**
-     * Get username
-     *
-     * @return string $firstname
-     */
-    public function getFirstname()
-    {
-        return $this->firstname;
-    }
-
-    /**
-     * Set username
-     *
-     * @param string $lastname
-     */
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
-    }
-
-    /**
-     * Get username
-     *
-     * @return string $lastname
-     */
-    public function getLastname()
-    {
-        return $this->lastname;
-    }
-
-
-    /**
-     * Set username
-     *
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    }
-
-    /**
-     * Get username
-     *
-     * @return string $username
-     */
-    public function getUsername()
-    {
-        return $this->username;
+    public function __get($name) {
+        return $this->$name;
     }
 
     /**
@@ -180,7 +127,7 @@ class Users
     {
         //$this->password = $password;
         #Auto hash.
-        $this->password = md5($password.$this->getSalt());
+        $this->password = $this->generatePassword($password);
     }
 
     /**
@@ -201,7 +148,7 @@ class Users
      */
     protected function generatePassword($password)
     {
-		return md5($password.$this->getSalt());
+	return md5($password.$this->getSalt());
     }
 
     /**
@@ -212,97 +159,7 @@ class Users
      */
     public function checkPassword($password)
     {
-		$check = $this->generatePassword($password);
+	$check = $this->generatePassword($password);
         return ($this->password == $check);
-    }
-
-    /**
-     * Set salt
-     *
-     * @param string $salt
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
-    }
-
-    /**
-     * Get salt
-     *
-     * @return string $salt
-     */
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
-    /**
-     * Set logins
-     *
-     * @param integer $logins
-     */
-    public function setLogins($logins)
-    {
-        $this->logins = $logins;
-    }
-
-    /**
-     * Get logins
-     *
-     * @return integer $logins
-     */
-    public function getLogins()
-    {
-        return $this->logins;
-    }
-
-    /**
-     * Set lastLogin
-     *
-     * @param datetime $lastLogin
-     */
-    public function setLastLogin($lastLogin)
-    {
-        $this->lastLogin = $lastLogin;
-    }
-
-    /**
-     * Get lastLogin
-     *
-     * @return datetime $lastLogin
-     */
-    public function getLastLogin()
-    {
-        return $this->lastLogin;
-    }
-    
-    
-    public function getLastLoginForamt($format){
-    	$ret="";
-    	$last=$this->getLastLogin();
-    	if(!empty($last)){
-    		$ret=$last->format($format); 	
-    	}
-    	return $ret;	
-    }
-
-    /**
-     * Set role
-     *
-     * @param Roles $role
-     */
-    public function setRole(\Roles $role)
-    {
-        $this->role = $role;
-    }
-
-    /**
-     * Get role
-     *
-     * @return Roles $role
-     */
-    public function getRole()
-    {
-        return $this->role;
     }
 }

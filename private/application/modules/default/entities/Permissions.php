@@ -1,5 +1,7 @@
 <?php
+namespace Application\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Permissions
  *
@@ -39,72 +41,20 @@ class Permissions
     private $role;
 
     /**
-     * Get id
      *
-     * @return integer $id
+     * @param type $name
+     * @param type $value 
      */
-    public function getId()
-    {
-        return $this->id;
+    public function __set($name, $value) {
+        $this->$name = $value;
     }
-
+    
     /**
-     * Set allowed
      *
-     * @param boolean $allowed
+     * @param type $name
+     * @return type 
      */
-    public function setAllowed($allowed)
-    {
-        $this->allowed = $allowed;
-    }
-
-    /**
-     * Get allowed
-     *
-     * @return boolean $allowed
-     */
-    public function getAllowed()
-    {
-        return $this->allowed;
-    }
-
-    /**
-     * Add role
-     *
-     * @param Roles $role
-     */
-    public function addRole(\Roles $role)
-    {
-        $this->role[] = $role;
-    }
-
-    /**
-     * Get role
-     *
-     * @return Doctrine\Common\Collections\Collection $role
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
-     * Set action
-     *
-     * @param Actions $action
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-    }
-
-    /**
-     * Get action
-     *
-     * @return Actions $action
-     */
-    public function getAction()
-    {
-        return $this->action;
-    }
+    public function __get($name) {
+        return $this->$name;
+    }    
 }
