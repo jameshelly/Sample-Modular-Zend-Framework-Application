@@ -54,7 +54,7 @@ closedir($dir_handle);
 $driverImpl = $config->newDefaultAnnotationDriver($entityPathes);
 $config->setMetadataDriverImpl($driverImpl);
 
-$config->setProxyDir(APPLICATION_PATH."../data/generated");
+$config->setProxyDir(realpath(APPLICATION_PATH."/../data/generated"));
 $config->setProxyNamespace('Proxies');
 
 // get Zend Ini
@@ -69,10 +69,10 @@ $zfconfig->resources->doctrine->orm->manager->connection
 
 $connectionOptions = array(
     'driver'		=> $zfconfig->resources->doctrine->dbal->default->driver,
-    'host'		=> $zfconfig->resources->doctrine->dbal->default->host,
-    'port'		=> $zfconfig->resources->doctrine->dbal->default->port,
+    'host'			=> $zfconfig->resources->doctrine->dbal->default->host,
+    'port'			=> $zfconfig->resources->doctrine->dbal->default->port,
     'dbname'		=> $zfconfig->resources->doctrine->dbal->default->dbname,
-    'user'		=> $zfconfig->resources->doctrine->dbal->default->user,
+    'user'			=> $zfconfig->resources->doctrine->dbal->default->user,
     'password'		=> $zfconfig->resources->doctrine->dbal->default->password,
     'unix_socket'	=> $zfconfig->resources->doctrine->dbal->default->unix_socket
 );

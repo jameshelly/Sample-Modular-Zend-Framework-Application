@@ -11,10 +11,12 @@ $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common',  LIB_PATH);
 $classLoader->register();
 $classLoader = new \Doctrine\Common\ClassLoader('Symfony',  realpath( LIB_PATH . '/Doctrine'));
 $classLoader->register();
+/*
 $classLoader = new \Doctrine\Common\ClassLoader('Entities', realpath(__DIR__ . '/../application/models/entities'));
 $classLoader->register();
 $classLoader = new \Doctrine\Common\ClassLoader('Proxies', realpath(__DIR__ . '/../application/models/proxies'));
 $classLoader->register();
+*/
 
 // Variable $helperSet is defined inside cli-config.php
 require __DIR__ . '/cli-config.php';
