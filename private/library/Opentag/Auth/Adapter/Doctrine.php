@@ -146,9 +146,6 @@ class Doctrine implements \Zend_Auth_Adapter_Interface {
      */
     public function authenticate()
     {
-		//$bootstrap = $this->getInvokeArg('bootstrap');
-    	//$log = $this->getContainer()->get('logger');//Zend_Registry::get('logger');
-
     	$this->_authenticateSetup();
 
         $userRepo = $this->entityManager->getRepository($this->entityName);

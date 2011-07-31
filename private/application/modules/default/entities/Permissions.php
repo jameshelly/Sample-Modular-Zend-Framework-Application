@@ -1,42 +1,45 @@
 <?php
 namespace Application\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation AS Gedmo, 
+    Doctrine\ORM\Mapping AS ORM,
+    Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Permissions
  *
- * @Table(name="permissions")
- * @Entity
+ * @ORM\Table(name="permissions")
+ * @ORM\Entity
  */
 class Permissions
 {
     /**
      * @var integer $id
      *
-     * @Column(name="id", type="integer", nullable=false)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var boolean $allowed
      *
-     * @Column(name="allowed", type="boolean", nullable=true)
+     * @ORM\Column(name="allowed", type="boolean", nullable=true)
      */
     private $allowed;
 
     /**
      * @var text $action
      *
-     * @Column(name="action", type="text", nullable=true)
+     * @ORM\Column(name="action", type="text", nullable=true)
      */
     private $action;
 
     /**
      * @var Roles
      *
-     * @ManyToMany(targetEntity="Roles", mappedBy="permission")
+     * @ORM\ManyToMany(targetEntity="Roles", mappedBy="permission")
      */
     private $role;
 

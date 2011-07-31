@@ -1,42 +1,45 @@
 <?php
 namespace Application\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection, Gedmo\Timestampable\Timestampable;
+use Gedmo\Mapping\Annotation AS Gedmo, 
+    Doctrine\ORM\Mapping AS ORM,
+    Doctrine\Common\Collections\ArrayCollection, 
+    Gedmo\Timestampable\Timestampable;
 /**
  * Permissions
  *
- * @Table(name="settings")
- * @Entity
+ * @ORM\Table(name="settings")
+ * @ORM\Entity
  */
 class Settings implements Timestampable
 {
     /**
      * @var integer $id
      *
-     * @Column(type="integer", nullable=false)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var boolean $allowed
      *
-     * @Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $allowed;
 
     /**
      * @var string $action
      *
-     * @Column(type="string", length="128", nullable=true)
+     * @ORM\Column(type="string", length="128", nullable=true)
      */
     private $type;
     
     /**
      * @var text $action
      *
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $parameters;
     
@@ -45,7 +48,7 @@ class Settings implements Timestampable
      * dates which should be updated on update and insert
      * @var timestamp $action
      *
-     * @Column(type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $modified;
     
@@ -54,7 +57,7 @@ class Settings implements Timestampable
      * dates which should be updated on insert only
      * @var timestamp $action
      *
-     * @Column(type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $created;
 

@@ -14,7 +14,7 @@ use Opentag\Auth\Adapter\Doctrine,
  * @author
  * @version
  */
-class AuthController extends Wednesday_Controller_Action
+class AuthController extends \Zend_Controller_Action
 {
 
     /**
@@ -26,12 +26,23 @@ class AuthController extends Wednesday_Controller_Action
         //$this->_loginForm = new Application_Form_Login();
         //$this->view->form = $this->_loginForm;
         // get auth service from bootstrap
+    	#Get bootstrap object.
         $bootstrap = $this->getInvokeArg('bootstrap');
-        $this->_auth = $bootstrap->getResource('auth');
+    	#Get Doctrine Entity Manager
+        $this->em = $bootstrap->getContainer()->get('entity.manager');
+        #Get Zend Auth.
+        $this->auth = Zend_Auth::getInstance();
+       
     }
 
     public function indexAction() {
-        $this->_forward('login');
+        $auth = Zend_Auth::getInstance();//$this->_auth;//
+        if ($auth->hasIdentity()) {
+            $this->view->title = "Users";
+            $this->view->message = "<p>".$auth->getIdentity()." logged in</p>";;           
+        } else {
+            $this->_forward('login');
+        }
     }
 
     /**
@@ -50,7 +61,7 @@ class AuthController extends Wednesday_Controller_Action
             "checkPassword"
         );
         $content ="";
-        $auth = Zend_Auth::getInstance();//$this->_auth;//
+        $auth = $this->auth;
         if ($auth->hasIdentity()) {
             $loginForm .= "<p>".$auth->getIdentity()." logged in</p>";
             //$this->_redirect("user/profile");
@@ -65,9 +76,6 @@ class AuthController extends Wednesday_Controller_Action
                     $loginForm->setDescription('Invalid credentials provided');
                     $content .= 'Invalid credentials provided <pre>'.print_r($result,true).'</pre>';
                 } else {
-//                    $ns = new Zend_Session_Namespace('wednesday');
-//                    $this->_redirect($ns->authReturn);
-//                    exit();
                     $loginForm = "<p>".$result->getIdentity()." login succeeded</p>";
                 }
             } else {
@@ -85,68 +93,11 @@ class AuthController extends Wednesday_Controller_Action
      *    -
      */
     public function logoutAction() {
-	$auth = Zend_Auth::getInstance();//$this->_auth;//
+	$auth = $this->auth;
         $auth->clearIdentity();
         $this->view->title = "Users";
         $this->view->message = "Logged out";
     }
     
-    public function indexAction() {
-        $this->_forward('login');
-    }
-
-    public function getAction() {
-        $this->_forward('login');
-    }
-
-    public function postAction() {
-        $params = $this->_getAllParams();
-        $return = "<pre>".print_r($params,true)."</pre>";
-        $this->getResponse()->appendBody("From postAction('".get_class($this)."') creating the requested Data:".$return);
-    }
-
-    public function putAction() {
-        $params = $this->_getAllParams();
-        $return = "<pre>".print_r($params,true)."</pre>";
-        $this->getResponse()->appendBody("From putAction('".get_class($this)."') updating the requested Data:".$return);
-        //$this->_forward('login');
-        $loginForm = $this->_loginForm;//new Api_Form_Login();
-        $request = $this->getRequest();
-        $adapter = new Wednesday_Auth_Adapter_Doctrine(
-            $this->em,
-            'Users',
-            'getUsername',
-            'getPassword',
-            "checkPassword"
-        );
-        $content ="";
-        $auth = Zend_Auth::getInstance();//$this->_auth;//
-        if ($auth->hasIdentity()) {
-            $loginForm .= "<p>".$auth->getIdentity()." logged in</p>";
-            //$this->_redirect("user/profile");
-        } else {
-            if($loginForm->isValid($request->getPost())) {
-                $values = $loginForm->getValues();
-                $adapter->setIdentity($values['username']);
-                $adapter->setCredential($values['password']);
-                $result = $auth->authenticate($adapter);
-                if (!$result->isValid()) {
-                    $auth->clearIdentity();
-                    $loginForm->setDescription('Invalid credentials provided');
-                    $content .= 'Invalid credentials provided'.print_r($result,true);
-                } else {
-                    $loginForm = "<p>".$result->getIdentity()." login succeeded</p>";
-                }
-            } else {
-                $loginForm->setDescription('Please login');
-            }
-        }
-        $this->getResponse()->appendBody("From '".get_class($this)."' ".$content);
-    }
-
-    public function deleteAction() {
-    	$this->_forward('logout');
-    }
-
 /* EOF Class */
 }

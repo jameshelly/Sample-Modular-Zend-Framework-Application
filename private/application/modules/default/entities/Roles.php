@@ -1,44 +1,46 @@
 <?php
 namespace Application\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation AS Gedmo, 
+    Doctrine\ORM\Mapping AS ORM,
+    Doctrine\Common\Collections\ArrayCollection;
 /**
  * Roles
  *
- * @Table(name="roles")
- * @Entity
+ * @ORM\Table(name="roles")
+ * @ORM\Entity
  */
 class Roles
 {
     /**
      * @var integer $id
      *
-     * @Column(name="id", type="integer", nullable=false)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var string $name
      *
-     * @Column(name="name", type="string", length=45, nullable=true)
+     * @ORM\Column(name="name", type="string", length=45, nullable=true)
      */
     private $name;
 
     /**
      * @var text $description
      *
-     * @Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
     
      /**
      * @var Roles
      *
-     * @ManyToOne(targetEntity="Roles")
-     * @JoinColumns({
-     *   @JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Roles")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * })
      */
     private $parent;
@@ -46,22 +48,14 @@ class Roles
      /**
      * @var integer $buildorder
      *
-     * @Column(name="buildorder", type="integer" )
+     * @ORM\Column(name="buildorder", type="integer" )
      */
     private $buildorder;
     
     /**
      * @var Permissions
      *
-     * @ManyToMany(targetEntity="Permissions", inversedBy="role")
-     * @JoinTable(name="roles_permissions",
-     *   joinColumns={
-     *     @JoinColumn(name="role_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @JoinColumn(name="permission_id", referencedColumnName="id")
-     *   }
-     * )
+     * @ORM\ManyToMany(targetEntity="Permissions", inversedBy="role")
      */
     private $permission;
     
