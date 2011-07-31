@@ -3,6 +3,7 @@
 namespace Gedmo\Timestampable\Mapping\Driver;
 
 use Gedmo\Mapping\Driver\Xml as BaseXml,
+    Doctrine\Common\Persistence\Mapping\ClassMetadata,
     Gedmo\Exception\InvalidMappingException;
 
 /**
@@ -36,12 +37,12 @@ class Xml extends BaseXml
     /**
      * {@inheritDoc}
      */
-    public function validateFullMetadata($meta, array $config) {}
+    public function validateFullMetadata(ClassMetadata $meta, array $config) {}
 
     /**
      * {@inheritDoc}
      */
-    public function readExtendedMetadata($meta, array &$config)
+    public function readExtendedMetadata(ClassMetadata $meta, array &$config)
     {
         /**
          * @var \SimpleXmlElement $mapping
@@ -92,7 +93,7 @@ class Xml extends BaseXml
      * @param string $field
      * @return boolean
      */
-    protected function isValidField($meta, $field)
+    protected function isValidField(ClassMetadata $meta, $field)
     {
         $mapping = $meta->getFieldMapping($field);
         return $mapping && in_array($mapping['type'], $this->validTypes);

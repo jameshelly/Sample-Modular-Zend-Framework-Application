@@ -416,6 +416,9 @@ class ZFDebug_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
         return ('
     <style type="text/css" media="screen">
         html,body {height:100%}
+        
+        #ZFDebug img { display: inline; }
+        #ZFDebug br { display: block; }
         #ZFDebug, #ZFDebug div, #ZFDebug span, #ZFDebug h1, #ZFDebug h2, #ZFDebug h3, #ZFDebug h4, #ZFDebug h5, #ZFDebug h6, #ZFDebug p, #ZFDebug blockquote, #ZFDebug pre, #ZFDebug a, #ZFDebug code, #ZFDebug em, #ZFDebug img, #ZFDebug strong, #ZFDebug dl, #ZFDebug dt, #ZFDebug dd, #ZFDebug ol, #ZFDebug ul, #ZFDebug li, #ZFDebug table, #ZFDebug tbody, #ZFDebug tfoot, #ZFDebug thead, #ZFDebug tr, #ZFDebug th, #ZFDebug td {
         	margin: 0;
         	padding: 0;
@@ -427,10 +430,10 @@ class ZFDebug_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
         	}
         
         #ZFDebug_offset {height:'.$boxheight.'px}
-        #ZFDebug {height:'.$boxheight.'px; width:100%; background:#262626; 
+        #ZFDebug { height:'.$boxheight.'px; width:100%; background:#262626; 
                         font: 12px/1.4em Lucida Grande, Lucida Sans Unicode, sans-serif; 
                         position:fixed; bottom:0px; left:0px; color:#FFF; background:#000000;
-                        z-index:2718281828459045;}
+                        z-index:2718281828459045; }
         #ZFDebug p {margin:1em 0}
         #ZFDebug a {color:#FFFFFF}
         #ZFDebug tr {color:#FFFFFF;}
@@ -445,7 +448,7 @@ class ZFDebug_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
         #ZFDebug .ZFDebug_panel {padding:0px 15px 15px 15px;
                         font: 11px/1.4em Menlo, Monaco, Lucida Console, monospace;
                         text-align:left; height:'.($boxheight-50).'px; overflow:auto; display:none; }
-        #ZFDebug h4 {font:bold 12px/1.4em Menlo, Monaco, Lucida Console, monospace; margin:1em 0;}
+        #ZFDebug h4 {font:bold 12px/1.4em Menlo, Monaco, Lucida Console, monospace; margin:1em 0; color: white;}
         #ZFDebug .ZFDebug_active {background:#1a1a1a;}
         #ZFDebug .ZFDebug_panel .pre {margin:0 0 0 22px}
         #ZFDebug_exception { border:1px solid #CD0A0A;display: block; }

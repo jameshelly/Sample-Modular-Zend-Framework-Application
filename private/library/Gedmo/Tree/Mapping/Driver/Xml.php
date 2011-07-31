@@ -3,6 +3,7 @@
 namespace Gedmo\Tree\Mapping\Driver;
 
 use Gedmo\Mapping\Driver\Xml as BaseXml,
+    Doctrine\Common\Persistence\Mapping\ClassMetadata,
     Gedmo\Exception\InvalidMappingException;
 
 /**
@@ -45,7 +46,7 @@ class Xml extends BaseXml
     /**
      * {@inheritDoc}
      */
-    public function validateFullMetadata($meta, array $config)
+    public function validateFullMetadata(ClassMetadata $meta, array $config)
     {
         if (isset($config['strategy'])) {
             if (is_array($meta->identifier) && count($meta->identifier) > 1) {
@@ -61,7 +62,7 @@ class Xml extends BaseXml
     /**
      * {@inheritDoc}
      */
-    public function readExtendedMetadata($meta, array &$config) {
+    public function readExtendedMetadata(ClassMetadata $meta, array &$config) {
         /**
          * @var \SimpleXmlElement $xml
          */
@@ -140,7 +141,7 @@ class Xml extends BaseXml
      * @param string $field
      * @return boolean
      */
-    protected function isValidField($meta, $field)
+    protected function isValidField(ClassMetadata $meta, $field)
     {
         $mapping = $meta->getFieldMapping($field);
         return $mapping && in_array($mapping['type'], $this->validTypes);
@@ -154,7 +155,7 @@ class Xml extends BaseXml
      * @throws InvalidMappingException
      * @return void
      */
-    private function validateNestedTreeMetadata($meta, array $config)
+    private function validateNestedTreeMetadata(ClassMetadata $meta, array $config)
     {
         $missingFields = array();
         if (!isset($config['parent'])) {
@@ -179,7 +180,7 @@ class Xml extends BaseXml
      * @throws InvalidMappingException
      * @return void
      */
-    private function validateClosureTreeMetadata($meta, array $config)
+    private function validateClosureTreeMetadata(ClassMetadata $meta, array $config)
     {
         $missingFields = array();
         if (!isset($config['parent'])) {

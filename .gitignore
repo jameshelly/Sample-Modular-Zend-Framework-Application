@@ -1,5 +1,6 @@
 ._auth/*
 .DStor*
+*.DStor*
 source/*
 /private/library/_backup*
 /private/_backup*

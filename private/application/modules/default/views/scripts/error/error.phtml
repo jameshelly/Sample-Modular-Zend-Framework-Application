@@ -1,17 +1,151 @@
-					<div class="clearfix">
-						<h1><?=$this->title?></h1>
-						<?php if ($this->message): ?>
-							<p>The following error occurred:</p>
-							<pre><?=$this->message ?></pre>
-						<?php endif; ?>
-						<?php if (isset($this->exception)): ?>
-							<h3>Exception information:</h3>
-							<p><b>Message:</b> <?php echo $this->exception->getMessage() ?></p>
+				
+				<div class="box-inner error structure clearfix">
+					<form action="<?=$this->baseUrl();?>" id="signup-form" method="post">
+						<fieldset class="form-skin-1">
+							<legend class="screen-offset">Moncler email signup</legend>
+								<p class="message"><?=$this->title?></p>
+								<div class="input submit">
+									<input type="submit" value="continue to home">
+								</div>
+						</fieldset>
+					</form>
+					
+<?php if ($this->development): ?>
+				    <h1><?=$this->title?></h1>
+				    <?php if ($this->message): ?>
+				        <p>The following error occurred:</p>
+				        <pre><?=$this->message ?></pre>
+				    <?php endif; ?>
+				    
+				    <?php if (isset($this->exception)): ?>
+<pre class="box"><code>
+<h3>Exception information:</h3>
+<p><b>Message:</b> <?php echo $this->exception->getMessage() ?></p>
 
-							<h3>Stack trace:</h3>
-							<pre><?php echo $this->exception->getTraceAsString() ?></pre>
+<h3>Stack trace:</h3>
+<pre><?php echo $this->exception->getTraceAsString() ?></pre>
 
-							<h3>Request Parameters:</h3>
-							<pre><?php echo var_export($this->request->getParams(), true) ?></pre>
-						<?php endif ?>
-					</div>
+<h3>Request Parameters:</h3>
+<pre><?php echo var_export($this->request->getParams(), true) ?></pre>
+</code></pre>
+				    <?php endif ?>
+<?php endif; ?>					
+				    <!--TAPESTRY START-->
+				    <div class="grid-flexible-container" id="promo-panel" data-instruction-display-duration="2">
+				
+				            <!--GRID: CLEARFIX START-->
+				            <div class="grid-row clearfix">
+				
+				                    <!--GRID: 50 START-->
+				                    <div class="grid grid-33">
+				
+				                            <!--SPOTLIGHT 1 START-->
+				                            <div class="grid" id="spotlight-1">
+				                                    <!--SPOTLIGHT START-->
+				                                    <div class="spotlight config-flicker config-overlay-shade-0">
+				                                            <img alt="[CMS MANAGED IMAGE DESCRIPTION]" class="size-640-856" src="/themes/moncler/img/content/mens-skiwear.jpg" />
+				                                            <!--OVERLAY LINK START-->
+				                                            <a class="overlay-link" href="#/mens-wear">
+				                                                    <div class="faux-table">
+				                                                            <div class="faux-table-cell">
+				                                                                    <div class="overlay-link-content">
+				                                                                            <p class="action navigation">
+				                                                                                    <em>Mens Wear</em>
+				                                                                            </p>
+				                                                                            <h4><em>Mens Wear</em></h4>
+				                                                                            <p class="action navigation">
+				                                                                                    <em>Shop Now</em>
+				                                                                            </p>
+				                                                                    </div>
+				                                                            </div>
+				                                                    </div>
+				                                            </a>
+				                                            <!--OVERLAY LINK END-->
+				                                    </div>
+				                                    <!--SPOTLIGHT END-->
+				                            </div>
+				                            <!--SPOTLIGHT 1 END-->
+				
+				                    </div>
+				                    <!--GRID: 50 END-->
+				
+				
+				                    <!--GRID: 50 START-->
+				                    <div class="grid grid-33">
+				
+				                            <!--SPOTLIGHT 2 START-->
+				                            <div class="grid" id="spotlight-2">
+				                                    <!--SPOTLIGHT START-->
+				                                    <div class="spotlight config-flicker config-overlay-shade-0">
+				                                            <img alt="[CMS MANAGED IMAGE DESCRIPTION]" class="size-640-856" src="/themes/moncler/img/content/womens-outerwear.jpg" />
+				                                                                                                    													<!--OVERLAY LINK START-->
+				                                            <a class="overlay-link" href="#/womens-outerwear">
+				                                                    <div class="faux-table">
+				                                                            <div class="faux-table-cell">
+				                                                                    <div class="overlay-link-content">
+				                                                                            <p class="action navigation">
+				                                                                                    <em>Womens Outerwear</em>
+				                                                                            </p>
+				                                                                            <h4><em>Womens Outerwear</em></h4>
+				                                                                            <p class="action navigation">
+				                                                                                    <em>Shop Now</em>
+				                                                                            </p>
+				                                                                    </div>
+				                                                            </div>
+				                                                    </div>
+				                                            </a>
+				                                            <!--OVERLAY LINK END-->
+				
+				                                    </div>
+				                                    <!--SPOTLIGHT END-->
+				                            </div>
+				                            <!--SPOTLIGHT 2 END-->
+				
+				                    </div>
+				                    <!--GRID: 33 END-->
+				
+				
+				                    <!--GRID: 50 START-->
+				                    <div class="grid grid-33">
+				
+				                            <!--SPOTLIGHT 3 START-->
+				                            <div class="grid" id="spotlight-3">	
+				                                
+				                                    <!--SPOTLIGHT START-->
+				                                    <div class="spotlight config-flicker config-overlay-shade-0">
+				                                            <img alt="[CMS MANAGED IMAGE DESCRIPTION]" class="size-640-856" src="/themes/moncler/img/content/womens-accessories.jpg" />
+				                                            
+				                                            <!--OVERLAY LINK START-->
+				                                            <a class="overlay-link" href="#/womens-accessories">
+				                                                    <div class="faux-table">
+				                                                            <div class="faux-table-cell">
+				                                                                    <div class="overlay-link-content">
+				                                                                            <p class="action navigation">
+				                                                                                    <em>Womens Accessories</em>
+				                                                                            </p>
+				                                                                            <h4><em>Womens Accessories</em></h4>
+				                                                                            <p class="action navigation">
+				                                                                                    <em>Shop Now</em>
+				                                                                            </p>
+				                                                                    </div>
+				                                                            </div>
+				                                                    </div>
+				                                            </a>
+				                                            <!--OVERLAY LINK END-->
+				                                    </div>
+				                                    <!--SPOTLIGHT END-->
+				                                    
+				                            </div>
+				                            <!--SPOTLIGHT 3 END-->
+				
+				                    </div>
+				                    <!--GRID: 33 END-->
+				
+				            </div>
+				            <!--GRID: CLEARFIX END-->
+				
+				        </div>
+				        <!--TAPESTRY END-->
+				
+				</div>		        
+				

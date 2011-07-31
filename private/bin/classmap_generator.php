@@ -31,6 +31,21 @@
  * --overwrite|-w               Whether or not to overwrite existing autoload 
  *                              file
  */
+ 
+ // Define path to application directory
+set_include_path
+(
+	implode
+	(
+		PATH_SEPARATOR,
+		array
+		(
+			realpath(dirname(__FILE__) . '/../library'),
+			realpath(dirname(__FILE__). '/../application'),
+			get_include_path()
+		)
+	)
+);
 
 $libPath = dirname(__FILE__) . '/../library';
 if (!is_dir($libPath)) {

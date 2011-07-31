@@ -1,21 +1,28 @@
 <?php 
+//namespace Application\Module\Controller;
+
+use /*Opentag,*/
+    \Doctrine\ORM\EntityManager,
+    \Zend_Controller_Action,
+    \Zend_Auth_Adapter_Interface,
+    \Zend_Auth_Result;
 
 /**
  * Description of ArticleController
  *
  * @author mrhelly
  */
-class Rest_ArticleController extends Zend_Rest_Controller
+class Blog_ArticleController extends Zend_Rest_Controller
 {
 
     public function init()
     {
-		//$contextSwitch = $this->_helper->getHelper('contextSwitch');
+	//$contextSwitch = $this->_helper->getHelper('contextSwitch');
         //$contextSwitch->addActionContext('index', 'xml')->addActionContext('index', 'json')->initContext();
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
- 	public function indexAction()
+    public function indexAction()
     {
          $this->getResponse()->appendBody("From indexAction() returning all articles");
     }
