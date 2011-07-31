@@ -2,6 +2,8 @@
 .DStor*
 *.DStor*
 source/*
+/private/data/session/*
+/private/data/cache/*
 /private/library/_backup*
 /private/_backup*
 /private/library/alias2ln
