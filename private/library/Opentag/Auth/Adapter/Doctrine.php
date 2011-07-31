@@ -133,7 +133,8 @@ class Doctrine implements \Zend_Auth_Adapter_Interface {
      *
      */
     protected function _authenticateSetup() {
-            return;
+        #TODO move some stuff here.
+        return;
     }
 
     /**
@@ -145,42 +146,42 @@ class Doctrine implements \Zend_Auth_Adapter_Interface {
      * @throws Zend_Auth_Adapter_Exception if answering the authentication query is impossible
      * @return Zend_Auth_Result
      */
-    public function authenticate()
-    {
+    public function authenticate() {
     	$this->_authenticateSetup();
 
         $userRepo = $this->entityManager->getRepository($this->entityName);
         $user = $userRepo->findByUsername($this->_identity);
-		if(!empty($user[0]) && (count($user) == 1) ) {
-			$check = $this->credentialChecker;
-			error_log($user[0]->$check($this->_credential).' - '.$this->_credential);
-			if($user[0]->$check($this->_credential)){
-				$authResult = new Zend_Auth_Result(
-	            	Zend_Auth_Result::SUCCESS,
-	            	$this->_identity,
-	            	array('Authentication successful.')
-	            );
-	            return $authResult;
-			} else {
-			    $authResult = new Zend_Auth_Result(
-			       Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,
-			       $this->_identity,
-			       array('Authentication fail.')
-			    );
-			}
-		} if(count($user)>1) {
-			$authResult = new Zend_Auth_Result(
-	           	Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS,
-	           	$this->_identity,
-	           	array('Authentication fail.')
-			);
-		} else {
-			$authResult = new Zend_Auth_Result(
-	           	Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND,
-	           	$this->_identity,
-	           	array('Authentication fail.')
-			);
-		}
+        if(!empty($user[0]) && (count($user) == 1) ) {
+            $check = $this->credentialChecker;
+            error_log($user[0]->$check($this->_credential).' - '.$this->_credential);
+            if($user[0]->$check($this->_credential)) {
+                $authResult = new Zend_Auth_Result(
+                    Zend_Auth_Result::SUCCESS,
+                    $this->_identity,
+                    array('Authentication successful.')
+                );
+            return $authResult;
+            } else {
+                $authResult = new Zend_Auth_Result(
+                   Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,
+                   $this->_identity,
+                   array('Authentication fail.')
+                );
+            }
+        }
+        if(count($user)>1) {
+            $authResult = new Zend_Auth_Result(
+                    Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS,
+                    $this->_identity,
+                    array('Authentication fail.')
+                );
+        } else {
+            $authResult = new Zend_Auth_Result(
+                    Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND,
+                    $this->_identity,
+                    array('Authentication fail.')
+                );
+        }
         return $authResult;
     }
 
@@ -190,8 +191,7 @@ class Doctrine implements \Zend_Auth_Adapter_Interface {
      * @param  string $value
      * @return Zend_Auth_Adapter_DbTable Provides a fluent interface
      */
-    public function setIdentity($identity)
-    {
+    public function setIdentity($identity) {
         $this->_identity = $identity;
         return $this;
     }
@@ -203,8 +203,7 @@ class Doctrine implements \Zend_Auth_Adapter_Interface {
      * @param  string $credential
      * @return Zend_Auth_Adapter_DbTable Provides a fluent interface
      */
-    public function setCredential($credential)
-    {
+    public function setCredential($credential) {
         $this->_credential = $credential;
         return $this;
     }

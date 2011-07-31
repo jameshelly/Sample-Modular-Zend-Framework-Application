@@ -1,8 +1,7 @@
 <?php
 //namespace Application\Module\Controller;
 
-use /*Opentag,*/
-    \Doctrine\ORM\EntityManager,
+use Doctrine\ORM\EntityManager,
     \Application\Forms,
     \Application\Entities,
     \Zend_Controller_Action,

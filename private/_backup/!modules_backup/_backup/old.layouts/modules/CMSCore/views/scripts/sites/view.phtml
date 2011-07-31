@@ -1,6 +1,0 @@
-
-		<?php if(isset($this->site)) : ?>
-			<h5><?=$this->site->getName()?> (<a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'edit', 'id' => $this->site->getId())); ?>">edit</a>) <small class="right"><?=$this->site->getDescription()?></small></h5>
-		<?php else: ?>
-			<p>No Results</p>
-		<?php endif; ?>

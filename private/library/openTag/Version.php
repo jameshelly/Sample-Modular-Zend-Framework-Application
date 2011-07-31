@@ -9,7 +9,7 @@ use Opentag\Exception\IncompatibleComponentVersionException;
  * Version class allows to checking the dependencies required
  * and the current version of doctrine extensions
  *
- * @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ * @author James A Helly <mrhelly@gmail.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  * @subpackage Version
  * @package Opentag
  * @link http://www.gediminasm.org
@@ -63,7 +63,6 @@ final class Version
      *
      * @throws DependentComponentNotFoundException
      * @throws IncompatibleComponentVersionException
-     */
     public static function checkODMMongoDBDependencies()
     {
         // doctrine common library
@@ -88,4 +87,5 @@ final class Version
             throw new IncompatibleComponentVersionException("Doctrine\\ODM\\MongoDB library is older than expected for these extensions");
         }
     }
+    //*/
 }
