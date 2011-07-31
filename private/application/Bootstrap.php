@@ -93,7 +93,8 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
      *
      * @param void
      * @return void
-    */
+     * 
+     */
     protected function _initAutoload() {
         $front = $this->getResource('FrontController');
         $config = $this->getContainer()->get('config');
@@ -109,7 +110,7 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
         foreach ($front->getControllerDirectory() as $module => $path) {
             #dirname goes back a folder from the controller directory so we have the root folder of the module.
             $modulePath = dirname($path);
-	        $configPath = $modulePath.'/configs/default.ini';
+            $configPath = $modulePath.'/configs/default.ini';
             $moduleConfig = new Zend_Config_Ini($configPath, 'default');
         	if($moduleConfig->module->enabled == true) {
 	            $entitiesPathes[] = $modulePath.'/entities';
@@ -118,7 +119,7 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
 	            #TODO Move this lot to bootstrap, and get doctrine to load the proxy & entity pathes from a container.
 	            #This is for loading form classes in the specified module. Modules MUST be stored in a folder of the same name as the class prefix.
 	            #for windows ensure that there are no '\' before explode.
-	            $modulePath=str_replace(DIRECTORY_SEPARATOR,'/',$modulePath);
+	            $modulePath = str_replace(DIRECTORY_SEPARATOR,'/',$modulePath);
 	            $exPaths = explode('/',$modulePath);
 	            $moduleName = ucfirst($exPaths[count($exPaths)-1]);
 	            $autoloader = new Zend_Application_Module_Autoloader(array(
@@ -140,43 +141,16 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
         #Store Pathes for later use.
         $this->getContainer()->set('autoload.pathes', $autoloader);
     }
+    //*/
     
-    /*
-     * _initDate
-     *
-     * Initializes the default timezone for the php ENV
-     *
-     * @param void
-     * @return void
-    protected function _initLocalePlugin() {
-    	$logger = $this->getContainer()->get('logger');
-        Zend_Controller_Front::getInstance()->registerPlugin(new Default_Plugin_LocaleSelector());
-     	$logger->info(get_class($this).'::_initLocalePlugin[]');
-    }
-    //*/
-     
-    /*
-     * _initDate
-     *
-     * Initializes the default timezone for the php ENV
-     *
-     * @param void
-     * @return void
-    protected function _initPreloaderCachePlugin() {
-    	$logger = $this->getContainer()->get('logger');
-        Zend_Controller_Front::getInstance()->registerPlugin(new Default_Plugin_PreloaderCache());
-     	$logger->info(get_class($this).'::_initPreloaderCachePlugin[]');	
-    }
-    //*/
-   
     /*
      * _initZFDebug
      *
      * Add ZFDebug
      *
      * @param dfg
-     * @return void
-     * 
+     * @return void 
+     */
     protected function _initZFDebug() {
         $logger = $this->getContainer()->get('logger');
         if(APPLICATION_ENV != 'production'){
@@ -185,7 +159,7 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
             $config = $this->getContainer()->get('config');
             $options = array(
                 'plugins' => array(
-                    'Wednesday_ZFDebug_Plugin_Doctrine',
+                    'Opentag_ZFDebug_Plugin_Doctrine',
                     'Variables',
                         'File' => array('base_path' => APPLICATION_PATH . '/../','library' => $config->AutoloaderNamespaces->toArray() ),
                         'Memory',
@@ -198,7 +172,7 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
             if ($this->hasPluginResource('doctrine')) {
 		$this->bootstrap('doctrine');
                 $em = $this->getPluginResource('doctrine')->getEntityManager();
-                $options['plugins']['Wednesday_ZFDebug_Plugin_Doctrine']['adapter'] = $em;
+                $options['plugins']['Opentag_ZFDebug_Plugin_Doctrine']['adapter'] = $em;
             }
             # Setup the cache plugin
             if ($this->hasPluginResource('cache')){
