@@ -8,10 +8,10 @@ use Gedmo\Mapping\Annotation AS Gedmo,
 /**
  * Permissions
  *
- * @ORM\Table(name="settings")
+ * @ORM\Table(name="articles")
  * @ORM\Entity
  */
-class Article implements Timestampable
+class Articles implements Timestampable
 {
     /**
      * @var integer $id
