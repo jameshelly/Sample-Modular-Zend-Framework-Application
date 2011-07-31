@@ -2,8 +2,9 @@
 
 namespace Gedmo\Sluggable\Mapping\Driver;
 
-use Gedmo\Mapping\Driver,
+use Gedmo\Mapping\Driver\AnnotationDriverInterface,
     Doctrine\Common\Annotations\AnnotationReader,
+    Doctrine\Common\Persistence\Mapping\ClassMetadata,
     Gedmo\Exception\InvalidMappingException;
 
 /**
@@ -18,18 +19,18 @@ use Gedmo\Mapping\Driver,
  * @link http://www.gediminasm.org
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-class Annotation implements Driver
+class Annotation implements AnnotationDriverInterface
 {
     /**
      * Annotation to mark field as sluggable and include it in slug building
      */
-    const ANNOTATION_SLUGGABLE = 'Gedmo\Sluggable\Mapping\Sluggable';
+    const SLUGGABLE = 'Gedmo\\Mapping\\Annotation\\Sluggable';
 
     /**
      * Annotation to identify field as one which holds the slug
      * together with slug options
      */
-    const ANNOTATION_SLUG = 'Gedmo\Sluggable\Mapping\Slug';
+    const SLUG = 'Gedmo\\Mapping\\Annotation\\Slug';
 
     /**
      * List of types which are valid for slug and sluggable fields
@@ -37,27 +38,51 @@ class Annotation implements Driver
      * @var array
      */
     private $validTypes = array(
-        'string'
+        'string',
+        'text'
     );
+
+    /**
+     * Annotation reader instance
+     *
+     * @var object
+     */
+    private $reader;
+
+    /**
+     * original driver if it is available
+     */
+    protected $_originalDriver = null;
 
     /**
      * {@inheritDoc}
      */
-    public function validateFullMetadata($meta, array $config)
+    public function setAnnotationReader($reader)
     {
-        if ($config && !isset($config['fields'])) {
-            throw new InvalidMappingException("Unable to find any sluggable fields specified for Sluggable entity - {$meta->name}");
+        $this->reader = $reader;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function validateFullMetadata(ClassMetadata $meta, array $config)
+    {
+        if ($config) {
+            if (!isset($config['fields'])) {
+                throw new InvalidMappingException("Unable to find any sluggable fields specified for Sluggable entity - {$meta->name}");
+            }
+            foreach ($config['fields'] as $slugField => $fields) {
+                if (!isset($config['slugFields'][$slugField])) {
+                    throw new InvalidMappingException("Unable to find {$slugField} slugField specified for Sluggable entity - {$meta->name}, you should specify slugField annotation property");
+                }
+            }
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function readExtendedMetadata($meta, array &$config) {
-        require_once __DIR__ . '/../Annotations.php';
-        $reader = new AnnotationReader();
-        $reader->setAnnotationNamespaceAlias('Gedmo\Sluggable\Mapping\\', 'gedmo');
-
+    public function readExtendedMetadata(ClassMetadata $meta, array &$config) {
         $class = $meta->getReflectionClass();
         // property annotations
         foreach ($class->getProperties() as $property) {
@@ -68,7 +93,7 @@ class Annotation implements Driver
                 continue;
             }
             // sluggable property
-            if ($sluggable = $reader->getPropertyAnnotation($property, self::ANNOTATION_SLUGGABLE)) {
+            if ($sluggable = $this->reader->getPropertyAnnotation($property, self::SLUGGABLE)) {
                 $field = $property->getName();
                 if (!$meta->hasField($field)) {
                     throw new InvalidMappingException("Unable to find sluggable [{$field}] as mapped property in entity - {$meta->name}");
@@ -76,10 +101,14 @@ class Annotation implements Driver
                 if (!$this->isValidField($meta, $field)) {
                     throw new InvalidMappingException("Cannot slug field - [{$field}] type is not valid and must be 'string' in class - {$meta->name}");
                 }
-                $config['fields'][] = array('field' => $field, 'position' => $sluggable->position);
+                if (!is_null($sluggable->slugField) and !$meta->hasField($sluggable->slugField)) {
+
+                    throw new InvalidMappingException(sprintf('The "%s" property - which is defined as the "slugField" for the "%s" property - does not exist or is not mapped to Doctrine in "%s"', $sluggable->slugField, $field, $meta->name));
+                }
+                $config['fields'][$sluggable->slugField][] = array('field' => $field, 'position' => $sluggable->position, 'slugField' => $sluggable->slugField);
             }
             // slug property
-            if ($slug = $reader->getPropertyAnnotation($property, self::ANNOTATION_SLUG)) {
+            if ($slug = $this->reader->getPropertyAnnotation($property, self::SLUG)) {
                 $field = $property->getName();
                 if (!$meta->hasField($field)) {
                     throw new InvalidMappingException("Unable to find slug [{$field}] as mapped property in entity - {$meta->name}");
@@ -87,15 +116,12 @@ class Annotation implements Driver
                 if (!$this->isValidField($meta, $field)) {
                     throw new InvalidMappingException("Cannot use field - [{$field}] for slug storage, type is not valid and must be 'string' in class - {$meta->name}");
                 }
-                if (isset($config['slug'])) {
-                    throw new InvalidMappingException("There cannot be two slug fields: [{$slugField}] and [{$config['slug']}], in class - {$meta->name}.");
-                }
 
-                $config['slug'] = $field;
-                $config['style'] = $slug->style;
-                $config['updatable'] = $slug->updatable;
-                $config['unique'] = $slug->unique;
-                $config['separator'] = $slug->separator;
+                $config['slugFields'][$field]['slug'] = $field;
+                $config['slugFields'][$field]['style'] = $slug->style;
+                $config['slugFields'][$field]['updatable'] = $slug->updatable;
+                $config['slugFields'][$field]['unique'] = $slug->unique;
+                $config['slugFields'][$field]['separator'] = $slug->separator;
             }
         }
     }
@@ -107,9 +133,20 @@ class Annotation implements Driver
      * @param string $field
      * @return boolean
      */
-    protected function isValidField($meta, $field)
+    protected function isValidField(ClassMetadata $meta, $field)
     {
         $mapping = $meta->getFieldMapping($field);
         return $mapping && in_array($mapping['type'], $this->validTypes);
+    }
+
+    /**
+     * Passes in the mapping read by original driver
+     *
+     * @param $driver
+     * @return void
+     */
+    public function setOriginalDriver($driver)
+    {
+        $this->_originalDriver = $driver;
     }
 }

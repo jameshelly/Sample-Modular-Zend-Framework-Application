@@ -2,9 +2,15 @@
 
 namespace Gedmo\Mapping;
 
-use Gedmo\Mapping\ExtensionMetadataFactory,
-    Doctrine\Common\EventSubscriber,
-    Doctrine\Common\EventArgs;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Annotations\Reader;
+use Gedmo\Mapping\ExtensionMetadataFactory;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\EventArgs;
 
 /**
  * This is extension of event subscriber class and is
@@ -46,6 +52,18 @@ abstract class MappedEventSubscriber implements EventSubscriber
     private $adapters = array();
 
     /**
+     * Custom annotation reader
+     *
+     * @var object
+     */
+    private $annotationReader;
+
+    /**
+     * @var \Doctrine\Common\Annotations\AnnotationReader
+     */
+    private $defaultAnnotationReader;
+
+    /**
      * Get an event adapter to handle event specific
      * methods
      *
@@ -79,16 +97,25 @@ abstract class MappedEventSubscriber implements EventSubscriber
      * @param string $class
      * @return array
      */
-    public function getConfiguration($objectManager, $class) {
+    public function getConfiguration(ObjectManager $objectManager, $class) {
         $config = array();
         if (isset($this->configurations[$class])) {
             $config = $this->configurations[$class];
         } else {
-            $cacheDriver = $objectManager->getMetadataFactory()->getCacheDriver();
-            $cacheId = ExtensionMetadataFactory::getCacheId($class, $this->getNamespace());
-            if ($cacheDriver && ($cached = $cacheDriver->fetch($cacheId)) !== false) {
-                $this->configurations[$class] = $cached;
-                $config = $cached;
+            $factory = $objectManager->getMetadataFactory();
+            $cacheDriver = $factory->getCacheDriver();
+            if ($cacheDriver) {
+                $cacheId = ExtensionMetadataFactory::getCacheId($class, $this->getNamespace());
+                if (($cached = $cacheDriver->fetch($cacheId)) !== false) {
+                    $this->configurations[$class] = $cached;
+                    $config = $cached;
+                } else {
+                    // re-generate metadata on cache miss
+                    $this->loadMetadataForObjectClass($objectManager, $factory->getMetadataFor($class));
+                    if (isset($this->configurations[$class])) {
+                        $config = $this->configurations[$class];
+                    }
+                }
             }
         }
         return $config;
@@ -100,16 +127,37 @@ abstract class MappedEventSubscriber implements EventSubscriber
      * @param ObjectManager $objectManager
      * @return Gedmo\Mapping\ExtensionMetadataFactory
      */
-    public function getExtensionMetadataFactory($objectManager)
+    public function getExtensionMetadataFactory(ObjectManager $objectManager)
     {
         $oid = spl_object_hash($objectManager);
         if (!isset($this->extensionMetadataFactory[$oid])) {
+            if (is_null($this->annotationReader)) {
+                // create default annotation reader for extensions
+                $this->annotationReader = $this->getDefaultAnnotationReader();
+            }
             $this->extensionMetadataFactory[$oid] = new ExtensionMetadataFactory(
                 $objectManager,
-                $this->getNamespace()
+                $this->getNamespace(),
+                $this->annotationReader
             );
         }
         return $this->extensionMetadataFactory[$oid];
+    }
+
+    /**
+     * Set annotation reader class
+     * since older doctrine versions do not provide an interface
+     * it must provide these methods:
+     *     getClassAnnotations([reflectionClass])
+     *     getClassAnnotation([reflectionClass], [name])
+     *     getPropertyAnnotations([reflectionProperty])
+     *     getPropertyAnnotation([reflectionProperty], [name])
+     *
+     * @param object $reader - annotation reader class
+     */
+    public function setAnnotationReader($reader)
+    {
+        $this->annotationReader = $reader;
     }
 
     /**
@@ -120,7 +168,7 @@ abstract class MappedEventSubscriber implements EventSubscriber
      * @param ClassMetadata $metadata
      * @return void
      */
-    public function loadMetadataForObjectClass($objectManager, $metadata)
+    public function loadMetadataForObjectClass(ObjectManager $objectManager, ClassMetadata $metadata)
     {
         $factory = $this->getExtensionMetadataFactory($objectManager);
         $config = $factory->getExtensionMetadata($metadata);
@@ -137,4 +185,44 @@ abstract class MappedEventSubscriber implements EventSubscriber
      * @return string
      */
     abstract protected function getNamespace();
+
+    /**
+     * Create default annotation reader for extensions
+     *
+     * @return \Doctrine\Common\Annotations\AnnotationReader
+     */
+    private function getDefaultAnnotationReader()
+    {
+        if (null === $this->defaultAnnotationReader) {
+            if (version_compare(\Doctrine\Common\Version::VERSION, '2.1.0RC4-DEV', '>=')) {
+                $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+                \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+                    'Gedmo\\Mapping\\Annotation',
+                    __DIR__ . '/../../'
+                );
+                $reader = new \Doctrine\Common\Annotations\CachedReader($reader, new ArrayCache());
+            } else if (version_compare(\Doctrine\Common\Version::VERSION, '2.1.0-BETA3-DEV', '>=')) {
+                $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+                $reader->setDefaultAnnotationNamespace('Doctrine\ORM\Mapping\\');
+                $reader->setIgnoreNotImportedAnnotations(true);
+                $reader->setAnnotationNamespaceAlias('Gedmo\\Mapping\\Annotation\\', 'gedmo');
+                $reader->setEnableParsePhpImports(false);
+                $reader->setAutoloadAnnotations(true);
+                /*\Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+                    'Gedmo\\Mapping\\Annotation',
+                    __DIR__ . '/../../'
+                );*/
+                $reader = new \Doctrine\Common\Annotations\CachedReader(
+                    new \Doctrine\Common\Annotations\IndexedReader($reader), new ArrayCache()
+                );
+            } else {
+                $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+                $reader->setAutoloadAnnotations(true);
+                $reader->setAnnotationNamespaceAlias('Gedmo\\Mapping\\Annotation\\', 'gedmo');
+                $reader->setDefaultAnnotationNamespace('Doctrine\ORM\Mapping\\');
+            }
+            $this->defaultAnnotationReader = $reader;
+        }
+        return $this->defaultAnnotationReader;
+    }
 }

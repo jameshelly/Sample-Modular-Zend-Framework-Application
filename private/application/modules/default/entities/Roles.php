@@ -1,178 +1,65 @@
 <?php
+namespace Application\Entities;
 
+use Gedmo\Mapping\Annotation AS Gedmo, 
+    Doctrine\ORM\Mapping AS ORM,
+    Doctrine\Common\Collections\ArrayCollection;
 /**
  * Roles
  *
- * @Table(name="roles")
- * @Entity
+ * @ORM\Table(name="roles")
+ * @ORM\Entity
  */
 class Roles
 {
     /**
      * @var integer $id
      *
-     * @Column(name="id", type="integer", nullable=false)
-     * @Id
-     * @GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var string $name
      *
-     * @Column(name="name", type="string", length=45, nullable=true)
+     * @ORM\Column(type="string", length=45, nullable=true)
      */
     private $name;
 
     /**
      * @var text $description
      *
-     * @Column(name="description", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     
      /**
      * @var Roles
      *
-     * @ManyToOne(targetEntity="Roles")
-     * @JoinColumns({
-     *   @JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Roles")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * })
      */
     private $parent;
     
      /**
-     * @var integer $buildorder
      *
-     * @Column(name="buildorder", type="integer" )
+     * @param type $name
+     * @param type $value 
      */
-    private $buildorder;
-    
-    /**
-     * @var Permissions
-     *
-     * @ManyToMany(targetEntity="Permissions", inversedBy="role")
-     * @JoinTable(name="roles_permissions",
-     *   joinColumns={
-     *     @JoinColumn(name="role_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @JoinColumn(name="permission_id", referencedColumnName="id")
-     *   }
-     * )
-     */
-    private $permission;
-
-    /**
-     * Get id
-     *
-     * @return integer $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string $name
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set description
-     *
-     * @param text $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * Get description
-     *
-     * @return text $description
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Add permission
-     *
-     * @param Permissions $permission
-     */
-    public function addPermission(\Permissions $permission)
-    {
-        $this->permission[] = $permission;
-    }
-
-    /**
-     * Get permission
-     *
-     * @return Doctrine\Common\Collections\Collection $permission
-     */
-    public function getPermission()
-    {
-        return $this->permission;
+    public function __set($name, $value) {
+        $this->$name = $value;
     }
     
     /**
-     * Set parent
      *
-     * @param Roles $parent
+     * @param type $name
+     * @return type 
      */
-    public function setParent(\Roles $parent)
-    {
-        $this->parent = $parent;
+    public function __get($name) {
+        return $this->$name;
     }
-      
-
-    /**
-     * Get parent
-     *
-     * @return Roles $parent
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-    
-	/**
-     * Set buildorder
-     *
-     * @param integer $buildorder
-     */
-    public function setBuildOrder($buildorder)
-    {
-        $this->buildorder = $buildorder;
-    }
-
-    /**
-     * Get order
-     *
-     * @return integer $buildorder
-     */
-    public function getBuildOrder()
-    {
-    	return $this->buildorder;
-    }
-    
-    
 }

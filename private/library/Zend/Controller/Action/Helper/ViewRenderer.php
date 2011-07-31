@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: ViewRenderer.php 20261 2010-01-13 18:55:25Z matthew $
+ * @version    $Id: ViewRenderer.php 24225 2011-07-12 19:23:12Z matthew $
  */
 
 /**
@@ -68,7 +68,7 @@ require_once 'Zend/View.php';
  * @uses       Zend_Controller_Action_Helper_Abstract
  * @package    Zend_Controller
  * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Controller_Action_Helper_ViewRenderer extends Zend_Controller_Action_Helper_Abstract
@@ -626,6 +626,17 @@ class Zend_Controller_Action_Helper_ViewRenderer extends Zend_Controller_Action_
         } elseif (null !== $action) {
             $vars['action'] = $action;
         }
+        
+        $replacePattern = array('/[^a-z0-9]+$/i', '/^[^a-z0-9]+/i');
+        $vars['action'] = preg_replace($replacePattern, '', $vars['action']);
+
+        // Remove non-alphanumeric characters from action name
+        // see ZF-10725
+        $vars['action'] = preg_replace(
+            array('/[^a-z0-9]+$/', '/^[^a-z0-9]+/'),
+            array('', ''),
+            $vars['action']
+        );
 
         $inflector = $this->getInflector();
         if ($this->getNoController() || $this->getNeverController()) {

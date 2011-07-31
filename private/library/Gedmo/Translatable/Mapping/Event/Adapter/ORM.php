@@ -3,8 +3,11 @@
 namespace Gedmo\Translatable\Mapping\Event\Adapter;
 
 use Gedmo\Mapping\Event\Adapter\ORM as BaseAdapterORM;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\Query;
 use Gedmo\Translatable\Mapping\Event\TranslatableAdapter;
+use Gedmo\Tool\Wrapper\AbstractWrapper;
 use Doctrine\DBAL\Types\Type;
 
 /**
@@ -33,16 +36,16 @@ final class ORM extends BaseAdapterORM implements TranslatableAdapter
     public function loadTranslations($object, $translationClass, $locale)
     {
         $em = $this->getObjectManager();
-        $meta = $em->getClassMetadata(get_class($object));
+        $wrapped = AbstractWrapper::wrapp($object, $em);
         // load translated content for all translatable fields
-        $objectId = $this->extractIdentifier($em, $object);
+        $objectId = $wrapped->getIdentifier();
         // construct query
         $dql = 'SELECT t.content, t.field FROM ' . $translationClass . ' t';
         $dql .= ' WHERE t.foreignKey = :objectId';
         $dql .= ' AND t.locale = :locale';
         $dql .= ' AND t.objectClass = :objectClass';
         // fetch results
-        $objectClass = $meta->name;
+        $objectClass = $wrapped->getMetadata()->name;
         $q = $em->createQuery($dql);
         $q->setParameters(compact('objectId', 'locale', 'objectClass'));
         return $q->getArrayResult();
@@ -78,14 +81,15 @@ final class ORM extends BaseAdapterORM implements TranslatableAdapter
     /**
      * {@inheritDoc}
      */
-    public function removeAssociatedTranslations($objectId, $transClass)
+    public function removeAssociatedTranslations($objectId, $transClass, $targetClass)
     {
         $em = $this->getObjectManager();
         $dql = 'DELETE ' . $transClass . ' trans';
         $dql .= ' WHERE trans.foreignKey = :objectId';
+        $dql .= ' AND trans.objectClass = :targetClass';
 
         $q = $em->createQuery($dql);
-        $q->setParameters(compact('objectId'));
+        $q->setParameters(compact('objectId', 'targetClass'));
         return $q->getSingleScalarResult();
     }
 
@@ -116,10 +120,11 @@ final class ORM extends BaseAdapterORM implements TranslatableAdapter
     public function getTranslationValue($object, $field, $value = false)
     {
         $em = $this->getObjectManager();
-        $meta = $em->getClassMetadata(get_class($object));
+        $wrapped = AbstractWrapper::wrapp($object, $em);
+        $meta = $wrapped->getMetadata();
         $type = Type::getType($meta->getTypeOfField($field));
         if ($value === false) {
-            $value = $meta->getReflectionProperty($field)->getValue($object);
+            $value = $wrapped->getPropertyValue($field);
         }
         return $type->convertToDatabaseValue($value, $em->getConnection()->getDatabasePlatform());
     }
@@ -130,9 +135,10 @@ final class ORM extends BaseAdapterORM implements TranslatableAdapter
     public function setTranslationValue($object, $field, $value)
     {
         $em = $this->getObjectManager();
-        $meta = $em->getClassMetadata(get_class($object));
+        $wrapped = AbstractWrapper::wrapp($object, $em);
+        $meta = $wrapped->getMetadata();
         $type = Type::getType($meta->getTypeOfField($field));
         $value = $type->convertToPHPValue($value, $em->getConnection()->getDatabasePlatform());
-        $meta->getReflectionProperty($field)->setValue($object, $value);
+        $wrapped->setPropertyValue($field, $value);
     }
 }

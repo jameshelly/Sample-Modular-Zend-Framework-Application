@@ -3,8 +3,8 @@
 namespace Gedmo\Tree;
 
 use Doctrine\Common\EventArgs,
-    Gedmo\Mapping\MappedEventSubscriber;
-
+    Gedmo\Mapping\MappedEventSubscriber,
+    Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * The tree listener handles the synchronization of
@@ -56,7 +56,7 @@ class TreeListener extends MappedEventSubscriber
      * @param string $class
      * @return Strategy
      */
-    public function getStrategy($om, $class)
+    public function getStrategy(ObjectManager $om, $class)
     {
         if (!isset($this->strategies[$class])) {
             $config = $this->getConfiguration($om, $class);
@@ -193,7 +193,8 @@ class TreeListener extends MappedEventSubscriber
         $om = $ea->getObjectManager();
         $meta = $eventArgs->getClassMetadata();
         $this->loadMetadataForObjectClass($om, $meta);
-        if ($config = $this->getConfiguration($om, $meta->name)) {
+        if (isset($this->configurations[$meta->name]) && $this->configurations[$meta->name]) {
+            $config = $this->configurations[$meta->name];
             $this->getStrategy($om, $meta->name)->processMetadataLoad($om, $meta);
         }
     }

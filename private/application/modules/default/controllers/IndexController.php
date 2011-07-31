@@ -1,11 +1,31 @@
 <?php
+//namespace Application\Module\Controller;
+
+use /*Opentag,*/
+    \Doctrine\ORM\EntityManager,
+    \Zend_Controller_Action,
+    \Zend_Auth_Adapter_Interface,
+    \Zend_Auth_Result;
 /**
  * IndexController - The default controller
  *
  * @author
  * @version
  */
-class IndexController extends Zend_Controller_Action {
+class IndexController extends \Zend_Controller_Action {
+
+     /**
+     * @var Zend_Auth
+     */
+    protected $_auth = null;
+
+    public function init() {
+        //$this->_loginForm = new Application_Form_Login();
+        //$this->view->form = $this->_loginForm;
+        // get auth service from bootstrap
+        $bootstrap = $this->getInvokeArg('bootstrap');
+        $this->_auth = $bootstrap->getResource('auth');
+    }
 
     /**
      * This action handles
@@ -14,6 +34,8 @@ class IndexController extends Zend_Controller_Action {
      */
     public function indexAction() {
     	$this->view->message = "index";
+    	$this->view->placeholder('htmlclasses')->append('template-full-screen');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl('/themes/moncler/css/homepage-backgrounds.css'));
 		/*
 		//$fullUrl = $this->getRequest()->getHttpHost() .urldecode($this->view->url());
 		
@@ -61,7 +83,67 @@ class IndexController extends Zend_Controller_Action {
 		$this->view->message = $display;
 		*/
     }
-    
+
+    public function varsAction() {
+//        $this->_helper->viewRenderer->setNoRender(true);
+//        $this->_helper->layout->disableLayout();
+        $translate = $this->getInvokeArg('bootstrap')->getContainer()->get('translate');
+        $locale = $this->getRequest()->getParam('locale');
+        $translate->setLocale($locale);
+        //*
+        $jsonObject = (object) array(
+                "__ERROR_MESSAGES" => array(
+                        "__MANDATORY" => array(
+                                "long_description"   => $translate->_("ERROR_MANDATORY_LONG"),
+                                "short_description"  => $translate->_("ERROR_MANDATORY_SHORT")
+                        ),
+                        "__EMAIL" => array(
+                                "long_description"   => $translate->_("ERROR_EMAIL_LONG"),
+                                "short_description"  => $translate->_("ERROR_EMAIL_SHORT")
+                        ),
+                        "__MAXIMUM_FOURTY_CHARACTERS" => array(
+                                "long_description"   => $translate->_("ERROR_MAXIMUM_LONG"),
+                                "short_description"  => $translate->_("ERROR_MAXIMUM_SHORT")
+                        ),
+                        "__NUMERIC" => array(
+                                "long_description"   => $translate->_("ERROR_NUMERIC_LONG"),
+                                "short_description"  => $translate->_("ERROR_NUMERIC_SHORT")
+                        )
+                ),
+                "__LINK_TEXT" => array(
+                        "__CAROUSEL_NEXT" => array(
+                                "text"   => $translate->_("LINK_TEXT_NEXT_TEXT"),
+                                "title"  => $translate->_("LINK_TEXT_NEXT_TITLE")
+                        ),
+                        "__CAROUSEL_PREV" => array(
+                                "text"   => $translate->_("LINK_TEXT_PREV_TEXT"),
+                                "title"  => $translate->_("LINK_TEXT_PREV_TITLE")
+                        ),
+                        "__OPEN" => array(
+                                "text"   => $translate->_("LINK_TEXT_OPEN_TEXT"),
+                                "title"  => $translate->_("LINK_TEXT_OPEN_TITLE")
+                        ),
+                        "__CLOSE" => array(
+                                "text"   => $translate->_("LINK_TEXT_CLOSE_TEXT"),
+                                "title"  => $translate->_("LINK_TEXT_CLOSE_TITLE")
+                        )
+                ),
+                "__FOOTER_TEXT" => array(
+                        "__FOOTER_SWITCH_TEXT" => array(
+                                "text"   => $translate->_("LINK_TEXT_FOOTER_TEXT"),
+                                "title"  => $translate->_("LINK_TEXT_FOOTER_TITLE")
+                        )
+                ),
+                "__TAPESTRY_INSTRUCTION_TEXT" => array(
+                        "touch"   => $translate->_("TAPESTRY_INSTRUCTION_TOUCH"),
+                        "desktop"  => $translate->_("TAPESTRY_INSTRUCTION_DESKTOP")
+                )
+        );
+        //*/
+        $this->_helper->json($jsonObject);
+        //echo Zend_Json::encode($jsonObject);
+    }
+
     /**
      * lynxAction.
      * /
@@ -124,5 +206,5 @@ TEST;
         echo $display;
         $this->log->info(get_class($this).'::cacheAction()');
     }
-	//*/
+    //*/
 }

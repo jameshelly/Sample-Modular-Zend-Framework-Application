@@ -2,7 +2,8 @@
 
 namespace Gedmo\Tree\Strategy\ORM;
 
-use Doctrine\ORM\Proxy\Proxy;
+use Gedmo\Tool\Wrapper\EntityWrapper;
+use Gedmo\Tool\Wrapper\AbstractWrapper;
 use Gedmo\Tree\Strategy,
     Doctrine\ORM\EntityManager,
     Gedmo\Tree\TreeListener,
@@ -135,7 +136,25 @@ class Nested implements Strategy
         if (isset($config['root']) && isset($changeSet[$config['root']])) {
             throw new \Gedmo\Exception\UnexpectedValueException("Root cannot be changed manualy, change parent instead");
         }
-        if (isset($changeSet[$config['parent']])) {
+
+        $oid = spl_object_hash($node);
+        if (isset($changeSet[$config['left']]) && isset($this->nodePositions[$oid])) {
+            $wrapped = AbstractWrapper::wrapp($node, $em);
+            $parent = $wrapped->getPropertyValue($config['parent']);
+            // revert simulated changeset
+            $uow->clearEntityChangeSet($oid);
+            $wrapped->setPropertyValue($config['left'], $changeSet[$config['left']][0]);
+            $uow->setOriginalEntityProperty($oid, $config['left'], $changeSet[$config['left']][0]);
+            // set back all other changes
+            foreach ($changeSet as $field => $set) {
+                if ($field !== $config['left']) {
+                    $uow->setOriginalEntityProperty($oid, $field, $set[0]);
+                    $wrapped->setPropertyValue($field, $set[1]);
+                }
+            }
+            $uow->recomputeSingleEntityChangeSet($meta, $node);
+            $this->updateNode($em, $node, $parent);
+        } elseif (isset($changeSet[$config['parent']])) {
             $this->updateNode($em, $node, $changeSet[$config['parent']][1]);
         }
     }
@@ -160,13 +179,14 @@ class Nested implements Strategy
         $config = $this->listener->getConfiguration($em, $meta->name);
         $uow = $em->getUnitOfWork();
 
-        $leftValue = $meta->getReflectionProperty($config['left'])->getValue($node);
-        $rightValue = $meta->getReflectionProperty($config['right'])->getValue($node);
+        $wrapped = AbstractWrapper::wrapp($node, $em);
+        $leftValue = $wrapped->getPropertyValue($config['left']);
+        $rightValue = $wrapped->getPropertyValue($config['right']);
 
         if (!$leftValue || !$rightValue) {
             return;
         }
-        $rootId = isset($config['root']) ? $meta->getReflectionProperty($config['root'])->getValue($node) : null;
+        $rootId = isset($config['root']) ? $wrapped->getPropertyValue($config['root']) : null;
         $diff = $rightValue - $leftValue + 1;
         if ($diff > 2) {
             $dql = "SELECT node FROM {$config['useObjectClass']} node";
@@ -228,15 +248,16 @@ class Nested implements Strategy
      */
     public function updateNode(EntityManager $em, $node, $parent, $position = 'FirstChild')
     {
-        $meta = $em->getClassMetadata(get_class($node));
+        $wrapped = AbstractWrapper::wrapp($node, $em);
+        $meta = $wrapped->getMetadata();
         $config = $this->listener->getConfiguration($em, $meta->name);
 
-        $rootId = isset($config['root']) ? $meta->getReflectionProperty($config['root'])->getValue($node) : null;
+        $rootId = isset($config['root']) ? $wrapped->getPropertyValue($config['root']) : null;
         $identifierField = $meta->getSingleIdentifierFieldName();
-        $nodeId = $meta->getReflectionProperty($identifierField)->getValue($node);
+        $nodeId = $wrapped->getIdentifier();
 
-        $left = $meta->getReflectionProperty($config['left'])->getValue($node);
-        $right = $meta->getReflectionProperty($config['right'])->getValue($node);
+        $left = $wrapped->getPropertyValue($config['left']);
+        $right = $wrapped->getPropertyValue($config['right']);
 
         $isNewNode = empty($left) && empty($right);
         if ($isNewNode) {
@@ -252,33 +273,31 @@ class Nested implements Strategy
         $treeSize = $right - $left + 1;
         $newRootId = null;
         if ($parent) {
-            if ($parent instanceof Proxy && !$parent->__isInitialized__) {
-                $em->refresh($parent);
-            }
+            $wrappedParent = AbstractWrapper::wrapp($parent, $em);
 
-            $parentRootId = isset($config['root']) ? $meta->getReflectionProperty($config['root'])->getValue($parent) : null;
-            $parentLeft = $meta->getReflectionProperty($config['left'])->getValue($parent);
-            $parentRight = $meta->getReflectionProperty($config['right'])->getValue($parent);
+            $parentRootId = isset($config['root']) ? $wrappedParent->getPropertyValue($config['root']) : null;
+            $parentLeft = $wrappedParent->getPropertyValue($config['left']);
+            $parentRight = $wrappedParent->getPropertyValue($config['right']);
             if (!$isNewNode && $rootId === $parentRootId && $parentLeft >= $left && $parentRight <= $right) {
                 throw new \Gedmo\Exception\UnexpectedValueException("Cannot set child as parent to node: {$nodeId}");
             }
             if (isset($config['level'])) {
-                $level = $meta->getReflectionProperty($config['level'])->getValue($parent);
+                $level = $wrappedParent->getPropertyValue($config['level']);
             }
             switch ($position) {
                 case self::PREV_SIBLING:
-                    $newParent = $meta->getReflectionProperty($config['parent'])->getValue($parent);
+                    $newParent = $wrappedParent->getPropertyValue($config['parent']);
                     if (!$isNewNode) {
-                        $meta->getReflectionProperty($config['parent'])->setValue($node, $newParent);
+                        $wrapped->setPropertyValue($config['parent'], $newParent);
                         $em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $node);
                     }
                     $start = $parentLeft;
                     break;
 
                 case self::NEXT_SIBLING:
-                    $newParent = $meta->getReflectionProperty($config['parent'])->getValue($parent);
+                    $newParent = $wrappedParent->getPropertyValue($config['parent']);
                     if (!$isNewNode) {
-                        $meta->getReflectionProperty($config['parent'])->setValue($node, $newParent);
+                        $wrapped->setPropertyValue($config['parent'], $newParent);
                         $em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $node);
                     }
                     $start = $parentRight + 1;
@@ -298,11 +317,11 @@ class Nested implements Strategy
             $this->shiftRL($em, $config['useObjectClass'], $start, $treeSize, $parentRootId);
             if (!$isNewNode && $rootId === $parentRootId && $left >= $start) {
                 $left += $treeSize;
-                $meta->getReflectionProperty($config['left'])->setValue($node, $left);
+                $wrapped->setPropertyValue($config['left'], $left);
             }
             if (!$isNewNode && $rootId === $parentRootId && $right >= $start) {
                 $right += $treeSize;
-                $meta->getReflectionProperty($config['right'])->setValue($node, $right);
+                $wrapped->setPropertyValue($config['right'], $right);
             }
             $newRootId = $parentRootId;
         } elseif (!isset($config['root'])) {
@@ -317,7 +336,7 @@ class Nested implements Strategy
 
         $diff = $start - $left;
         if (!$isNewNode) {
-            $levelDiff = isset($config['level']) ? $level - $meta->getReflectionProperty($config['level'])->getValue($node) : null;
+            $levelDiff = isset($config['level']) ? $level - $wrapped->getPropertyValue($config['level']) : null;
             $this->shiftRangeRL(
                 $em,
                 $config['useObjectClass'],
@@ -334,30 +353,28 @@ class Nested implements Strategy
             $qb->update($config['useObjectClass'], 'node');
             if (isset($config['root'])) {
                 $qb->set('node.' . $config['root'], $newRootId);
-                $meta->getReflectionProperty($config['root'])->setValue($node, $newRootId);
+                $wrapped->setPropertyValue($config['root'], $newRootId);
                 $em->getUnitOfWork()->setOriginalEntityProperty($oid, $config['root'], $newRootId);
             }
             if (isset($config['level'])) {
                 $qb->set('node.' . $config['level'], $level);
-                $meta->getReflectionProperty($config['level'])->setValue($node, $level);
+                $wrapped->setPropertyValue($config['level'], $level);
                 $em->getUnitOfWork()->setOriginalEntityProperty($oid, $config['level'], $level);
             }
             if (isset($newParent)) {
-                if ($newParent instanceof Proxy && !$newParent->__isInitialized__) {
-                    $em->refresh($newParent);
-                }
-                $newParentId = $meta->getReflectionProperty($identifierField)->getValue($newParent);
+                $wrappedNewParent = AbstractWrapper::wrapp($newParent, $em);
+                $newParentId = $wrappedNewParent->getIdentifier();
                 $qb->set('node.' . $config['parent'], $newParentId);
-                $meta->getReflectionProperty($config['parent'])->setValue($node, $newParent);
+                $wrapped->setPropertyValue($config['parent'], $newParent);
                 $em->getUnitOfWork()->setOriginalEntityProperty($oid, $config['parent'], $newParent);
             }
             $qb->set('node.' . $config['left'], $left + $diff);
             $qb->set('node.' . $config['right'], $right + $diff);
             $qb->where("node.{$identifierField} = {$nodeId}");
             $qb->getQuery()->getSingleScalarResult();
-            $meta->getReflectionProperty($config['left'])->setValue($node, $left + $diff);
+            $wrapped->setPropertyValue($config['left'], $left + $diff);
+            $wrapped->setPropertyValue($config['right'], $right + $diff);
             $em->getUnitOfWork()->setOriginalEntityProperty($oid, $config['left'], $left + $diff);
-            $meta->getReflectionProperty($config['right'])->setValue($node, $right + $diff);
             $em->getUnitOfWork()->setOriginalEntityProperty($oid, $config['right'], $right + $diff);
         }
     }

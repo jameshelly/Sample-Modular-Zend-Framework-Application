@@ -1,0 +1,30 @@
+
+					<table>
+						<caption><?= $this->message ?></caption>
+						<thead>
+							<td>Name</td>
+							<td>Alias</td>
+							<td>Route</td>
+							<td>Template</td>
+							<td width="24"><small class="small">Edit Content</small></td>
+							<td width="24"><small class="small">List Data Contents</small></td>
+							<td width="24"><small class="small">Edit</small></td>
+							<td width="24"><small class="small">Delete</small></td>
+						</thead>
+						<?php $key=1;foreach($this->pages as $key => $page) : ?>
+						<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+							<td><?=$page->getName()?></td>
+							<td><?=$page->getAlias(); ?></td>
+							<td><?=$page->getRoute()->getName(); ?></td>
+							<td><?=$page->getTemplate()->getName(); ?></td>
+						    <td><a class="ui-icon ui-icon-wrench" href="<?=$this->baseUrl().$this->url(array('controller'=>'pages', 'action' => 'editcontents','id'=>$page->getId() )) ?>">edit contents</a></td>	
+							<td><a class="ui-icon ui-icon-wrench" href="<?=$this->baseUrl().$this->url(array('controller'=>'datacontent', 'action' => 'list' ,'id'=>$page->getId() )) ?>">list data</a></td>	
+							<td><a class="ui-icon ui-icon-pencil" href="<?=$this->baseUrl().$this->url(array('action' => 'edit' ,'id'=>$page->getId() )) ?>">Edit</a></td>
+							<td><a class="ui-icon ui-icon-close" href="<?=$this->baseUrl().$this->url(array('action' => 'delete' ,'id'=>$page->getId() )) ?>">delete</a></td>
+						</tr>
+						<?php endforeach; ?>
+						<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+							<td colspan="7"></td>
+							<td><a href="<?=$this->url(array('action' => 'create')); ?>">new</a></td>
+						</tr>
+					</table>

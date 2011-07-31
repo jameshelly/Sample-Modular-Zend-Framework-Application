@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: HtmlElement.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: HtmlElement.php 24201 2011-07-05 16:22:04Z matthew $
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/View/Helper/Abstract.php';
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_View_Helper_HtmlElement extends Zend_View_Helper_Abstract
@@ -75,6 +75,17 @@ abstract class Zend_View_Helper_HtmlElement extends Zend_View_Helper_Abstract
         return $doctype->isXhtml();
     }
 
+    /**
+     * Is doctype strict?
+     *
+     * @return boolean
+     */
+    protected function _isStrictDoctype()
+    {
+        $doctype = $this->view->doctype();
+        return $doctype->isStrict();
+    }
+    
     /**
      * Converts an associative array to a string of tag attributes.
      *

@@ -1,0 +1,12 @@
+._auth/*
+.DS_Store*
+*.DS_Store*
+*/.DS_Store*
+source/*
+/private/data/session/*
+/private/data/cache/*
+/private/library/_backup*
+/private/_backup*
+/private/library/alias2ln
+/private/library/Doctrine/.project*
+/private/library/Doctrine/.settings*

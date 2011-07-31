@@ -1,6 +1,7 @@
 <?php
+//namespace Application;
 
-class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
+class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
 {
 
     /*
@@ -139,5 +140,78 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         #Store Pathes for later use.
         $this->getContainer()->set('autoload.pathes', $autoloader);
     }
-
+    
+    /*
+     * _initDate
+     *
+     * Initializes the default timezone for the php ENV
+     *
+     * @param void
+     * @return void
+    protected function _initLocalePlugin() {
+    	$logger = $this->getContainer()->get('logger');
+        Zend_Controller_Front::getInstance()->registerPlugin(new Default_Plugin_LocaleSelector());
+     	$logger->info(get_class($this).'::_initLocalePlugin[]');
+    }
+    //*/
+     
+    /*
+     * _initDate
+     *
+     * Initializes the default timezone for the php ENV
+     *
+     * @param void
+     * @return void
+    protected function _initPreloaderCachePlugin() {
+    	$logger = $this->getContainer()->get('logger');
+        Zend_Controller_Front::getInstance()->registerPlugin(new Default_Plugin_PreloaderCache());
+     	$logger->info(get_class($this).'::_initPreloaderCachePlugin[]');	
+    }
+    //*/
+   
+    /*
+     * _initZFDebug
+     *
+     * Add ZFDebug
+     *
+     * @param dfg
+     * @return void
+     * 
+    protected function _initZFDebug() {
+        $logger = $this->getContainer()->get('logger');
+        if(APPLICATION_ENV != 'production'){
+            $autoloader = Zend_Loader_Autoloader::getInstance();
+            $autoloader->registerNamespace('ZFDebug');
+            $config = $this->getContainer()->get('config');
+            $options = array(
+                'plugins' => array(
+                    'Wednesday_ZFDebug_Plugin_Doctrine',
+                    'Variables',
+                        'File' => array('base_path' => APPLICATION_PATH . '/../','library' => $config->AutoloaderNamespaces->toArray() ),
+                        'Memory',
+                        'Time',
+                        'Log',
+                        'Exception'
+                )
+            );
+            # Instantiate the doctrine database adapter and setup the plugin.
+            if ($this->hasPluginResource('doctrine')) {
+		$this->bootstrap('doctrine');
+                $em = $this->getPluginResource('doctrine')->getEntityManager();
+                $options['plugins']['Wednesday_ZFDebug_Plugin_Doctrine']['adapter'] = $em;
+            }
+            # Setup the cache plugin
+            if ($this->hasPluginResource('cache')){
+                $this->bootstrap('cache');
+                $cache = $this->getPluginResource('cache')->getDbAdapter();
+                $options['plugins']['Cache']['backend'] = $cache->getBackend();
+            }
+            $debug = new ZFDebug_Controller_Plugin_Debug($options);
+            $this->bootstrap('frontController');
+            $frontController = $this->getResource('frontController');
+            $frontController->registerPlugin($debug);
+            $logger->info(get_class($this).'::_initZFDebug[]');
+        }
+    }
+  //*/
 }

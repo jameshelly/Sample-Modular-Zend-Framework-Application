@@ -2,6 +2,10 @@
 
 namespace Gedmo\Translatable\Document;
 
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Document;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\UniqueIndex;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Index;
+
 /**
  * Gedmo\Translatable\Document\Translation
  *
@@ -13,8 +17,8 @@ namespace Gedmo\Translatable\Document;
  *         "field"
  * })
  * @Index(name="translations_lookup_idx", keys={
- *      "locale", 
- *      "object_class", 
+ *      "locale",
+ *      "object_class",
  *      "foreign_key"
  * })
  */

@@ -14,7 +14,7 @@
  *
  * @category   Zend
  * @package    Zend_Form
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -36,9 +36,9 @@ require_once 'Zend/Validate/Abstract.php';
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Element.php 22464 2010-06-19 17:31:21Z alab $
+ * @version    $Id: Element.php 24198 2011-07-05 16:04:15Z matthew $
  */
 class Zend_Form_Element implements Zend_Validate_Interface
 {
@@ -1377,15 +1377,23 @@ class Zend_Form_Element implements Zend_Validate_Interface
             if ($isArray && is_array($value)) {
                 $messages = array();
                 $errors   = array();
-                foreach ($value as $val) {
-                    if (!$validator->isValid($val, $context)) {
+                if (empty($value)) {
+                    if ($this->isRequired()
+                        || (!$this->isRequired() && !$this->getAllowEmpty())
+                    ) {
                         $result = false;
-                        if ($this->_hasErrorMessages()) {
-                            $messages = $this->_getErrorMessages();
-                            $errors   = $messages;
-                        } else {
-                            $messages = array_merge($messages, $validator->getMessages());
-                            $errors   = array_merge($errors,   $validator->getErrors());
+                    }
+                } else {
+                    foreach ($value as $val) {
+                        if (!$validator->isValid($val, $context)) {
+                            $result = false;
+                            if ($this->_hasErrorMessages()) {
+                                $messages = $this->_getErrorMessages();
+                                $errors   = $messages;
+                            } else {
+                                $messages = array_merge($messages, $validator->getMessages());
+                                $errors   = array_merge($errors,   $validator->getErrors());
+                            }
                         }
                     }
                 }

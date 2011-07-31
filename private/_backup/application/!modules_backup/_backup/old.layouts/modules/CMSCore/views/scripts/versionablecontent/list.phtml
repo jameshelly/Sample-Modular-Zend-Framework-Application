@@ -1,0 +1,27 @@
+<h2>Index</h2>
+
+<table>
+	<caption><?= $this->message ?></caption>
+	<thead>
+		<td>Name</td>
+		<td>Email</td>
+		<td>Logins</td>
+		<td>Last Login</td>
+		<td width="24"><small class="small">Edit</small></td>
+		<td width="24"><small class="small">Delete</small></td>
+	</thead>				
+	<?php  $key=0;foreach($this->versions as $version) : ?>
+		<tr <?php ++$key;echo ($key%2 == 1)?'class="even"':'';?>>
+			<td><a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'view', 'id' => $version->getId())); ?>"><?=$version->getVersion(); ?></a></td>
+			<td><a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'view', 'id' => $version->getId())); ?>"><?=$version->getSnapshotDate()->format(DATE_RFC822); ?></a></td>
+			<td><a href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'view', 'id' => $version->getId())); ?>"><?=$version->getPublishVersion(); ?></a></td>
+					
+			<td><a class="ui-icon ui-icon-pencil" href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'edit', 'id' => $version->getId())); ?>">Edit</a></td>
+			<td><a class="ui-icon ui-icon-close" href="<?=$this->baseUrl(); ?><?=$this->url(array('action' => 'delete', 'id' => $version->getId())); ?>">View</a></td>
+		</tr>
+	<?php endforeach; ?>
+						<tr <?php echo ($key%2 == 1)?'class="even"':'';?>>
+							<td colspan="5"><a href="<?=$this->url(array('module' => 'CMSCore', 'controller' => 'index','action' => 'index')); ?>">Back</a></td>
+							<td><a href="<?=$this->url(array('action' => 'create')); ?>">new</a></td>
+						</tr>
+</table>

@@ -3,6 +3,7 @@
 namespace Gedmo\Sluggable\Mapping\Event\Adapter;
 
 use Gedmo\Mapping\Event\Adapter\ODM as BaseAdapterODM;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Cursor;
 use Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
 
@@ -21,10 +22,10 @@ final class ODM extends BaseAdapterODM implements SluggableAdapter
     /**
      * {@inheritDoc}
      */
-    public function getSimilarSlugs($object, $meta, array $config, $slug)
+    public function getSimilarSlugs($object, ClassMetadata $meta, array $config, $slug)
     {
         $dm = $this->getObjectManager();
-        $qb = $dm->createQueryBuilder($meta->name);
+        $qb = $dm->createQueryBuilder($config['useObjectClass']);
         $identifier = $this->extractIdentifier($dm, $object);
         if ($identifier) {
             $qb->field($meta->identifier)->notEqual($identifier);

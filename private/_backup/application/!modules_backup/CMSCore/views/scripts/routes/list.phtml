@@ -1,0 +1,8 @@
+<h2><?=$this->header ?></h2>
+<?=$this->message ?>
+
+<ul>
+<?php foreach($this->routes as $child): ?>
+	<li><?=$child->getName()." : ".$child->getRoute();?></li>
+<?php endforeach; ?>
+</ul>
