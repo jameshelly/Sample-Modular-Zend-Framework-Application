@@ -10,4 +10,4 @@ source/*
 /private/library/alias2ln
 /private/library/Doctrine/.project*
 /private/library/Doctrine/.settings*
-/nbproject/private/
+/nbproject/*
