@@ -80,11 +80,11 @@ try {
     // Bootstrapping Console HelperSet
     $helperSet = array();
 
-    if (($dbal = $container->getConnection(getenv('CONN') ?: $container->defaultConnection)) !== null) {
+    if (($dbal = $container->getConnection(getenv('CONN') ?: @$container->defaultConnection)) !== null) {
         $helperSet['db'] = new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($dbal);
     }
 
-    if (($em = $container->getEntityManager(getenv('EM') ?: $container->defaultEntityManager)) !== null) {
+    if (($em = $container->getEntityManager(getenv('EM') ?: @$container->defaultEntityManager)) !== null) {
         $helperSet['em'] = new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($em);
     }
 } catch (\Exception $e) {

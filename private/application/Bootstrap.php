@@ -19,7 +19,7 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
         $this->setAppNamespace($config->appnamespace);
         $this->getContainer()->set('config', $config);
     }
-    
+
     /*
      * _initDate
      *
@@ -42,7 +42,7 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
      * @return void
     */
     protected function _initLog() {
-    	
+
         $config = $this->getContainer()->get('config');
         $logPath = $config->resources->log->path;
         $filelog = new Zend_Log_Writer_Stream($logPath);
@@ -93,16 +93,16 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
      *
      * @param void
      * @return void
-     * 
+     *
      */
     protected function _initAutoload() {
         $front = $this->getResource('FrontController');
         $config = $this->getContainer()->get('config');
 
-        $proxyPathes = array();
+        $proxyPaths = array();
         $proxyPath = APPLICATION_PATH . $config->resources->doctrine->orm->manager->proxy->dir;
-        $entitiesPathes = array();
-        $formPathes = array();
+        $entitiesPaths = array();
+        $formPaths = array();
 
         #This is a fallback to autoload our own classes in library
         $autoLoader = Zend_Loader_Autoloader::getInstance();
@@ -113,9 +113,9 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
             $configPath = $modulePath.'/configs/default.ini';
             $moduleConfig = new Zend_Config_Ini($configPath, 'default');
         	if($moduleConfig->module->enabled == true) {
-	            $entitiesPathes[] = $modulePath.'/entities';
-	            $proxyPathes[] = $modulePath.'/entities/generated';
-	            $formPathes[] = $modulePath.'/forms';
+	            $entitiesPaths[] = $modulePath.'/entities';
+	            $proxyPaths[] = $modulePath.'/entities/generated';
+	            $formPaths[] = $modulePath.'/forms';
 	            #TODO Move this lot to bootstrap, and get doctrine to load the proxy & entity pathes from a container.
 	            #This is for loading form classes in the specified module. Modules MUST be stored in a folder of the same name as the class prefix.
 	            #for windows ensure that there are no '\' before explode.
@@ -133,23 +133,23 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
 			}
         }
         $autoloader = (object) array(
-            'entities'=>$entitiesPathes,
-            'proxies'=>$proxyPathes,
+            'entities'=>$entitiesPaths,
+            'proxies'=>$proxyPaths,
             'proxyPath'=>$proxyPath,
-            'forms'=>$formPathes
+            'forms'=>$formPaths
         );
         #Store Pathes for later use.
-        $this->getContainer()->set('autoload.pathes', $autoloader);
+        $this->getContainer()->set('autoload.paths', $autoloader);
     }
     //*/
-    
+
     /*
      * _initZFDebug
      *
      * Add ZFDebug
      *
      * @param dfg
-     * @return void 
+     * @return void
      */
     protected function _initZFDebug() {
         $logger = $this->getContainer()->get('logger');

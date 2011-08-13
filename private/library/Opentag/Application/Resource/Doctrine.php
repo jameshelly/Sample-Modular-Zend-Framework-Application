@@ -163,10 +163,10 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
             $config->setQueryCacheImpl($cache);
             $config->setResultCacheImpl($cache);
         }
-        $autoPathes = $this->getBootstrap()->getContainer()->get('autoload.pathes');
+        $autoPaths = $this->getBootstrap()->getContainer()->get('autoload.paths');
 
         #Proxy Configuration
-        $config->setProxyDir($autoPathes->proxyPath);
+        $config->setProxyDir($autoPaths->proxyPath);
         $config->setProxyNamespace('Proxies');
         $config->setAutoGenerateProxyClasses(false);
 
@@ -183,14 +183,14 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
         $reader->setAnnotationNamespaceAlias('Gedmo\Mapping\Annotation\\', 'gedmo');
 //        $reader->setIgnoreNotImportedAnnotations(true);
 //        $reader->setEnableParsePhpImports(false);
-        $entityPathes = $autoPathes->entities;
+        $entityPathes = $autoPaths->entities;
         array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Tree/Entity');
         array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Sortable/Entity');
         array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Loggable/Entity');
         array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Translatable/Entity');
 
         $chainDriverImpl = new \Doctrine\ORM\Mapping\Driver\DriverChain();
-        $defaultDriverImpl = \Doctrine\ORM\Mapping\Driver\AnnotationDriver::create($autoPathes->entities, $reader);
+        $defaultDriverImpl = \Doctrine\ORM\Mapping\Driver\AnnotationDriver::create($autoPaths->entities, $reader);
         $defaultDriverImpl->getAllClassNames();
         $translatableDriverImpl = $config->newDefaultAnnotationDriver($entityPathes);
         $chainDriverImpl->addDriver($defaultDriverImpl, 'Application\Entities\\');

@@ -19,6 +19,9 @@ class Blog_IndexController extends Zend_Controller_Action
     public function indexAction()
     {
         // action body
+        $this->view->title = "Blog";
+        $this->view->message = "Blog Message";
+        $this->view->content = "Blog Content";
     }
 
 }
