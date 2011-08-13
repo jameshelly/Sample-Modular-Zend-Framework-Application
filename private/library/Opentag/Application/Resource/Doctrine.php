@@ -2,10 +2,10 @@
 //namespace Opentag\Application\Resource;
 
 /**/
-use Doctrine\DBAL\DriverManager,   
+use Doctrine\DBAL\DriverManager,
     Doctrine\DBAL\Logging\DebugStack,
     Doctrine\Common\Annotations\AnnotationReader,
-    Doctrine\Common\Annotations\AnnotationRegistry,      
+    Doctrine\Common\Annotations\AnnotationRegistry,
     Doctrine\ORM\Mapping\Driver\AnnotationDriver,
     Doctrine\ORM\Mapping\Driver\DriverChain,
     Doctrine\ORM\EntityManager,
@@ -39,12 +39,12 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
      * @var Zend_Log
      */
     protected $log;
-    
+
     /**
      * @var \Doctrine\ORM\Configuration
      */
     protected $cfg;
-    
+
     /**
      * @var \Doctrine\Common\EventManager
      */
@@ -87,7 +87,7 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
         $this->getBootstrap()->getContainer()->set('entity.manager', $this->_em);
         return $this->_em;
     }
-    
+
     public function getConnection() {
         #Get logger
         if(null === $this->log) {
@@ -98,10 +98,10 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
             $this->_conn = $this->_buildConnection();
         }
         $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->_conn);
-        return $this->_conn;        
+        return $this->_conn;
     }
-    
-    
+
+
     protected function _buildConnection() {
        //die(print_r($options));
         $options = $this->getOptions();
@@ -114,14 +114,14 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
 
 	$sluggableListener = new SluggableListener();
         $eventManager->addEventSubscriber($sluggableListener);
-        
+
         $translatableListener = new TranslationListener();
         $translatableListener->setTranslatableLocale('en_gb');
         $eventManager->addEventSubscriber($translatableListener);
 
         $treeListener = new TreeListener();
-        $eventManager->addEventSubscriber($treeListener);    
-        
+        $eventManager->addEventSubscriber($treeListener);
+
         return \Doctrine\DBAL\DriverManager::getConnection($connectionOptions, $config, $eventManager);
     }
 
@@ -142,14 +142,14 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
         $connection = $this->_buildConnection();
         $config = $this->cfg;
         $eventManager = $this->eventManager;
-        
+
         #Now configure doctrine cache
         if ('development' == APPLICATION_ENV) {
             $cacheClass = isset($options['cacheClass']) ? $options['cacheClass'] : 'Doctrine\Common\Cache\ArrayCache';
         } else {
             $cacheClass = isset($options['cacheClass']) ? $options['cacheClass'] : 'Doctrine\Common\Cache\XcacheCache';
         }
-        
+
         #Cache Options.
         $cache = new $cacheClass();
         $config->setMetadataCacheImpl($cache);
@@ -191,7 +191,7 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
 
         $chainDriverImpl = new \Doctrine\ORM\Mapping\Driver\DriverChain();
         $defaultDriverImpl = \Doctrine\ORM\Mapping\Driver\AnnotationDriver::create($autoPathes->entities, $reader);
-        $defaultDriverImpl->getAllClassNames(); 
+        $defaultDriverImpl->getAllClassNames();
         $translatableDriverImpl = $config->newDefaultAnnotationDriver($entityPathes);
         $chainDriverImpl->addDriver($defaultDriverImpl, 'Application\Entities\\');
         $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Tree');
@@ -236,11 +236,7 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
                 $connection[$driverOption] = $dbalopts[$driverOption];
             }
         }
-        /*
-        if (isset($dbalopts['driverOptions']) && !is_null($dbalopts['driverOptions'])) {
-            $connection['driverOptions'] = $dbalopts['driverOptions'];
-        }
-        */
+
         return $connection;
     }
 }
