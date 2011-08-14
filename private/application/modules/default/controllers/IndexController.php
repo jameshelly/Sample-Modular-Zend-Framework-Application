@@ -20,11 +20,7 @@ class IndexController extends \Zend_Controller_Action {
     protected $_auth = null;
 
     public function init() {
-        //$this->_loginForm = new Application_Form_Login();
-        //$this->view->form = $this->_loginForm;
-        // get auth service from bootstrap
-        $bootstrap = $this->getInvokeArg('bootstrap');
-        $this->_auth = $bootstrap->getResource('auth');
+        $this->view->headTitle('title');
     }
 
     /**

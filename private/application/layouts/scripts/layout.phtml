@@ -1,17 +1,18 @@
 <?=$this->doctype() ?>
 <html>
     <head>
-        <?= $this->headTitle(); ?>
-        <?= $this->headLink(); ?>
-        <?= $this->headStyle(); ?>
+        <?=$this->headTitle(); ?>
+        <?=$this->headMeta(); ?>
+        <?=$this->headLink(); ?>
+        <?=$this->headStyle(); ?>
     </head>
     <body>
-	    <section id="wrapper">
-	    	<?= $this->render('page.header.phtml'); ?>
-	    	<article id="">
-		    	<?= $this->layout()->content; ?>
-	    	</article>
-	    	<?= $this->render('page.footer.phtml'); ?>
+        <section id="wrapper">
+            <?=$this->render('page.header.phtml'); ?>
+            <article id="content">
+                <?=$this->layout()->content; ?>
+            </article>
+            <?=$this->render('page.footer.phtml'); ?>
     	</section>
     </body>
 </html>

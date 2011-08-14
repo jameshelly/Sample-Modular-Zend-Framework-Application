@@ -1,6 +1,11 @@
 
 	<div class="container">
-		<h1><?= $this->title;?></h1>
-                <?=$this->message;?>
-		<?=$this->content;?>
+            <hgroup>
+		<h2><?= $this->title;?></h2>
+                <h3><?=$this->message;?></h3>
+            </hgroup>
+<?=$this->content;?>
+            <ul>
+<?=$this->partialLoop('article.phtml',$this->articles); ?>
+            </ul>
 	</div>

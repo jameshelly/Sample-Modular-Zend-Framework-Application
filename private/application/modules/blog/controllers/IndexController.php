@@ -10,18 +10,25 @@ use Doctrine\ORM\EntityManager,
 
 class Blog_IndexController extends Zend_Controller_Action
 {
+    const ENTITY_NAME = "Application\Entities\Articles";
 
     public function init()
     {
-        /* Initialize action controller here */
+    	#Get Doctrine Entity Manager
+        $bootstrap = $this->getInvokeArg('bootstrap');
+        $this->em = $bootstrap->getContainer()->get('entity.manager');
+        //$this->view->placeholder('doctrine')->exchangeArray(array('em'=>$this->em));
+        $this->view->partialLoop()->setObjectKey('entity');
+        $this->view->headTitle('blog');
     }
 
     public function indexAction()
     {
         // action body
-        $this->view->title = "Blog";
+        $this->view->title = "Blog Title";
         $this->view->message = "Blog Message";
-        $this->view->content = "Blog Content";
+        $this->view->content = "<p>Featured Blog Content</p>";
+        $this->view->articles = $this->em->getRepository(self::ENTITY_NAME)->findAll();
     }
 
 }

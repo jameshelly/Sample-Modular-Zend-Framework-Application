@@ -1,0 +1,6 @@
+
+                    <li class="post" id="article-<?=$this->entity->id;?>">
+                        <h4><?=$this->entity->title; ?> <small><time class="published" title="<?=$this->entity->created->format('d/m/Y'); ?>"><?=$this->entity->created->format('d/m/y'); ?></time></small></h4>
+                        <?php $textile = \Zend_Markup::factory('Bbcode', 'Html'); ?>
+                        <?=$textile->render($this->entity->content); ?>
+                    </li>
