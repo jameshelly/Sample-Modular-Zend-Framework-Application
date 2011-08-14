@@ -1,9 +1,9 @@
 <?php
 namespace Application\Entities;
 
-use Gedmo\Mapping\Annotation AS Gedmo, 
+use Gedmo\Mapping\Annotation AS Gedmo,
     Doctrine\ORM\Mapping AS ORM,
-    Doctrine\Common\Collections\ArrayCollection, 
+    Doctrine\Common\Collections\ArrayCollection,
     Gedmo\Timestampable\Timestampable;
 /**
  * Users
@@ -21,7 +21,7 @@ class Users implements Timestampable
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @Gedmo\Timestampable(on="update")
      * dates which should be updated on update and insert
@@ -30,7 +30,7 @@ class Users implements Timestampable
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $modified;
-    
+
     /**
      * @Gedmo\Timestampable(on="create")
      * dates which should be updated on insert only
@@ -102,20 +102,20 @@ class Users implements Timestampable
      * @ORM\Column(type="string", length=128, nullable=true)
      */
     private $lastname;
-    
+
      /**
      *
      * @param type $name
-     * @param type $value 
+     * @param type $value
      */
     public function __set($name, $value) {
         $this->$name = $value;
     }
-    
+
     /**
      *
      * @param type $name
-     * @return type 
+     * @return type
      */
     public function __get($name) {
         return $this->$name;
@@ -150,7 +150,7 @@ class Users implements Timestampable
      */
     protected function generatePassword($password)
     {
-	return md5($password.$this->getSalt());
+	return md5($password.$this->salt);
     }
 
     /**

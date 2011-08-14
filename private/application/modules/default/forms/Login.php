@@ -1,11 +1,11 @@
 <?php
 namespace Application\Forms;
 
-use \Doctrine\Common\Collections\ArrayCollection, 
+use \Doctrine\Common\Collections\ArrayCollection,
     \Gedmo\Timestampable\Timestampable,
     \Zend_Form;
 
-class Login extends \Zend_Form {
+class Default_Form_Login extends \Zend_Form {
 
     //TODO Setup Cache Vars?
     public function loadDefaultDecorators() {
@@ -20,7 +20,7 @@ class Login extends \Zend_Form {
 	$this->setMethod('post');
 	$this->addAttribs(array(
 	    'id'       => 'default_login',
-	    'class'       => 'login dialog',
+	    'class'    => 'login dialog',
 	    'onSubmit' => 'validate(this)',
 	));
 
@@ -43,9 +43,9 @@ class Login extends \Zend_Form {
     }
 
     /**
-     * 
+     *
      */
     public function mapUserFormToEntity() {
-	
+
     }
 }

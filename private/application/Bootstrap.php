@@ -1,5 +1,6 @@
 <?php
 //namespace Application;
+#Come on ZF2!
 
 class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
 {
@@ -14,7 +15,7 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initConfig()
     {
-        #Configs
+        #Store Config to container, so we can easily use it later.
         $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/default.ini', APPLICATION_SRV);
         $this->setAppNamespace($config->appnamespace);
         $this->getContainer()->set('config', $config);
@@ -42,7 +43,7 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
      * @return void
     */
     protected function _initLog() {
-
+        #Log, we need to log.
         $config = $this->getContainer()->get('config');
         $logPath = $config->resources->log->path;
         $filelog = new Zend_Log_Writer_Stream($logPath);
@@ -73,15 +74,16 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
     	$this->bootstrap('FrontController');
     	$front = $this->getResource('FrontController');
         $router = $front->getInstance()->getRouter();
+        #Each Module can add to the router.
         foreach ($front->getControllerDirectory() as $module => $path) {
             $modulePath = dirname($path);
             $configPath = $modulePath.'/configs/default.ini';
             $moduleRoutes = new Zend_Config_Ini($configPath, 'default');
-            //$moduleRoutes
             if($moduleRoutes->module->enabled) {
             	$router->addConfig($moduleRoutes, 'routes');
             }
-        }//module.enabled
+        }
+        #Single Route ini.
         //$routescfg = new Zend_Config_Ini(APPLICATION_PATH . '/configs/routes.ini', APPLICATION_SRV);
         //$router->addConfig($routescfg, 'routes');
     }
@@ -93,7 +95,6 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
      *
      * @param void
      * @return void
-     *
      */
     protected function _initAutoload() {
         $front = $this->getResource('FrontController');
@@ -143,6 +144,20 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
     }
     //*/
 
+    /**
+     * _initDate
+     *
+     * Initializes the default timezone for the php ENV
+     *
+     * @param void
+     * @return void
+     */
+    protected function _initExamplePlugin() {
+    	$logger = $this->getContainer()->get('logger');
+        Zend_Controller_Front::getInstance()->registerPlugin(new Default_Plugin_Example());
+     	$logger->info(get_class($this).'::_initExamplePlugin[]');
+    }
+
     /*
      * _initZFDebug
      *
@@ -150,7 +165,6 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
      *
      * @param dfg
      * @return void
-     */
     protected function _initZFDebug() {
         $logger = $this->getContainer()->get('logger');
         if(APPLICATION_ENV != 'production'){

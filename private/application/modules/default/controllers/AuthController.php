@@ -4,7 +4,7 @@
 use Opentag\Auth\Adapter\Doctrine,
     \Doctrine\ORM\EntityManager,
     \Zend_Controller_Action,
-    \Application\Forms\Login,
+    \Application\Forms\Default_Form_Login,
     \Zend_Auth_Adapter_Interface,
     \Zend_Auth_Result;
 
@@ -24,7 +24,7 @@ class AuthController extends \Zend_Controller_Action
     protected $_auth = null;
 
     public function init() {
-        //$this->_loginForm = new Application_Form_Login();
+        $this->_loginForm = new Default_Form_Login();
         //$this->view->form = $this->_loginForm;
         // get auth service from bootstrap
     	#Get bootstrap object.
@@ -33,14 +33,13 @@ class AuthController extends \Zend_Controller_Action
         $this->em = $bootstrap->getContainer()->get('entity.manager');
         #Get Zend Auth.
         $this->auth = Zend_Auth::getInstance();
-       
     }
 
     public function indexAction() {
-        $auth = Zend_Auth::getInstance();//$this->_auth;//
+        $auth = $this->auth;//Zend_Auth::getInstance();//
         if ($auth->hasIdentity()) {
             $this->view->title = "Users";
-            $this->view->message = "<p>".$auth->getIdentity()." logged in</p>";;           
+            $this->view->message = "<p>".$auth->getIdentity()." logged in</p>";;
         } else {
             $this->_forward('login');
         }
@@ -52,7 +51,7 @@ class AuthController extends \Zend_Controller_Action
      *    -
      */
     public function loginAction() {
-    	$loginForm = new Login();
+    	$loginForm = $this->_loginForm;
         $request = $this->getRequest();
         $adapter = new \Opentag\Auth\Adapter\Doctrine(
             $this->em,
@@ -87,7 +86,7 @@ class AuthController extends \Zend_Controller_Action
         $this->view->title = "Users";
         $this->view->message = $content;
     }
-    
+
     /**
      * This action handles
      *    - logoutAction
@@ -99,6 +98,6 @@ class AuthController extends \Zend_Controller_Action
         $this->view->title = "Users";
         $this->view->message = "Logged out";
     }
-    
+
 /* EOF Class */
 }
