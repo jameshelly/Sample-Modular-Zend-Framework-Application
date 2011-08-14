@@ -166,9 +166,9 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
         $autoPaths = $this->getBootstrap()->getContainer()->get('autoload.paths');
 
         #Proxy Configuration
-        $config->setProxyDir($autoPaths->proxyPath);
-        $config->setProxyNamespace('Proxies');
-        $config->setAutoGenerateProxyClasses(false);
+        $config->setProxyDir($options['orm']['manager']['proxy']['dir']);
+        $config->setProxyNamespace($options['orm']['manager']['proxy']['namespace']);
+        $config->setAutoGenerateProxyClasses($options['orm']['manager']['proxy']['autoGenerateClasses']);
 
         #Set Logging
         $logger = new \Doctrine\DBAL\Logging\DebugStack;
