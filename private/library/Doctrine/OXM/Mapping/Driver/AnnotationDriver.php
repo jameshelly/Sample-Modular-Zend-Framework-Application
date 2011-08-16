@@ -26,8 +26,6 @@ use Doctrine\OXM\Mapping\ClassMetadataInfo;
 use Doctrine\OXM\Mapping\MappingException;
 use Doctrine\OXM\Mapping\Driver\Driver as DriverInterface;
 
-require __DIR__ . '/DoctrineAnnotations.php';
-
 /**
  * The AnnotationDriver reads the mapping metadata from docblock annotations.
  *
@@ -69,10 +67,10 @@ class AnnotationDriver implements DriverInterface
      * Initializes a new AnnotationDriver that uses the given AnnotationReader for reading
      * docblock annotations.
      * 
-     * @param $reader The AnnotationReader to use.
+     * @param AnnotationReader $reader The AnnotationReader to use.
      * @param string|array $paths One or multiple paths where mapping classes can be found. 
      */
-    public function __construct(AnnotationReader $reader, $paths = null)
+    public function __construct($reader, $paths = null)
     {
         $this->reader = $reader;
         if ($paths) {
@@ -129,6 +127,15 @@ class AnnotationDriver implements DriverInterface
         $reflClass = $metadata->getReflectionClass();
 
         $classAnnotations = $this->reader->getClassAnnotations($reflClass);
+
+        // Compatibility with Doctrine Common 3.x
+        if ($classAnnotations && is_int(key($classAnnotations))) {
+            foreach ($classAnnotations as $annot) {
+                $classAnnotations[get_class($annot)] = $annot;
+            }
+        }
+
+        // Evaluate XmlEntity Annotations
         if (isset($classAnnotations['Doctrine\OXM\Mapping\XmlEntity'])) {
             $entityAnnot = $classAnnotations['Doctrine\OXM\Mapping\XmlEntity'];
         } elseif (isset($classAnnotations['Doctrine\OXM\Mapping\XmlRootEntity'])) {
@@ -191,6 +198,12 @@ class AnnotationDriver implements DriverInterface
             if ($idAnnot = $this->reader->getPropertyAnnotation($property, 'Doctrine\OXM\Mapping\XmlId')) {
                 $mapping['id']  = true;
             }
+            
+            if ($generatedValueAnnot = $this->reader->getPropertyAnnotation($property, 'Doctrine\OXM\Mapping\XmlGeneratedValue')) {
+                $metadata->setIdGeneratorType(constant('Doctrine\OXM\Mapping\ClassMetadata::GENERATOR_TYPE_' . $generatedValueAnnot->strategy));
+            }
+            
+            
             $referenceAnnot = $this->reader->getPropertyAnnotation($property, 'Doctrine\OXM\Mapping\XmlReferences');
             if (isset($referenceAnnot->entityName)) {
                 $mapping['references']  = $referenceAnnot->entityName;
@@ -213,9 +226,17 @@ class AnnotationDriver implements DriverInterface
         // Evaluate @HasLifecycleCallbacks annotations
         if (isset($classAnnotations['Doctrine\OXM\Mapping\HasLifecycleCallbacks'])) {
             foreach ($reflClass->getMethods() as $method) {
-                if ($method->isPublic()) {
+                // filter for the declaring class only, callbacks from parents will already be registered.
+                if ($method->isPublic() && $method->getDeclaringClass()->getName() == $reflClass->name) {
                     $annotations = $this->reader->getMethodAnnotations($method);
-
+                    
+                    // Compatibility with Doctrine Common 3.x
+                    if ($annotations && is_int(key($annotations))) {
+                        foreach ($annotations as $annot) {
+                            $annotations[get_class($annot)] = $annot;
+                        }
+                    }
+                    
                     if (isset($annotations['Doctrine\OXM\Mapping\PreMarshal'])) {
                         $metadata->addLifecycleCallback($method->getName(), \Doctrine\OXM\Events::preMarshal);
                     }
@@ -310,13 +331,12 @@ class AnnotationDriver implements DriverInterface
         foreach ($declared as $className) {
             $rc = new \ReflectionClass($className);
             $sourceFile = $rc->getFileName();
-            if (in_array($sourceFile, $includedFiles) && ! $this->isTransient($className)) {
+            if (in_array($sourceFile, $includedFiles) && !$this->isTransient($className)) {
                 $classes[] = $className;
             }
         }
-
         $this->classNames = $classes;
-
+        
         return $classes;
     }
 
@@ -332,7 +352,14 @@ class AnnotationDriver implements DriverInterface
     public function isTransient($className)
     {
         $classAnnotations = $this->reader->getClassAnnotations(new \ReflectionClass($className));
-
+        
+        // Compatibility with Doctrine Common 3.x
+        if ($classAnnotations && is_int(key($classAnnotations))) {
+            foreach ($classAnnotations as $annot) {
+                $classAnnotations[get_class($annot)] = $annot;
+            }
+        }
+        
         return ! isset($classAnnotations['Doctrine\OXM\Mapping\XmlEntity']) &&
                ! isset($classAnnotations['Doctrine\OXM\Mapping\XmlRootEntity']) &&
                ! isset($classAnnotations['Doctrine\OXM\Mapping\XmlMappedSuperclass']);

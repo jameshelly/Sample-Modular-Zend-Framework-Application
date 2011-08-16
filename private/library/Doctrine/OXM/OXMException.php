@@ -33,6 +33,11 @@ class OXMException extends Exception
             "to Doctrine\\OXM\\Configuration::setMappingDriverImpl().");
     }
 
+    public static function entityMissingAssignedId($entity)
+    {
+        return new self("Entity of type " . get_class($entity) . " is missing an assigned ID.");
+    }
+
     public static function unrecognizedField($field)
     {
         return new self("Unrecognized field: $field");
@@ -88,5 +93,20 @@ class OXMException extends Exception
     public static function entityManagerClosed()
     {
         return new self("The XmlEntityManager is closed");
+    }
+    
+    public static function xmlEntityNotFound($className, $identifier)
+    {
+        return new self(sprintf('The "%s" XmlEntity with identifier "%s" could not be found.', $className, $identifier));
+    }
+    
+    public static function fileMappingDriversRequireConfiguredDirectoryPath()
+    {
+        return new self('File mapping drivers must have a valid directory path, however the given path seems to be incorrect!');
+    }
+    
+    public static function mappingNotFound($className, $fieldName)
+    {
+        return new self("No mapping found for field '$fieldName' in class '$className'.");
     }
 }

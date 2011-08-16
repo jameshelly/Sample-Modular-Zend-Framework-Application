@@ -1,5 +1,7 @@
 <?php
 /*
+ *  $Id$
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -15,41 +17,19 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
  * <http://www.doctrine-project.org>.
- */
+*/
 
-namespace Doctrine\OXM\Mapping\Driver;
-
-use Doctrine\OXM\Mapping\ClassMetadataInfo;
+namespace Doctrine\OXM;
 
 /**
+ * Is thrown when a transaction is required for the current operation, but there is none open.
  *
- * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link    www.doctrine-project.org
- * @since   2.0
- * @version $Revision$
- * @author  Richard Fullmer <richard.fullmer@opensoftdev.com>
+ * @author Dmitry Petrov <dmitry.petrov@opensoftdev.ru>>
  */
-class PHPDriver extends AbstractFileDriver
+class TransactionRequiredException extends OXMException
 {
-
-    protected $fileExtension = '.php';
-    protected $metadata;
-
-    /**
-     * Loads the mapping for the specified class into the provided container.
-     *
-     * @param string $className
-     * @param Mapping $mapping
-     */
-    public function loadMetadataForClass($className, ClassMetadataInfo $metadata)
+    static public function transactionRequired()
     {
-        $this->metadata = $metadata;
-        $this->loadMappingFile($this->findMappingFile($className));
-    }
-
-    protected function loadMappingFile($file)
-    {
-        $metadata = $this->metadata;
-        include $file;
+        return new self('An open transaction is required for this operation.');
     }
 }
