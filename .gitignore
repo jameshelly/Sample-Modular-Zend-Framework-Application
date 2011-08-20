@@ -10,3 +10,7 @@ source/*
 private/data/session/*
 private/data/cache/*
 private/_backup*
+private/library/Doctrine/*
+private/library/Gedmo/*
+private/library/Zend/*
+private/library/ZendX/*
