@@ -25,10 +25,10 @@ class IndexController extends \Zend_Controller_Action {
 
     /**
      * This action handles
-     *    - Application
-     *    -
+     *    - Default page
      */
     public function indexAction() {
-    	$this->view->message = "index";
+    	$this->view->message = "<p>Sample Zend Modular Application</p>";
+     	$this->view->message .= "<p><a href='".$this->view->url(array('module' => 'blog', 'controller' => 'index', 'action' => 'index'))."'>View the Blog</a></p>";
     }
 }
