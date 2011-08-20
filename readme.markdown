@@ -4,9 +4,11 @@
 
 This is a sample application to allow you use Doctrine 2 at the top of Zend Framework 1.
 
-G
-, Doctrine 2.1, , Gedmo Application
-Zend 1.11.9, Doctrine 2.1, Classmap, Gedmo Application
+The following Libraries and extensions have been used:
+ - Zend 1.11.9
+ - ZF1 Classmap Autoloaders
+ - Doctrine 2.1
+ - Gedmo Doctrine Extensions
 
 ### Installing
 
@@ -27,9 +29,33 @@ http://www.doctrine-project.org/docs/orm/2.1/en/reference/introduction.html
 
 ### Configuring
 
-#### Configuring Namespaces
-
 #### Configuring Classmaps
+private/bin/$ php classmap_generator.php -l ../application/
+private/bin/$ php classmap_generator.php -l ../library/
+
 #### Configuring Doctrine
+private/bin/$ php d2.php orm:validate
+private/bin/$ php d2.php orm:schema-tool:create
+private/bin/$ php d2.php orm:generate-proxies
+
+	resources.doctrine.charset = UTF8
+	resources.doctrine.compiled = false
+	resources.doctrine.orm.manager.connection     							= default
+	resources.doctrine.orm.manager.proxy.autoGenerateClasses 				= false
+	resources.doctrine.orm.manager.proxy.namespace           				= "Application\Entities\Proxy"
+	resources.doctrine.orm.manager.proxy.dir                 				= APPLICATION_PATH "/../data/generated"
+	resources.doctrine.orm.manager.metadataDrivers.0.adapterClass          	= "Doctrine\ORM\Mapping\Driver\AnnotationDriver"
+	resources.doctrine.orm.manager.metadataDrivers.0.annotationReaderClass 	= "Doctrine\Common\Annotations\AnnotationReader"
+	resources.doctrine.orm.manager.metadataDrivers.0.annotationReaderCache 	= default
+
+	resources.doctrine.dbal.default.driver = pdo_mysql
+	resources.doctrine.dbal.default.unix_socket = '/etc/mysql.sock'
+	resources.doctrine.dbal.default.host = localhost
+	resources.doctrine.dbal.default.port = 3306
+	resources.doctrine.dbal.default.user = root
+	resources.doctrine.dbal.default.password = 
+	resources.doctrine.dbal.default.dbname = zf11d2_alpha
+	
+	resources.doctrine.cacheClass = "Doctrine\Common\Cache\ArrayCache"
 
 ### Using
