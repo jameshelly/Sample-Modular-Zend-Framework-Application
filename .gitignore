@@ -8,6 +8,4 @@ nbproject/*
 source/*
 private/data/session/*
 private/data/cache/*
-private/library/alias2ln
-private/library/_backup*
 private/_backup*
