@@ -2,6 +2,7 @@
 .DS_Stor*
 *.DS_Stor*
 */.DS_Store
+.notes.md
 .project*
 .settings*
 nbproject/*
