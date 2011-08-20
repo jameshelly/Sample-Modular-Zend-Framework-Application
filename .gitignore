@@ -1,7 +1,7 @@
 ._auth/*
-.DS_Store*
-*.DS_Store*
-*/.DS_Store*
+.DS_Stor*
+*.DS_Stor*
+*/.DS_Store
 source/*
 /private/data/session/*
 /private/data/cache/*
