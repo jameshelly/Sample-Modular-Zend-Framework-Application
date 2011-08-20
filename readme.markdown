@@ -7,6 +7,7 @@ Zend Framework 1.11.9 + Doctrine 2.1 integration
 This is a sample application to allow you use Doctrine 2 at the top of Zend Framework 1.
 
 The following Libraries and extensions have been used:
+
  +  Zend 1.11.9
  +  ZF1 Classmap Autoloaders
  +  Doctrine 2.1
@@ -15,6 +16,7 @@ The following Libraries and extensions have been used:
 I don't use the typical layout for a Zend Application, this is mainly due to the servers I typically use for sites. I place the application, bin, data & library folders into a private folder, I also rename public to content.
 
 Zend Custom Structure:
+
  *  content
  *  private
 	 +  application
@@ -22,6 +24,7 @@ Zend Custom Structure:
 	 +  library
 
 Compared to the Zend Standard Structure:
+
  *  application
  *  bin
  *  docs
