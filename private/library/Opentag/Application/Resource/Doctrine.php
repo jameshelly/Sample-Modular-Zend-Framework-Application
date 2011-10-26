@@ -112,15 +112,15 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
         $config = $this->cfg;
         $eventManager = $this->eventManager;
 
-	$sluggableListener = new SluggableListener();
-        $eventManager->addEventSubscriber($sluggableListener);
-
-        $translatableListener = new TranslationListener();
-        $translatableListener->setTranslatableLocale('en_gb');
-        $eventManager->addEventSubscriber($translatableListener);
-
-        $treeListener = new TreeListener();
-        $eventManager->addEventSubscriber($treeListener);
+//	$sluggableListener = new SluggableListener();
+//        $eventManager->addEventSubscriber($sluggableListener);
+//
+//        $translatableListener = new TranslationListener();
+//        $translatableListener->setTranslatableLocale('en_gb');
+//        $eventManager->addEventSubscriber($translatableListener);
+//
+//        $treeListener = new TreeListener();
+//        $eventManager->addEventSubscriber($treeListener);
 
         return \Doctrine\DBAL\DriverManager::getConnection($connectionOptions, $config, $eventManager);
     }
@@ -194,10 +194,10 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
         $defaultDriverImpl->getAllClassNames();
         $translatableDriverImpl = $config->newDefaultAnnotationDriver($entityPathes);
         $chainDriverImpl->addDriver($defaultDriverImpl, 'Application\Entities\\');
-        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Tree');
-        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Sortable');
-        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Loggable');
-        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Translatable');
+//        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Tree');
+//        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Sortable');
+//        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Loggable');
+//        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Translatable');
         $config->setMetadataDriverImpl($chainDriverImpl);
 
         #setup entity manager

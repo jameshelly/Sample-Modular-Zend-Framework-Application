@@ -107,6 +107,7 @@ $cli->addCommands(array(
     new \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand(),
     new \Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand(),
     new \Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand(),
+    new \Doctrine\ORM\Tools\Console\Command\InfoCommand(),
     new \Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand(),
     new \Doctrine\ORM\Tools\Console\Command\ConvertDoctrine1SchemaCommand(),
     new \Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand(),
