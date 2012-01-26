@@ -1,8 +1,14 @@
 <?php
 /*
  * Zf11D2 FrontEnd
+ * @since   beta 1.0
+ * @data 28-05-2011.
+ * @version $Revision$
+ * @author James A Helly <mrhelly@gmail.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ * @subpackage index bootstrap Zend Application.
+ * @package Opentag
+ * @category Opentag
  * Index.php
- * James A Helly. 28-05-2011.
  */
 
 #Define path to core directory

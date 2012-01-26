@@ -1,6 +1,13 @@
 <?php
 //namespace Opentag\ZFDebug\Plugin;
 /**
+ * @since   beta 1.0
+ * @version $Revision$
+ * @author James A Helly <mrhelly@gmail.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ * @subpackage Version
+ * @package Opentag
+ * @link http://opentag.spyders-lair.com
+ * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @see Doctrine
  */
 use \Doctrine\DBAL\Logging\DebugStack;
@@ -36,7 +43,7 @@ class Opentag_ZFDebug_Plugin_Doctrine extends ZFDebug_Controller_Plugin_Debug_Pl
      * @var array
      */
     protected $_db = array();
-    
+
     protected $_explain = false;
 
     /**
@@ -61,7 +68,7 @@ class Opentag_ZFDebug_Plugin_Doctrine extends ZFDebug_Controller_Plugin_Debug_Pl
     {
         return $this->_identifier;
     }
-    
+
     /**
      * Returns the base64 encoded icon
      *
@@ -89,7 +96,7 @@ class Opentag_ZFDebug_Plugin_Doctrine extends ZFDebug_Controller_Plugin_Debug_Pl
 			$totals += $queries['executionMS'];
 		}
 		$html =  count($logger->queries).' in '. round(($totals * 1000) ,3) .' ms';
-		
+
         return $html;
     }
 
@@ -102,7 +109,7 @@ class Opentag_ZFDebug_Plugin_Doctrine extends ZFDebug_Controller_Plugin_Debug_Pl
     {
         if (!$this->_db)
             return '';
-            
+
         $html = '<h4>Database queries';
         //TODO Display other options that doctrine might have...
         $html .= '</h4>';

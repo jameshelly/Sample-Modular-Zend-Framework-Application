@@ -9,11 +9,14 @@ use Opentag\Exception\IncompatibleComponentVersionException;
  * Version class allows to checking the dependencies required
  * and the current version of doctrine extensions
  *
+ * @since   beta 1.0
+ * @version $Revision$
  * @author James A Helly <mrhelly@gmail.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @subpackage Version
+ * @subpackage Doctrine Adapter
  * @package Opentag
- * @link http://www.gediminasm.org
- * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @category Opentag
+ * @link http://opentag.spyders-lair.com
+ * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
  */
 final class Version
 {

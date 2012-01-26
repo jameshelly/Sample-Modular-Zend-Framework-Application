@@ -1,7 +1,18 @@
 <?php
-//namespace Opentag\Application\Resource;
-
-/**/
+/*
+ * //namespace Opentag\Application\Resource;
+ *
+ * @since   beta 1.0
+ * @version $Revision$
+ * @author James A Helly <mrhelly@gmail.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ * @subpackage Doctrine Adapter
+ * @package Opentag
+ * @category Opentag
+ *
+ * @see Zend_Application_Resource_ResourceAbstract
+ * require_once 'Zend/Application/Resource/ResourceAbstract.php';
+ *
+ */
 use Doctrine\DBAL\DriverManager,
     Doctrine\DBAL\Logging\DebugStack,
     Doctrine\Common\Annotations\AnnotationReader,
@@ -18,22 +29,22 @@ use Doctrine\DBAL\DriverManager,
     Gedmo\Translatable\TranslationListener,
     Gedmo\Timestampable\TimestampableListener;
 
-/**
- * @see Zend_Application_Resource_ResourceAbstract
- */
-//require_once 'Zend/Application/Resource/ResourceAbstract.php';
-
 class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_ResourceAbstract {
+
+    /**
+     * @var \Doctrine\Common\EventManager
+     */
+    protected $evtm;
 
     /**
      * @var \Doctrine\ORM\EntityManager
      */
-    protected $_em;
+    protected $em;
 
     /**
      * @var Doctrine\DBAL\Connection
      */
-    protected $_conn;
+    protected $conn;
 
     /**
      * @var Zend_Log
@@ -46,9 +57,21 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
     protected $cfg;
 
     /**
-     * @var \Doctrine\Common\EventManager
+     * Constructor.
+     *
+     * @param array $config Doctrine Container configuration
      */
-    protected $eventManager;
+    public function __construct(array $config = array())
+    {
+        #Initialise default state for query.
+         #Get logger
+        $this->log = $this->getBootstrap()->getContainer()->get('logger');
+        $this->log->info(get_class($this) . '::init');
+        #Use apc for queryCache & configCache {session,default,autheduser,authpipe}
+        $this->cfg = new \Doctrine\ORM\Configuration;
+        $this->evtm = new \Doctrine\Common\EventManager();
+        $this->em = $this->getEntityManager();
+   }
 
     /**
      * Init Doctrine
@@ -57,12 +80,6 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
      * @return \Doctrine\ORM\EntityManager Instance.
      */
     public function init() {
-        #Get logger
-        $this->log = $this->getBootstrap()->getContainer()->get('logger');
-        $this->log->info(get_class($this).'::init');
-        $this->cfg = new \Doctrine\ORM\Configuration;
-        $this->eventManager = new \Doctrine\Common\EventManager();
-        $this->_em = $this->getEntityManager();
 
         return $this;
     }
@@ -73,45 +90,45 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
      * @param N/A
      * @return \Doctrine\ORM\EntityManager Instance.
      */
-    public function getEntityManager() {
+    public function getEntityManager($options = false) {
         #Get logger
         //$logger = Zend_Registry::get('logger');
-
-        if(null === $this->log) {
+        #use apc object cache.
+        if (null === $this->log) {
             $this->log = $this->getBootstrap()->getContainer()->get('logger');
         }
-        $this->log->info(get_class($this).'::getEntityManager');
-        if ( (null === $this->_em) ) {
-            $this->_em = $this->_buildEntityManager($this->getOptions());
+        $this->log->info(get_class($this) . '::getEntityManager');
+        if ((null === $this->em)) {
+            $this->em = $this->_buildEntityManager($this->getOptions());
         }
-        $this->getBootstrap()->getContainer()->set('entity.manager', $this->_em);
-        return $this->_em;
+        $this->getBootstrap()->getContainer()->set('entity.manager', $this->em);
+        return $this->em;
     }
 
-    public function getConnection() {
+    public function getConnection($options = false) {
         #Get logger
-        if(null === $this->log) {
+        if (null === $this->log) {
             $this->log = $this->getBootstrap()->getContainer()->get('logger');
         }
-        $this->log->info(get_class($this).'::getConnection');
-        if ( (null === $this->_conn) ) {
-            $this->_conn = $this->_buildConnection();
+        $this->log->info(get_class($this) . '::getConnection');
+        if ((null === $this->conn)) {
+            $this->conn = $this->_buildConnection();
         }
-        $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->_conn);
-        return $this->_conn;
+        $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->conn);
+        return $this->conn;
     }
-
 
     protected function _buildConnection() {
-       //die(print_r($options));
+        //die(print_r($options));
         $options = $this->getOptions();
 
         $connectionOptions = $this->_buildConnectionOptions($options);
 
         #Setup configuration as seen from the sandbox application
         $config = $this->cfg;
-        $eventManager = $this->eventManager;
+        $eventManager = $this->evtm;
 
+<<<<<<< HEAD
 //	$sluggableListener = new SluggableListener();
 //        $eventManager->addEventSubscriber($sluggableListener);
 //
@@ -121,6 +138,17 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
 //
 //        $treeListener = new TreeListener();
 //        $eventManager->addEventSubscriber($treeListener);
+=======
+        $sluggableListener = new SluggableListener();
+        $eventManager->addEventSubscriber($sluggableListener);
+
+        $translatableListener = new TranslationListener();
+        $translatableListener->setTranslatableLocale('en_gb');
+        $eventManager->addEventSubscriber($translatableListener);
+
+        $treeListener = new TreeListener();
+        $eventManager->addEventSubscriber($treeListener);
+>>>>>>> jah.development
 
         return \Doctrine\DBAL\DriverManager::getConnection($connectionOptions, $config, $eventManager);
     }
@@ -136,12 +164,12 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
      * @return \Doctrine\ORM\EntityManager Instance.
      */
     protected function _buildEntityManager() {
-        $this->log->info(get_class($this).'::buildEntityManager');
+        $this->log->info(get_class($this) . '::buildEntityManager');
         #Options
         $options = $this->getOptions();
         $connection = $this->_buildConnection();
         $config = $this->cfg;
-        $eventManager = $this->eventManager;
+        $eventManager = $this->evtm;
 
         #Now configure doctrine cache
         if ('development' == APPLICATION_ENV) {
@@ -202,9 +230,7 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
 
         #setup entity manager
         $em = \Doctrine\ORM\EntityManager::create(
-            $connection,
-            $config,
-            $eventManager
+                        $connection, $config, $eventManager
         );
 
         return $em;
@@ -223,14 +249,14 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
     protected function _buildConnectionOptions(array $options) {
         $connectionSpec = array(
             'pdo_sqlite' => array('path', 'memory', 'user', 'password'),
-            'pdo_mysql'  => array('user', 'password', 'host', 'port', 'dbname', 'unix_socket', 'charset'),
-            'pdo_pgsql'  => array('user', 'password', 'host', 'port', 'dbname'),
-            'pdo_oci'    => array('user', 'password', 'host', 'port', 'dbname', 'charset')
+            'pdo_mysql' => array('user', 'password', 'host', 'port', 'dbname', 'unix_socket', 'charset'),
+            'pdo_pgsql' => array('user', 'password', 'host', 'port', 'dbname'),
+            'pdo_oci' => array('user', 'password', 'host', 'port', 'dbname', 'charset')
         );
-		$dbalopts = $options['dbal'][$options['orm']['manager']['connection']];
-        $connection = array('driver' => $dbalopts['driver'] );
+        $dbalopts = $options['dbal'][$options['orm']['manager']['connection']];
+        $connection = array('driver' => $dbalopts['driver']);
 
-	#Simple array map.
+        #Simple array map.
         foreach ($connectionSpec[$dbalopts['driver']] as $driverOption) {
             if (isset($dbalopts[$driverOption]) && !is_null($driverOption)) {
                 $connection[$driverOption] = $dbalopts[$driverOption];
@@ -239,4 +265,5 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
 
         return $connection;
     }
+
 }

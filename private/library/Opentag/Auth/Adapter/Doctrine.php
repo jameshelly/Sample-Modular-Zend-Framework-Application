@@ -19,9 +19,12 @@ use Opentag,
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
+ * @since   beta 1.0
+ * @version $Revision$
+ * @author James A Helly <mrhelly@gmail.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ * @subpackage Doctrine Adapter 
+ * @package Opentag
  * @category   Wednesday
- * @package    Zend_Auth
- * @subpackage Adapter
  * @copyright  Copyright (c) 2011 Wednesday London. (http://www.wednesday-london.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Doctrine.php 23483 2011-02-01 09:40:01Z jameshelly $

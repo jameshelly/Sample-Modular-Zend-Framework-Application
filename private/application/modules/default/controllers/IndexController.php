@@ -1,11 +1,12 @@
 <?php
+
 //namespace Application\Module\Controller;
 
-use /*Opentag,*/
-    \Doctrine\ORM\EntityManager,
-    \Zend_Controller_Action,
-    \Zend_Auth_Adapter_Interface,
-    \Zend_Auth_Result;
+use /* Opentag, */ \Doctrine\ORM\EntityManager,
+                   \Zend_Controller_Action,
+                   \Zend_Auth_Adapter_Interface,
+                   \Zend_Auth_Result;
+
 /**
  * IndexController - The default controller
  *
@@ -14,7 +15,7 @@ use /*Opentag,*/
  */
 class IndexController extends \Zend_Controller_Action {
 
-     /**
+    /**
      * @var Zend_Auth
      */
     protected $_auth = null;
@@ -28,7 +29,8 @@ class IndexController extends \Zend_Controller_Action {
      *    - Default page
      */
     public function indexAction() {
-    	$this->view->message = "<p>Sample Zend Modular Application</p>";
-     	$this->view->message .= "<p><a href='".$this->view->url(array('module' => 'blog', 'controller' => 'index', 'action' => 'index'))."'>View the Blog</a></p>";
+        $this->view->message = "<p>Sample Zend Modular Application</p>";
+        $this->view->message .= "<p><a href='" . $this->view->url(array('module' => 'blog', 'controller' => 'index', 'action' => 'index')) . "'>View the Blog</a></p>";
     }
+
 }
