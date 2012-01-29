@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony-project.org/2.0/container">
+    <services>
+        <service id="doctrine" class="Opentag\Service\Doctrine" shared="true">
+            <argument>resources.doctrine</argument>
+        </service>
+        <service id="randomizer" class="Opentag\Service\Randomizer" shared="true">
+        </service>
+    </services>
+</container>

@@ -1,6 +1,7 @@
 <?php
 //namespace Application;
 #Come on ZF2!
+use \Opentag\Common\Di\Di as DependencyInjector;
 
 class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
 {
@@ -69,11 +70,20 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
      * @return void
      */
     protected function _initServices() {
-//        $sc = new sfServiceContainerBuilder();
-        $sc = (object) array();
-//        $loader = new sfServiceContainerLoaderFileXml($sc);
-//        $loader->load(APPLICATION_PATH . "/configs/services.xml");
-        Zend_Registry::set('sc', $sc);
+        $di = new DependencyInjector();
+        $config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/services.xml');
+        foreach($config->services->service as $service) {
+//            $config['resources']['doctrine']
+
+//            $di->instanceManager()->setParameters($service->class,$service->argument);
+
+//            echo $service->class;
+//            echo $service->argument;
+//            print_r($service);
+//            echo "<hr/>";
+        }
+//        die('hmm');
+        Zend_Registry::set('sc', $di);
     }
 
 

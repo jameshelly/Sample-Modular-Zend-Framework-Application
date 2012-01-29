@@ -2,7 +2,8 @@
 
 namespace Opentag\Common\Di\Definition;
 
-use Zend\Code\Annotation\AnnotationManager;
+//use Zend\Code\Annotation\AnnotationManager;
+use Opentag\Common\Code\Annotation\AnnotationManager;
 
 class IntrospectionStrategy
 {
@@ -44,7 +45,7 @@ class IntrospectionStrategy
     }
 
 
-    
+
     public function setUseAnnotations($useAnnotations)
     {
         $this->useAnnotations = $useAnnotations;

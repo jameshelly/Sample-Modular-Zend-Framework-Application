@@ -2,7 +2,8 @@
 
 namespace Opentag\Common\Di\Definition\Annotation;
 
-use Zend\Code\Annotation\Annotation;
+//use Zend\Code\Annotation\Annotation;
+use Opentag\Common\Code\Annotation\Annotation;
 
 class Inject implements Annotation
 {
