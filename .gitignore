@@ -2,6 +2,7 @@
 .DS_Stor*
 *.DS_Stor*
 */.DS_Store
+*.classmap.php
 .notes.md
 .project*
 .settings*
