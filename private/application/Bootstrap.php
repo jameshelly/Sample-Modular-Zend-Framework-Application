@@ -60,6 +60,23 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
         $this->getContainer()->set('logger', $logger);
     }
 
+    /**
+     * _initServices
+     *
+     * Initializes the Dependancy Injection Service.
+     *
+     * @param void
+     * @return void
+     */
+    protected function _initServices() {
+//        $sc = new sfServiceContainerBuilder();
+        $sc = (object) array();
+//        $loader = new sfServiceContainerLoaderFileXml($sc);
+//        $loader->load(APPLICATION_PATH . "/configs/services.xml");
+        Zend_Registry::set('sc', $sc);
+    }
+
+
     /*
      * _initRoutes
      *
