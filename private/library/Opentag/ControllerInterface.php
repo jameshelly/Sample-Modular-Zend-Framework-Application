@@ -11,7 +11,7 @@ namespace Opentag;
  *
  */
 
-use Opentag\Common\Cache\ApcCache,
+use \Opentag\Common\Cache\ApcCache,
     \Opentag_Application_Resource_Doctrine;
 
 use Opentag\Exception\DependentComponentNotFoundException;
@@ -30,7 +30,6 @@ interface ControllerInterface {
      * $doctrine->getConnection();
      * $doctrine->getEntityManager();
      */
-
     protected $doctrine;
 
     //put your code here

@@ -61,8 +61,13 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
      *
      * @param array $config Doctrine Container configuration
      */
-    public function __construct(array $config = array())
+    public function __construct($options = null)
     {
+        if (is_array($options)) {
+            $this->setOptions($options);
+        } else if ($options instanceof Zend_Config) {
+            $this->setOptions($options->toArray());
+        }
         #Initialise default state for query.
          #Get logger
         $this->log = $this->getBootstrap()->getContainer()->get('logger');
@@ -128,17 +133,6 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
         $config = $this->cfg;
         $eventManager = $this->evtm;
 
-<<<<<<< HEAD
-//	$sluggableListener = new SluggableListener();
-//        $eventManager->addEventSubscriber($sluggableListener);
-//
-//        $translatableListener = new TranslationListener();
-//        $translatableListener->setTranslatableLocale('en_gb');
-//        $eventManager->addEventSubscriber($translatableListener);
-//
-//        $treeListener = new TreeListener();
-//        $eventManager->addEventSubscriber($treeListener);
-=======
         $sluggableListener = new SluggableListener();
         $eventManager->addEventSubscriber($sluggableListener);
 
@@ -148,7 +142,6 @@ class Opentag_Application_Resource_Doctrine extends \Zend_Application_Resource_R
 
         $treeListener = new TreeListener();
         $eventManager->addEventSubscriber($treeListener);
->>>>>>> jah.development
 
         return \Doctrine\DBAL\DriverManager::getConnection($connectionOptions, $config, $eventManager);
     }

@@ -1,8 +1,0 @@
-127.0.0.1 - - [26/Jan/2012:02:59:21 +0000] "GET / HTTP/1.1" 200 680 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7"
-127.0.0.1 - - [26/Jan/2012:02:59:21 +0000] "HEAD / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7"
-127.0.0.1 - - [26/Jan/2012:03:00:12 +0000] "GET / HTTP/1.1" 200 781 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7"
-127.0.0.1 - - [26/Jan/2012:03:00:12 +0000] "HEAD / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7"
-127.0.0.1 - - [26/Jan/2012:03:02:28 +0000] "GET / HTTP/1.1" 200 778 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7"
-127.0.0.1 - - [26/Jan/2012:03:02:28 +0000] "HEAD / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7"
-127.0.0.1 - - [26/Jan/2012:09:21:42 +0000] "GET / HTTP/1.1" 200 778 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7"
-127.0.0.1 - - [26/Jan/2012:09:21:43 +0000] "HEAD / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7"
