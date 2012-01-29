@@ -28,6 +28,7 @@ interface ControllerInterface {
      * $doctrine->log;
      * $doctrine->cfg;
      * $doctrine->getConnection();
+     * $doctrine->getEventManager();
      * $doctrine->getEntityManager();
      */
     protected $doctrine;

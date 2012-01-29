@@ -20,6 +20,12 @@ class IndexController extends \Zend_Controller_Action {
      */
     protected $_auth = null;
 
+    /**
+     * @var \App\Service\RandomQuote
+     * @InjectService RandomQuote
+     */
+    protected $_randomQuote = null;
+
     public function init() {
         $this->view->headTitle('title');
     }
