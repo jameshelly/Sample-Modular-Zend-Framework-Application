@@ -63,6 +63,12 @@ git submodule add git://github.com/weierophinney/zf-examples.git private/library
 git submodule add git://github.com/doctrine/doctrine2.git private/library/Doctrine
 git submodule add git://github.com/l3pp4rd/DoctrineExtensions.git private/library/Gedmo
 
+php private/bin/d2.php orm:validate
+php private/bin/classmap_generator.php -l ../application/
+php private/bin/classmap_generator.php -l ../library/
+php private/bin/d2.php orm:schema-tool:create
+php private/bin/d2.php orm:generate-proxies
+
 #### Configuring Doctrine
 there is a default.php example, you should copy the file and rename it d2.php set it up for a connection.
 ---- Code Example

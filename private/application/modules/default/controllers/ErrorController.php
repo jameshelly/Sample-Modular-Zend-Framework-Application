@@ -1,24 +1,29 @@
 <?php
 //namespace Application\Module\Controller;
 
-use /*Opentag,*/
-    \Doctrine\ORM\EntityManager,
-    \Zend_Controller_Action,
+use \Application\Forms,
+    \Application\Entities,
+    \Application\Forms\Default_Form_Login,
+    Opentag\Auth\Adapter\Doctrine,
+    Opentag\ControllerInterface as ControllerI,
+    Opentag_ZFDebug_Plugin_Doctrine as ZFDebugPlugin,
+    Zend_Controller_Action as ControllerAction,
+    Zend\Di\Configuration,
+    Zend\Di\ServiceLocation,
     \Zend_Auth_Adapter_Interface,
     \Zend_Auth_Result;
-
 /**
  * ErrorController - The default error controller class
- * 
+ *
  * @author
- * @version 
+ * @version
  */
-class ErrorController extends \Zend_Controller_Action {
-    
+class ErrorController extends ControllerAction {
+
     /**
-     * This action handles  
+     * This action handles
      *    - Application errors
-     *    - Errors in the controller chain arising from missing 
+     *    - Errors in the controller chain arising from missing
      *      controller classes and/or action methods
      */
     public function init() {
@@ -26,9 +31,9 @@ class ErrorController extends \Zend_Controller_Action {
 //        $bootstrap = $this->getInvokeArg('bootstrap');
 //        $this->_auth = $bootstrap->getResource('auth');
     }
-    
+
     /**
-     * 
+     *
      */
     public function triggerAction() {
         switch ($this->getRequest()->getParam('errnum')) {
@@ -46,9 +51,9 @@ class ErrorController extends \Zend_Controller_Action {
     }
 
     /**
-     * This action handles  
+     * This action handles
      *    - Application errors
-     *    - Errors in the controller chain arising from missing 
+     *    - Errors in the controller chain arising from missing
      *      controller classes and/or action methods
      */
     public function errorAction() {
@@ -68,7 +73,7 @@ class ErrorController extends \Zend_Controller_Action {
                 //$this->log->err('::404 Not Found ['.$_SERVER['REQUEST_URI'].']');//['URI']
                 if ($log = $this->getLog()) {
                     $log->err('::404 Not Found ['.$_SERVER['REQUEST_URI'].']');
-                }                
+                }
                 break;
             default:
                 // application error; display error page, but don't change status code
@@ -78,7 +83,7 @@ class ErrorController extends \Zend_Controller_Action {
                 //$this->log->crit($errors->exception);
                 if ($log = $this->getLog()) {
                     $log->crit($this->view->message, $errors->exception);
-                }                
+                }
                 break;
         }
         // conditionally display exceptions
@@ -91,7 +96,7 @@ class ErrorController extends \Zend_Controller_Action {
             $log->info(get_class($this).'::errorAction()');
         }
     }
-    
+
     public function getLog() {
         $bootstrap = $this->getInvokeArg('bootstrap');
         if (!$bootstrap->hasResource('Log')) {

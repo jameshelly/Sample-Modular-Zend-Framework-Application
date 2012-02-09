@@ -1,13 +1,17 @@
 <?php
 //namespace Application\Module\Controller;
 
-use Opentag\Auth\Adapter\Doctrine,
-    \Doctrine\ORM\EntityManager,
-    \Zend_Controller_Action,
+use \Application\Forms,
+    \Application\Entities,
     \Application\Forms\Default_Form_Login,
+    Opentag\Auth\Adapter\Doctrine,
+    Opentag\ControllerInterface as ControllerI,
+    Opentag_ZFDebug_Plugin_Doctrine as ZFDebugPlugin,
+    Zend_Controller_Action as ControllerAction,
+    Zend\Di\Configuration,
+    Zend\Di\ServiceLocation,
     \Zend_Auth_Adapter_Interface,
     \Zend_Auth_Result;
-
 /**
  * ErrorController - The default error controller class
  *
@@ -15,7 +19,7 @@ use Opentag\Auth\Adapter\Doctrine,
  * @version
  */
 
-class AuthController extends \Zend_Controller_Action
+class AuthController extends ControllerAction
 {
 
     /**

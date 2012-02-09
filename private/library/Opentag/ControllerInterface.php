@@ -18,7 +18,7 @@ use Opentag\Common\Cache\ApcCache,
     Opentag\Exception\IncompatibleComponentVersionException,
     Doctrine\Common\PropertyChangedListener as PropertyListener;
 
-interface ControllerInterface extends PropertyChangedListener {
+interface ControllerInterface extends PropertyListener {
 
     public function init();
 

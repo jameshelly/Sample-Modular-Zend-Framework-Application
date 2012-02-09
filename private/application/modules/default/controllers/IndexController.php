@@ -2,18 +2,24 @@
 
 //namespace Application\Module\Controller;
 
-use /* Opentag, */ \Doctrine\ORM\EntityManager,
-                   \Zend_Controller_Action,
-                   \Zend_Auth_Adapter_Interface,
-                   \Zend_Auth_Result;
-
+use \Application\Forms,
+    \Application\Entities,
+    \Application\Forms\Default_Form_Login,
+    Opentag\Auth\Adapter\Doctrine,
+    Opentag\ControllerInterface as ControllerI,
+    Opentag_ZFDebug_Plugin_Doctrine as ZFDebugPlugin,
+    Zend_Controller_Action as ControllerAction,
+    Zend\Di\Configuration,
+    Zend\Di\ServiceLocation,
+    \Zend_Auth_Adapter_Interface,
+    \Zend_Auth_Result;
 /**
  * IndexController - The default controller
  *
  * @author
  * @version
  */
-class IndexController extends \Zend_Controller_Action {
+class IndexController extends ControllerAction {
 
     /**
      * @var Zend_Auth

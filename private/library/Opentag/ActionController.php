@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManager,
     Opentag\ControllerInterface as ControllerI,
 //    Application\Forms,
 //    Application\Entities,
+    Doctrine\Common\PropertyChangedListener,
     Opentag\Service\Doctrine,
     Opentag_ZFDebug_Plugin_Doctrine as ZFDebugPlugin,
     Zend_Controller_Action as ControllerAction,
@@ -47,14 +48,61 @@ class ActionController extends ControllerAction implements ControllerI {
     	#Get Doctrine Entity Manager
         $bootstrap = $this->getInvokeArg('bootstrap');
         $context = 'bootstrap';
+
+        #Render log
         $this->_log = $this->getLog();
+        #Render cfg
         $this->_cfg = $this->getConfiguration($context,$this->getRequest());
+        #Render doctrine
         $this->doctrine = $this->getDoctrine($context);//$this->_cfg, $this->_log
+        #Render evtn
         $this->_evtm = $this->doctrine->getEventManager($context);
+        #Render entm
         $this->_entm = $this->doctrine->getEntityManager($context);
-        $this->view->entity = $this->doctrine->getResponseEntity($this->getRequest());
-//        $this->em = $bootstrap->getContainer()->get('entity.manager');
-        //$this->view->placeholder('doctrine')->exchangeArray(array('em'=>$this->em));
+        #Render entity
+//        $this->view->entity = $this->doctrine->getResponseEntity($this->getRequest());
+        #Set layout files to look in Theme folder.
+        $this->view->layout()->setLayoutPath(WEB_PATH . '/assets/layouts')
+                ->setLayout('bootstrap')
+                ->setViewBasePath(WEB_PATH . '/assets/views');
+        #Set view files based on template, theme & config settings.
+        $this->view->addScriptPath(WEB_PATH . '/assets/views');
+        #Detect Ajax Early.
+        if ($this->_request->isXmlHttpRequest()) {
+            $this->getLayout()->disableLayout();
+        }
+        #Default View Setup
+        $this->view->doctype('<!DOCTYPE html>');
+        #Render Sidebar
+//        $this->view->layout()->sidebar = "<h4>Sidebar</h4>";
+        #Init Context Switching
+        $this->_helper->contextSwitch()->setContext(
+                'html', array(
+            'suffix' => 'html',
+            'headers' => array(
+                'Content-Type' => 'text/html; Charset=' . $encoding,
+            ),
+                ), 'xml', array(
+            'suffix' => 'xml',
+            'headers' => array(
+                'Content-Type' => 'text/xml; Charset=' . $encoding,
+            ),
+                ), 'json', array(
+            'suffix' => 'json',
+            'headers' => array(
+                'Content-Type' => 'application/json; Charset=' . $encoding,
+            ),
+                )
+        )->setAutoJsonSerialization(false)->initContext();
+
+//        $this->buildPageTitle();
+//        $this->buildPageKeywords();
+//        $this->buildPageDescription();
+//        $this->buildHeadMeta($encoding, $this->locale);
+//        $this->buildScripts();
+//        $this->buildGoogleAnalytics();
+//        $this->addFacebookOpenGraph();
+//        $this->view->placeholder('doctrine')->exchangeArray(array('em'=>$this->em));
 //        $zfDebugPluginInstance = new ZFDebugPlugin($initArray);
         $this->view->partialLoop()->setObjectKey('entity');
         $this->view->headTitle('blog');
@@ -69,23 +117,27 @@ class ActionController extends ControllerAction implements ControllerI {
         $this->view->title = "Default Title";
         $this->view->message = "Default Message";
         $this->view->content = "<p>Default Content</p>";
-        $this->view->articles = $this->em->getRepository()->findAll();
+        $this->view->articles = (isset($this->entm)===false)?"none found. ":$this->entm->getRepository()->findAll();
     }
 
-    protected function getResponseEntity($request) {
-
-    }
-
-    protected function getClientResponsePrefs($request) {
+    public function propertyChanged($sender, $propertyName, $oldValue, $newValue) {
 
     }
 
-    protected function getConfiguration($context, $request) {
+    public function getResponseEntity($request) {
+
+    }
+
+    public function getClientResponsePrefs($request) {
+
+    }
+
+    public function getConfiguration($context, $request) {
         $cfg = false;
         return $cfg;
     }
 
-    protected function getDoctrine($context) {
+    public function getDoctrine($context) {
         $this->_cfg = $config;
         $this->_log = $log;
 
@@ -93,17 +145,17 @@ class ActionController extends ControllerAction implements ControllerI {
         return $doctrine;
     }
 
-    protected function getEventManager($context) {
+    public function getEventManager($context) {
         $evtm = false;
         return $evtm;
     }
 
-    protected function getEntityManager($context) {
+    public function getEntityManager($context) {
         $log = false;
         return $entm;
     }
 
-    protected function getLog() {
+    public function getLog() {
         $log = false;
         return $log;
     }
