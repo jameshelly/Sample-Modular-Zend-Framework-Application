@@ -11,27 +11,17 @@ namespace Opentag;
  *
  */
 
-use \Opentag\Common\Cache\ApcCache,
-    \Opentag_Application_Resource_Doctrine;
+use Opentag\Common\Cache\ApcCache,
+    Opentag_Application_Resource_Doctrine as DoctrineResource,
+    Opentag\Service\Doctrine as DoctrineService,
+    Opentag\Exception\DependentComponentNotFoundException,
+    Opentag\Exception\IncompatibleComponentVersionException,
+    Doctrine\Common\PropertyChangedListener as PropertyListener;
 
-use Opentag\Exception\DependentComponentNotFoundException;
-use Opentag\Exception\IncompatibleComponentVersionException;
+interface ControllerInterface extends PropertyChangedListener {
 
-interface ControllerInterface {
+    public function init();
 
-    /**
-     * @var Opentag_Application_Resource_Doctrine
-     *
-     * $doctrine->evtm;
-     * $doctrine->em;
-     * $doctrine->conn;
-     * $doctrine->log;
-     * $doctrine->cfg;
-     * $doctrine->getConnection();
-     * $doctrine->getEventManager();
-     * $doctrine->getEntityManager();
-     */
-    protected $doctrine;
+    public function indexAction();
 
-    //put your code here
 }
