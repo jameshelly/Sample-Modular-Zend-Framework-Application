@@ -1,0 +1,12 @@
+<?php
+//$this->entity->setTranslatableLocale($this->placeholder('locale'));
+//$this->placeholder('doctrine')->em->refresh($this->entity);
+?>
+        <tr>
+            <td><a href="/manager/hcards/update/<?=$this->entity->id; ?>"><?=($this->entity->organization->name!='')?$this->entity->organization->name:'Address'; ?></a></td>
+            <td><?="";?></td>
+            <td><?="";?></td>
+            <td><?="";?></td>
+            <td><?="";?></td>
+            <td><a href="/manager/hcards/delete/<?=$this->entity->id; ?>">delete</a></td>
+        </tr>

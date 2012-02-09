@@ -1,0 +1,9 @@
+
+        <tr>
+            <td><a href="/manager/acluserroles/update/<?=$this->entity->id; ?>"><?=$this->entity->title;?></a></td>
+            <td><?=$this->entity->firstname."".$this->entity->lastname;?></td>
+            <td><?=$this->entity->email;?></td>
+            <td><?="";/*$this->entity->lastLogin->format('d/m/Y');*/?></td>
+            <td><?=$this->entity->logins; ?></td>
+            <td><a href="/manager/acluserroles/delete/<?=$this->entity->id; ?>">delete</a></td>
+        </tr>

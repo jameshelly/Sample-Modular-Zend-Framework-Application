@@ -1,0 +1,13 @@
+<?php
+    $this->entity->setTranslatableLocale($this->placeholder('locale'));
+    $this->placeholder('doctrine')->em->refresh($this->entity);
+?>
+<tr>
+    <td><input type="checkbox" id="post-<?=$this->entity->id; ?>" data-entity="blog" name="post" value="<?=$this->entity->id; ?>" /></td>
+    <td><a href="<?=$this->placeholder('blogitemuri');?>/update/<?=$this->entity->id; ?>"><?=($this->entity->title!='')?$this->entity->title:$this->entity->slug; ?></a></td>
+    <td><?=($this->entity->author->username != '')?$this->entity->author->username:'Unknown';?></td>
+    <td><?=$this->entity->listTags();?></td>
+    <td><?=$this->entity->status; ?></td>
+    <td><time datetime="<?=$this->entity->publishstart->format('Y-m-d'); ?>" pubdate><?=$this->entity->publishstart->format('Y-m-d'); ?></time></td>
+    <td><time datetime="<?=$this->entity->updated->format('Y-m-d'); ?>"><?=$this->entity->updated->format('Y-m-d'); ?></time></td>
+</tr>

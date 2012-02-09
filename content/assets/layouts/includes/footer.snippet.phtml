@@ -1,0 +1,18 @@
+				<footer class="bottombar">
+
+                    <div class="container-fluid">
+
+                        <?php if($this->userIsLoggedIn()): ?>
+                        <ul>
+                            <!--
+                            <li><a href="<?= $this->baseUrl('/admin/reference'); ?>">Reference Guide</a></li>
+                            -->
+                            <li><a href="<?= $this->baseUrl('/'); ?>"><?= $this->placeholder('site')->clientname; ?> intranet</a></li>
+                        </ul>
+                        <?php endif; ?>
+
+						<span class="pull-right copyright">&copy; <a href="<?= $this->baseUrl('/'); ?>"><?= $this->placeholder('site')->clientname; ?></a> <?= date('Y'); ?></span>
+
+                    </div>
+
+				</footer>

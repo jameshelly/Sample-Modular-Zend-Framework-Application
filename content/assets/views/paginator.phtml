@@ -1,0 +1,20 @@
+<?php if ($this->pageCount): ?>
+<div class="pagination">
+    <ul>
+        <!-- Previous page link -->
+        <li class="more prev<?php if (!isset($this->previous)): ?> disabled<?php endif; ?>"><a href="<?php echo $this->url(array(
+        		'querystring' => $this->querystring, 
+        		'action' => $this->action, 
+        		'page' => $this->previous)
+        		, $this->method); ?>" rel="twipsy" title="Load the previous 20 pages of results.">&larr; Previous </a></li>
+    
+        <!-- Numbered page links -->
+        <?php foreach ($this->pagesInRange as $page): ?>
+            <li <?php if ($page == $this->current): ?> class="active"<?php endif; ?>><a href="<?php echo $this->url(array('querystring' => $this->querystring, 'action' => $this->action, 'page' => $page), $this->method); ?>"> <?php echo $page; ?></a>
+        <?php endforeach; ?>
+    
+        <!-- Next page link -->
+        <li class="more next<?php if (!isset($this->next)): ?> disabled<?php endif; ?>"><a href="<?php echo $this->url(array('querystring' => $this->querystring, 'action' => $this->action, 'page' => $this->next), $this->method); ?>" rel="twipsy" title="Load the next 20 pages of results.">Next &rarr;</a>
+    </ul>
+</div>
+<?php endif; ?>

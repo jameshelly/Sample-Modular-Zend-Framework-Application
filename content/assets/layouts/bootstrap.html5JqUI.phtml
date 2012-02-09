@@ -1,0 +1,80 @@
+<?= $this->doctype() . "\r\n"; ?>
+<html lang="<?= $this->placeholder('locale'); ?>" class="no-js <?= $this->placeholder('htmlclasses'); ?>">
+
+	<head>
+
+        <?= $this->render('includes/head.phtml'); ?>
+
+	</head>
+
+	<!--[if IE 6 ]><body class="ie6"><![endif]-->
+	<!--[if IE 7 ]><body class="ie7"><![endif]-->
+	<!--[if IE 8 ]><body class="ie8"><![endif]-->
+	<!--[if IE 9 ]><body class="ie9"><![endif]-->
+	<!--[if (gt IE 9)|!(IE)]><!--><body><!--<![endif]-->
+
+        <div id="wrapper">
+
+            <div id="footer-offset">
+
+                <?= $this->render('includes/header.phtml'); ?>
+
+                <?php if($this->userIsLoggedIn()): ?>
+
+                    <?= ''; $this->render('includes/sidepanel.phtml'); ?>
+
+                <?php endif; ?>
+
+                <div class="container<?php if($this->userIsLoggedIn()): ?>-fluid<?php endif; ?>" id="main">
+
+                    <?php if($this->userIsLoggedIn()): ?>
+
+                        <?= $this->render('includes/sidebar.phtml'); ?>
+
+                    <?php endif; ?>
+
+                    <div class="content">
+
+                        <h1 class="site-title"><?= $this->placeholder('site')->clientname; ?></h1>
+
+                        <?php if($this->userIsLoggedIn()): ?>
+
+                            <?= '';//$this->render('includes/breadcrumbs.phtml'); ?>
+
+                        <?php endif; ?>
+
+						<h2><?=$this->title;?></h2>
+
+                        <article>
+
+                            <!-- per-page content start -->
+
+                                <?php echo $this->layout()->content ?>
+
+                            <!-- per-page content end -->
+
+                        </article>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <?= $this->render('includes/footer.phtml'); ?>
+
+        <?php if($this->userIsLoggedIn()): ?>
+
+            <?php echo $this->render('partials/manager/modal.confirm-deletion.phtml'); ?>
+            <?php echo $this->render('partials/manager/modal.confirm-deletion-single.phtml'); ?>
+            <?php echo $this->render('partials/manager/modal.asset-manager.phtml'); ?>
+
+        <?php endif; ?>
+
+        <?php echo  $this->render('includes/scripts.phtml'); ?>
+
+	</body>
+
+</html>

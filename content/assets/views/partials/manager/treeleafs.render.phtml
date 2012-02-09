@@ -1,0 +1,12 @@
+<?php
+//$this->entity->setTranslatableLocale($this->placeholder('locale'));
+//if(isset($this->entity)===true){
+//    $this->placeholder('doctrine')->em->refresh($this->entity);
+//}
+?>
+                <li id="node-<?=$this->entity->id;?>" class="<?=($this->entity->selected)?'jstree-checked':''; ?>"><a href="#<?=$this->entity->id;?>" class="<?=$spanclass;?>"><?=$this->entity->title;?></a><?php if(count($this->entity->children)>0) {
+                    echo '<ul class="tree-view-leaf">';
+                    echo $this->partialLoop('treeview/treeleafs.render.phtml', $this->entity->children);
+                    echo '</ul>';
+                    }
+                    ?></li>

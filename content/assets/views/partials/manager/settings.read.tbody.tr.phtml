@@ -1,0 +1,16 @@
+<?php
+//$this->entity->setTranslatableLocale($this->placeholder('locale'));
+//$this->placeholder('doctrine')->em->refresh($this->entity);
+?>
+        <tr>
+            <td><input type="checkbox" id="page-<?=$this->entity->id; ?>" name="settings" value="<?=$this->entity->id; ?>" /></td>
+            <td><a href="/manager/settings/update/<?=$this->entity->id; ?>"><?=($this->entity->title!='')?$this->entity->title:'title'; ?></a></td>
+            <td><?="";?></td>
+            <td><?="";//$this->entity->listCategories();?></td>
+            <td><?php
+                foreach($this->entity->categories as $category){
+                    echo $category->title.", ";
+                }
+            ?></td>
+            <td><a class="btn danger delete pull-right" href="/manager/settings/delete/<?=$this->entity->id; ?>">delete</a></td>
+        </tr>

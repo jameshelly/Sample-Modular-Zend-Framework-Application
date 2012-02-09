@@ -1,0 +1,16 @@
+<?php
+//$this->entity->setTranslatableLocale($this->placeholder('locale'));
+//$this->placeholder('doctrine')->em->refresh($this->entity);
+?>
+        <tr>
+            <td><a href="/manager/mediagalleries/update/<?=$this->entity->id; ?>"><?=($this->entity->title!='')?$this->entity->title:'title'; ?></a></td>
+            <td><?="";?></td>
+            <td><?="";?></td>
+            <td><?="";?></td>
+            <td><?php
+                foreach($this->entity->categories as $category){
+                    echo $category->title.", ";
+                }
+            ?></td>
+            <td><a href="/manager/mediagalleries/delete/<?=$this->entity->id; ?>">delete</a></td>
+        </tr>
