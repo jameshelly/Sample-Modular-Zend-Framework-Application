@@ -1,0 +1,42 @@
+<?= $this->doctype() . "\r\n"; ?>
+<html lang="<?= $this->placeholder('locale'); ?>" class="no-js <?= $this->placeholder('htmlclasses'); ?>">
+
+	<head>
+        <?= $this->render('includes/head.phtml'); ?>
+	</head>
+
+	<!--[if IE 6 ]><body class="ie6"><![endif]-->
+	<!--[if IE 7 ]><body class="ie7"><![endif]-->
+	<!--[if IE 8 ]><body class="ie8"><![endif]-->
+	<!--[if IE 9 ]><body class="ie9"><![endif]-->
+	<!--[if (gt IE 9)|!(IE)]><!--><body><!--<![endif]-->
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <h1 class="site-title"><?= $this->placeholder('site')->clientname; ?></h1>
+                <?=$this->render('includes/header.phtml'); ?>
+            </div>
+            <div class="row-fluid">
+                <div class="span2">
+                <!--Sidebar content-->
+                <?=$this->render('includes/sidepanel.phtml'); ?>
+                </div>
+                <div class="span10">
+                <article>
+                <h2><?=$this->title;?></h2>
+                <?=$this->layout()->content; ?>
+                </article>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <?= $this->render('includes/footer.phtml'); ?>
+            </div>
+            <div id="screen-offset">
+                <?="";//$this->renderPartials('partials/manager/modal.*.phtml'); ?>
+                <?=$this->render('includes/scripts.phtml'); ?>
+            </div>
+        </div>
+        
+	</body>
+
+</html>

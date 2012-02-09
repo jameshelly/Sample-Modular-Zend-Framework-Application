@@ -48,14 +48,20 @@ http://www.doctrine-project.org/
 http://www.doctrine-project.org/docs/orm/2.1/en/reference/introduction.html
 
 # Gedmo 2.x
-git://github.com/doctrine/doctrine2.git
-http://www.doctrine-project.org/
-http://www.doctrine-project.org/docs/orm/2.1/en/reference/introduction.html
+git://github.com/l3pp4rd/DoctrineExtensions.git
+https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc
+https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/annotations.md
 
 # Configuring
 # Configuring Classmaps
 private/bin/$ php classmap_generator.php -l ../application/
 private/bin/$ php classmap_generator.php -l ../library/
+
+Add libraries as submodules, next step is to autoload things.
+git submodule add git://github.com/jameshelly/ZendFrameWork1.git private/library
+git submodule add git://github.com/weierophinney/zf-examples.git private/library/examples
+git submodule add git://github.com/doctrine/doctrine2.git private/library/Doctrine
+git submodule add git://github.com/l3pp4rd/DoctrineExtensions.git private/library/Gedmo
 
 #### Configuring Doctrine
 there is a default.php example, you should copy the file and rename it d2.php set it up for a connection.
@@ -86,4 +92,12 @@ private/bin/$ php d2.php orm:generate-proxies
 
 ### Using
 	Its a pretty raw application, with a default & blog modules.
+
+### Useful commandline functions.
+php private/bin/d2.php orm:validate
+php private/bin/d2.php orm:info
+php private/bin/d2.php orm:schema-tool:create
+php private/bin/d2.php orm:schema-tool:drop --force --full-database
+php private/bin/d2.php orm:schema-tool:create
+php private/bin/d2.php dbal:import private/data/install/wedcms.minimal.sql
 
