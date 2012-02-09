@@ -47,12 +47,19 @@ git://github.com/doctrine/doctrine2.git
 http://www.doctrine-project.org/
 http://www.doctrine-project.org/docs/orm/2.1/en/reference/introduction.html
 
+# Gedmo 2.x
+git://github.com/doctrine/doctrine2.git
+http://www.doctrine-project.org/
+http://www.doctrine-project.org/docs/orm/2.1/en/reference/introduction.html
+
 # Configuring
 # Configuring Classmaps
 private/bin/$ php classmap_generator.php -l ../application/
 private/bin/$ php classmap_generator.php -l ../library/
 
 #### Configuring Doctrine
+there is a default.php example, you should copy the file and rename it d2.php set it up for a connection.
+---- Code Example
 private/bin/$ php d2.php orm:validate
 private/bin/$ php d2.php orm:schema-tool:create
 private/bin/$ php d2.php orm:generate-proxies

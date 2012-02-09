@@ -54,7 +54,7 @@ class Doctrine extends DoctrineInterface {
         }
         $this->log->info(get_class($this) . '::getEntityManager');
         if ((null === $this->em)) {
-            $this->em = $this->_buildEntityManager($this->getOptions());
+            $this->em = getConfiguration();//$this->_buildEntityManager($this->getOptions());
         }
         $this->getBootstrap()->getContainer()->set('entity.manager', $this->em);
         return $this->em;
