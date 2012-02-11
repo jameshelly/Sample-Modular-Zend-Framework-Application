@@ -61,8 +61,8 @@ I also grab Doctrine & Gedmo repositories.
 
 ---- Repositories
 
-git clone git://github.com/doctrine/doctrine2.git 
-git clone git://github.com/l3pp4rd/DoctrineExtensions.git
+	git clone git://github.com/doctrine/doctrine2.git 
+	git clone git://github.com/l3pp4rd/DoctrineExtensions.git
 
 ---- Alias folders to Library folder.
 
@@ -78,11 +78,15 @@ private/bin/$ php classmap_generator.php -l ../library/
 
 #### Configuring Doctrine
 There is a d2.default.php example, you should copy the file and rename it d2.php set it up for a connection.
+
 ---- Code Example
+
 	private/bin/$ php d2.php orm:validate
 	private/bin/$ php d2.php orm:schema-tool:create
 	private/bin/$ php d2.php orm:generate-proxies
+
 ---- Configuration Example
+
 	resources.doctrine.charset = UTF8
 	resources.doctrine.compiled = false
 	resources.doctrine.orm.manager.connection     							= default
