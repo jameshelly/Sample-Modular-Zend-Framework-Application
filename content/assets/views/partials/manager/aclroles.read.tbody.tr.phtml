@@ -1,9 +1,0 @@
-<?php
-//$this->entity->setTranslatableLocale($this->placeholder('locale'));
-//$this->placeholder('doctrine')->em->refresh($this->entity);
-?>
-        <tr>
-            <td><input type="checkbox" id="page-<?=$this->entity->id; ?>" name="acluserroles" value="<?=$this->entity->id; ?>" /></td>
-            <td><a href="/manager/aclroles/update/<?=$this->entity->id; ?>"><?=($this->entity->title!='')?$this->entity->title:'title'; ?></a></td>
-            <td><a class="btn danger delete pull-right" href="/manager/aclroles/delete/<?=$this->entity->id; ?>">delete</a></td>
-        </tr>

@@ -1,8 +1,0 @@
-
-<?php foreach($this->items as $item) : ?>
- <tr>
-     <td><a href="/admin/deploy/rollback/?suffix=<?=$item; ?>"><?php echo $item; ?> </a></td>
-     <td><a class="btn danger delete pull-right" href="/admin/deploy/delete/?suffix=<?=$item; ?>">delete</a></td>
-</tr>
-
-<?php endforeach;?>
