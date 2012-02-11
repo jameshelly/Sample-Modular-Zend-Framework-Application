@@ -55,9 +55,20 @@ https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/annotations.md
 # Configuring
 Add libraries as submodules, next step is to autoload things.
 git submodule add git://github.com/jameshelly/ZendFrameWork1.git private/library
-git submodule add git://github.com/weierophinney/zf-examples.git private/library/examples
-git submodule add git://github.com/doctrine/doctrine2.git private/library/Doctrine
-git submodule add git://github.com/l3pp4rd/DoctrineExtensions.git private/library/Gedmo
+
+# Adding other Libraries
+I also grab Doctrine & Gedmo repositories.
+
+Doctrine 2
+git clone git://github.com/doctrine/doctrine2.git 
+git clone git://github.com/l3pp4rd/DoctrineExtensions.git
+
+alias folders to Library folder.
+ln -s doctrine2/lib/Doctrine/ORM  /sitelocation/private/library/Doctrine/ORM
+ln -s doctrine2/lib/vendor/doctrine-common/lib/Doctrine/Common  /sitelocation/private/library/Doctrine/Common
+ln -s doctrine2/lib/vendor/doctrine-dbal/lib/Doctrine/DBAL  /sitelocation/private/library/Doctrine/DBAL
+ln -s doctrine2/lib/vendor/Symfony  /sitelocation/private/library/Doctrine/Symfony
+ln -s DoctrineExtensions/lib/Gedmo  /sitelocation/private/library/Gedmo
 
 # Configuring Classmaps
 private/bin/$ php classmap_generator.php -l ../application/
