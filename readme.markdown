@@ -59,11 +59,13 @@ git submodule add git://github.com/jameshelly/ZendFrameWork1.git private/library
 # Adding other Libraries
 I also grab Doctrine & Gedmo repositories.
 
----- Doctrine 2
+---- Repositories
+
 git clone git://github.com/doctrine/doctrine2.git 
 git clone git://github.com/l3pp4rd/DoctrineExtensions.git
 
 ---- Alias folders to Library folder.
+
 	ln -s doctrine2/lib/Doctrine/ORM  /sitelocation/private/library/Doctrine/ORM
 	ln -s doctrine2/lib/vendor/doctrine-common/lib/Doctrine/Common  /sitelocation/private/library/Doctrine/Common
 	ln -s doctrine2/lib/vendor/doctrine-dbal/lib/Doctrine/DBAL  /sitelocation/private/library/Doctrine/DBAL
