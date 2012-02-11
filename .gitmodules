@@ -1,0 +1,6 @@
+[submodule "private/library"]
+	path = private/library
+	url = git://github.com/jameshelly/ZendFrameWork1.git
+[submodule "content/assets/bootstrap"]
+	path = content/assets/bootstrap
+	url = git://github.com/twitter/bootstrap.git

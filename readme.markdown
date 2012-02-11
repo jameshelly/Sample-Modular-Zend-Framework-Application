@@ -53,15 +53,15 @@ https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc
 https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/annotations.md
 
 # Configuring
-# Configuring Classmaps
-private/bin/$ php classmap_generator.php -l ../application/
-private/bin/$ php classmap_generator.php -l ../library/
-
 Add libraries as submodules, next step is to autoload things.
 git submodule add git://github.com/jameshelly/ZendFrameWork1.git private/library
 git submodule add git://github.com/weierophinney/zf-examples.git private/library/examples
 git submodule add git://github.com/doctrine/doctrine2.git private/library/Doctrine
 git submodule add git://github.com/l3pp4rd/DoctrineExtensions.git private/library/Gedmo
+
+# Configuring Classmaps
+private/bin/$ php classmap_generator.php -l ../application/
+private/bin/$ php classmap_generator.php -l ../library/
 
 php private/bin/d2.php orm:validate
 php private/bin/classmap_generator.php -l ../application/
@@ -70,7 +70,7 @@ php private/bin/d2.php orm:schema-tool:create
 php private/bin/d2.php orm:generate-proxies
 
 #### Configuring Doctrine
-there is a default.php example, you should copy the file and rename it d2.php set it up for a connection.
+there is a d2.default.php example, you should copy the file and rename it d2.php set it up for a connection.
 ---- Code Example
 private/bin/$ php d2.php orm:validate
 private/bin/$ php d2.php orm:schema-tool:create

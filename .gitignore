@@ -13,5 +13,3 @@ private/data/session/*
 private/data/cache/*
 private/data/logs/*
 private/_backup*
-private/library/Zend/*
-private/library/ZendX/*
