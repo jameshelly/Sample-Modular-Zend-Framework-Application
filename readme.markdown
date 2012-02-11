@@ -64,30 +64,19 @@ git clone git://github.com/doctrine/doctrine2.git
 git clone git://github.com/l3pp4rd/DoctrineExtensions.git
 
 alias folders to Library folder.
-
-ln -s doctrine2/lib/Doctrine/ORM  /sitelocation/private/library/Doctrine/ORM
-
-ln -s doctrine2/lib/vendor/doctrine-common/lib/Doctrine/Common  /sitelocation/private/library/Doctrine/Common
-
-ln -s doctrine2/lib/vendor/doctrine-dbal/lib/Doctrine/DBAL  /sitelocation/private/library/Doctrine/DBAL
-
-ln -s doctrine2/lib/vendor/Symfony  /sitelocation/private/library/Doctrine/Symfony
-
-ln -s DoctrineExtensions/lib/Gedmo  /sitelocation/private/library/Gedmo
+	ln -s doctrine2/lib/Doctrine/ORM  /sitelocation/private/library/Doctrine/ORM
+	ln -s doctrine2/lib/vendor/doctrine-common/lib/Doctrine/Common  /sitelocation/private/library/Doctrine/Common
+	ln -s doctrine2/lib/vendor/doctrine-dbal/lib/Doctrine/DBAL  /sitelocation/private/library/Doctrine/DBAL
+	ln -s doctrine2/lib/vendor/Symfony  /sitelocation/private/library/Doctrine/Symfony
+	ln -s DoctrineExtensions/lib/Gedmo  /sitelocation/private/library/Gedmo
 
 
 # Configuring Classmaps
 private/bin/$ php classmap_generator.php -l ../application/
 private/bin/$ php classmap_generator.php -l ../library/
 
-php private/bin/d2.php orm:validate
-php private/bin/classmap_generator.php -l ../application/
-php private/bin/classmap_generator.php -l ../library/
-php private/bin/d2.php orm:schema-tool:create
-php private/bin/d2.php orm:generate-proxies
-
 #### Configuring Doctrine
-there is a d2.default.php example, you should copy the file and rename it d2.php set it up for a connection.
+There is a d2.default.php example, you should copy the file and rename it d2.php set it up for a connection.
 ---- Code Example
 private/bin/$ php d2.php orm:validate
 private/bin/$ php d2.php orm:schema-tool:create
@@ -110,17 +99,16 @@ private/bin/$ php d2.php orm:generate-proxies
 	resources.doctrine.dbal.default.user = root
 	resources.doctrine.dbal.default.password = 
 	resources.doctrine.dbal.default.dbname = zf11d2_alpha
-	
 	resources.doctrine.cacheClass = "Doctrine\Common\Cache\ArrayCache"
 
 ### Using
 	Its a pretty raw application, with a default & blog modules.
 
 ### Useful commandline functions.
-php private/bin/d2.php orm:validate
-php private/bin/d2.php orm:info
-php private/bin/d2.php orm:schema-tool:create
-php private/bin/d2.php orm:schema-tool:drop --force --full-database
-php private/bin/d2.php orm:schema-tool:create
-php private/bin/d2.php dbal:import private/data/install/wedcms.minimal.sql
-
+	php private/bin/d2.php orm:validate
+	php private/bin/d2.php orm:info
+	php private/bin/d2.php orm:schema-tool:create
+	php private/bin/d2.php orm:schema-tool:drop --force --full-database
+	php private/bin/d2.php orm:schema-tool:create
+	php private/bin/d2.php orm:generate-proxies
+	php private/bin/d2.php dbal:import private/data/install/wedcms.minimal.sql
