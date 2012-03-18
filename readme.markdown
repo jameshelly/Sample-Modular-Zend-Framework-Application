@@ -56,6 +56,10 @@ https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/annotations.md
 Add libraries as submodules, next step is to autoload things.
 git submodule add git://github.com/jameshelly/ZendFrameWork1.git private/library
 
+git submodule add git://github.com/zendframework/zf2.git  vendor/ZendFramework
+git submodule add git://github.com/l3pp4rd/DoctrineExtensions.git  vendor/l3pp4rd/DoctrineExtensions
+git submodule add git://github.com/doctrine/doctrine2.git vendor/Doctrine
+
 # Adding other Libraries
 I also grab Doctrine & Gedmo repositories.
 
