@@ -8,6 +8,7 @@
 .settings*
 nbproject/*
 source/*
+Icon*
 private/bin/d2.php
 private/data/session/*
 private/data/cache/*
