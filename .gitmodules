@@ -1,3 +1,6 @@
 [submodule "content/assets/bootstrap"]
 	path = content/assets/bootstrap
 	url = git://github.com/twitter/bootstrap.git
+[submodule "private/library/Zend"]
+	path = private/library/Zend
+	url = git://github.com/JamesWednesday/ZendFramework-1.11.x.git
