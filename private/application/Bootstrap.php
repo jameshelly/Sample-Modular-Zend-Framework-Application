@@ -48,12 +48,12 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
         $config = $this->getContainer()->get('config');
         $logPath = $config->resources->log->path;
         $filelog = new Zend_Log_Writer_Stream($logPath);
-        $filter = new Zend_Log_Filter_Priority(Zend_Log::ERR);
+        $filter = new Zend_Log_Filter_Priority(Zend_Log::INFO);
         $filelog->addFilter($filter);
         $logger = new Zend_Log($filelog);
         if(APPLICATION_ENV != 'production') {
             $writer = new Zend_Log_Writer_Firebug();
-            $fbfilter = new Zend_Log_Filter_Priority(Zend_Log::INFO);
+            $fbfilter = new Zend_Log_Filter_Priority(Zend_Log::DEBUG);
             $writer->addFilter($fbfilter);
             $logger->addWriter($writer);
         }
