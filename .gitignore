@@ -13,4 +13,5 @@ private/bin/d2.php
 private/data/session/*
 private/data/cache/*
 private/data/logs/*
+private/data/generated/*
 private/_backup*
