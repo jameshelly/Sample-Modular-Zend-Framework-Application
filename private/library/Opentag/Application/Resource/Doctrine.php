@@ -14,21 +14,23 @@
  *
  */
 use Doctrine\DBAL\DriverManager,
-    Doctrine\DBAL\Logging\DebugStack,
     Doctrine\Common\Annotations\AnnotationReader,
     Doctrine\Common\Annotations\AnnotationRegistry,
     Doctrine\ORM\Mapping\Driver\AnnotationDriver,
-    Doctrine\ORM\Mapping\Driver\DriverChain,
+    Doctrine\Common\EventManager,
     Doctrine\ORM\EntityManager,
     Doctrine\ORM\Configuration,
+    Doctrine\DBAL\Logging\DebugStack as DoctrineDebugStack,
+    Doctrine\ORM\Mapping\Driver\DriverChain as DoctrineDriverChain,
     Opentag\Auth\Adapter\Doctrine as AuthAdapterDoctrine,
     Opentag_ZFDebug_Plugin_Doctrine as ZFDebugDoctrine,
-    Gedmo\Tree\TreeListener,
-    Gedmo\Loggable\LoggableListener,
-    Gedmo\Sluggable\SluggableListener,
-    Gedmo\Translatable\TranslationListener,
-    Gedmo\Timestampable\TimestampableListener,
-    \Zend_Application_Resource_ResourceAbstract as ResourceAbstract;
+    Zend_Application_Resource_ResourceAbstract as ResourceAbstract
+//    Gedmo\Tree\TreeListener,
+//    Gedmo\Loggable\LoggableListener,
+//    Gedmo\Sluggable\SluggableListener,
+//    Gedmo\Translatable\TranslationListener,
+//    Gedmo\Timestampable\TimestampableListener
+    ;
 
 /**
  * Description of Doctrine
@@ -213,41 +215,6 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
         }
         return DriverManager::getConnection($connectionOptions, $this->cfg, $this->evtm);
     }
-//    public function getConnection($options = false) {
-//        #Get logger
-//        if (null === $this->log) {
-//            $this->log = $this->getBootstrap()->getContainer()->get('logger');
-//        }
-//        $this->log->info(get_class($this) . '::getConnection');
-//        if ((null === $this->conn)) {
-//            $this->conn = $this->_buildConnection();
-//        }
-//        $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->conn);
-//        return $this->conn;
-//    }
-//
-//    protected function _buildConnection() {
-//        //die(print_r($options));
-//        $options = $this->getOptions();
-//
-//        $connectionOptions = $this->_buildConnectionOptions($options);
-//
-//        #Setup configuration as seen from the sandbox application
-//        $config = $this->cfg;
-//        $eventManager = $this->evtm;
-//
-//        $sluggableListener = new SluggableListener();
-//        $eventManager->addEventSubscriber($sluggableListener);
-//
-//        $translatableListener = new TranslationListener();
-//        $translatableListener->setTranslatableLocale('en_gb');
-//        $eventManager->addEventSubscriber($translatableListener);
-//
-//        $treeListener = new TreeListener();
-//        $eventManager->addEventSubscriber($treeListener);
-//
-//        return \Doctrine\DBAL\DriverManager::getConnection($connectionOptions, $config, $eventManager);
-//    }
 
     /**
      * A method to build the connection options, for a Doctrine
@@ -295,7 +262,7 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
         $config->setAutoGenerateProxyClasses($options['orm']['manager']['proxy']['autoGenerateClasses']);
 
         #Set Logging
-        $logger = new \Doctrine\DBAL\Logging\DebugStack;
+        $logger = new DoctrineDebugStack;
         $config->setSqlLogger($logger);
 
         #Driver Configuration
@@ -308,13 +275,13 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
 //        $reader->setIgnoreNotImportedAnnotations(true);
 //        $reader->setEnableParsePhpImports(false);
         $entityPathes = $autoPaths->entities;
-        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Tree/Entity');
-        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Sortable/Entity');
-        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Loggable/Entity');
-        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Translatable/Entity');
+//        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Tree/Entity');
+//        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Sortable/Entity');
+//        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Loggable/Entity');
+//        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Translatable/Entity');
 
-        $chainDriverImpl = new \Doctrine\ORM\Mapping\Driver\DriverChain();
-        $defaultDriverImpl = \Doctrine\ORM\Mapping\Driver\AnnotationDriver::create($autoPaths->entities, $reader);
+        $chainDriverImpl = new DoctrineDriverChain();
+        $defaultDriverImpl = AnnotationDriver::create($autoPaths->entities, $reader);
         $defaultDriverImpl->getAllClassNames();
         $translatableDriverImpl = $config->newDefaultAnnotationDriver($entityPathes);
         $chainDriverImpl->addDriver($defaultDriverImpl, 'Application\Entities\\');
@@ -370,5 +337,40 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
 
         return $connection;
     }
+//    public function getConnection($options = false) {
+//        #Get logger
+//        if (null === $this->log) {
+//            $this->log = $this->getBootstrap()->getContainer()->get('logger');
+//        }
+//        $this->log->info(get_class($this) . '::getConnection');
+//        if ((null === $this->conn)) {
+//            $this->conn = $this->_buildConnection();
+//        }
+//        $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->conn);
+//        return $this->conn;
+//    }
+//
+//    protected function _buildConnection() {
+//        //die(print_r($options));
+//        $options = $this->getOptions();
+//
+//        $connectionOptions = $this->_buildConnectionOptions($options);
+//
+//        #Setup configuration as seen from the sandbox application
+//        $config = $this->cfg;
+//        $eventManager = $this->evtm;
+//
+//        $sluggableListener = new SluggableListener();
+//        $eventManager->addEventSubscriber($sluggableListener);
+//
+//        $translatableListener = new TranslationListener();
+//        $translatableListener->setTranslatableLocale('en_gb');
+//        $eventManager->addEventSubscriber($translatableListener);
+//
+//        $treeListener = new TreeListener();
+//        $eventManager->addEventSubscriber($treeListener);
+//
+//        return \Doctrine\DBAL\DriverManager::getConnection($connectionOptions, $config, $eventManager);
+//    }
 
 }
