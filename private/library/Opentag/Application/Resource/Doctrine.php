@@ -97,10 +97,9 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
 //         #Get logger
         $this->log = $this->getBootstrap()->getContainer()->get('logger');
         $this->log->info(get_class($this) . '::init');
-//        #Use apc for queryCache & configCache {session,default,autheduser,authpipe}
-//        $this->cfg = new \Doctrine\ORM\Configuration;
-//        $this->evtm = $this->getEntityManager();
-//        $this->entm = $this->getEntityManager();
+        $this->d2 = new DoctrineService($this->getOptions());
+        $this->d2->setBootstrap($this->getBootstrap());
+        return $this;
    }
 
     /**
@@ -110,7 +109,11 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
      * @return \Doctrine\ORM\EntityManager Instance.
      */
     public function init() {
-        return new DoctrineService($this->getOptions());
+        return $this->d2;
+    }
+
+    public function getEntityManager($options = null) {
+        return $this->d2->getEntityManager($options);
     }
 
 }

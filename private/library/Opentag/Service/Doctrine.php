@@ -11,11 +11,10 @@ use Doctrine\DBAL\DriverManager,
     Doctrine\Common\Annotations\AnnotationReader,
     Doctrine\Common\Annotations\AnnotationRegistry,
     Doctrine\Common\EventManager,
-    Doctrine\DBAL\Connection,
     Doctrine\ORM\EntityManager,
     Doctrine\OXM\XmlEntityManager,
     Doctrine\ODM\MongoDB\DocumentManager,
-    Doctrine\ORM\Configuration,
+    Doctrine\ORM\Configuration as ORMConfiguration,
     Doctrine\ORM\Mapping\Driver\AnnotationDriver as ORMAnnotationDriver,
     Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver as ODMAnnotationDriver,
     Doctrine\OXM\Mapping\Driver\AnnotationDriver as OXMAnnotationDriver,
@@ -135,21 +134,7 @@ class Doctrine {
         } else if ($options instanceof Zend_Config) {
             $this->setOptions($options->toArray());
         }
-
-        $CacheOptions = array();
-        $ConnectionOptions = array();
-        $EventOptions = array();
-        $EntityOptions = array();
-        $XmlEntityOptions = array();
-        $DocumentOptions = array();
-
-        $this->context      = $this->getContext();
-        $this->cache        = $this->getCacheManager($CacheOptions);
-        $this->conn         = $this->getConnection($ConnectionOptions);
-        $this->evtm         = $this->getEventManager($EventOptions);
-        $this->evtm         = $this->getEntityManager($EntityOptions);
-        $this->xmltm        = $this->getXmlEntityManager($XmlEntityOptions);
-        $this->xmltm        = $this->getDocumentManager($DocumentOptions);
+        $this->cfg          = $this->getConfig();
     }
 
     /**
@@ -159,11 +144,25 @@ class Doctrine {
      * @return \Doctrine\ORM\EntityManager Instance.
      */
     public function init() {
-        $this->_bootstrap = Front::getInstance()->getParam('bootstrap');
         if(null === $this->log) {
             $this->log = $this->getBootstrap()->getResource('Log');
         }
+        $this->log->info(get_class($this) . '::init');
+        $CacheOptions = array();
+        $ConnectionOptions = array();
+        $EventOptions = array();
+        $EntityOptions = array();
+        $XmlEntityOptions = array();
+        $DocumentOptions = array();
 
+        $this->context      = $this->getContext();
+//        $this->cache        = $this->getCacheManager($CacheOptions);
+        $this->conn         = $this->getConnection($ConnectionOptions);
+        $this->evtm         = $this->getEventManager($EventOptions);
+        $this->entm         = $this->getEntityManager($EntityOptions);
+//        $this->xmltm        = $this->getXmlEntityManager($XmlEntityOptions);
+//        $this->doctm        = $this->getDocumentManager($DocumentOptions);
+        $this->log->info(get_class($this) . '::init');
         return $this;
     }
 
@@ -229,6 +228,16 @@ class Doctrine {
         return $array1;
     }
 
+    /**
+     *
+     */
+    public function getConfig() {
+        if ((null === $this->cfg) ) {
+            $this->cfg = new ORMConfiguration();
+        }
+        return $this->cfg;//new \Boilerplate\Webservice\Soap
+    }
+
 //    public function getConnection() {
 //
 //    }
@@ -248,11 +257,11 @@ class Doctrine {
         if(($name != 'default')&&($name != '')) {
             return $this->_buildConnection($name);
         }
-        if ( (null === $this->_conn) ) {
-            $this->_conn = $this->_buildConnection($name);
+        if ( (null === $this->conn) ) {
+            $this->conn = $this->_buildConnection($name);
         }
-        $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->_conn);
-        return $this->_conn;
+        $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->conn);
+        return $this->conn;
     }
 
     /**
@@ -308,7 +317,6 @@ class Doctrine {
         return $this->entm;
     }
 
-
 //
 //    public function getEntityManager() {
 //
@@ -342,10 +350,14 @@ class Doctrine {
         $options = $this->getOptions();
         $connectionOptions = $this->_buildConnectionOptions($name);
         #Setup configuration as seen from the sandbox application
+        if ((null === $this->cfg) ) {
+            $this->cfg = $this->getConfig();
+        }
         if ( (null === $this->evtm) ) {
             $this->evtm = $this->getEventManager();
         }
-        return $this->cahce;
+
+        return DriverManager::getConnection($connectionOptions, $this->cfg, $this->evtm);
     }
 
 //    public function _buildEventManager($options = false) {
@@ -364,7 +376,6 @@ class Doctrine {
     protected function _buildEventManager($name = 'default') {
         $options = $this->getOptions();
         $eventManager = new EventManager();
-//        $this->log->debug($options);
         #TODO Loop through config to find availible listeners.
         foreach ($options['extensions']['listener'] as $listenerName => $listenerOptions) {
               $$listenerName = new $listenerOptions['driver']();
@@ -392,73 +403,164 @@ class Doctrine {
         $this->log->info(get_class($this) . '::buildEntityManager');
         #Options
         $options = $this->getOptions();
-        $connection = $this->_buildConnection();
-        $config = $this->cfg;
-        $eventManager = $this->evtm;
+        $metadataDrivers = $options['orm']['manager']['metadataDrivers'][0];
+        $this->cfg = $this->getConfig();
+        $this->conn = $this->getConnection();
+        $this->evtm = $this->getEventManager();
 
         #Now configure doctrine cache
-        if ('development' == APPLICATION_ENV) {
+        if (defined('COMMAND_LINE')===true) {
+            $cacheClass = 'Doctrine\Common\Cache\ArrayCache';
+        } else if ('development' == APPLICATION_ENV) {
             $cacheClass = isset($options['cacheClass']) ? $options['cacheClass'] : 'Doctrine\Common\Cache\ArrayCache';
         } else {
-            $cacheClass = isset($options['cacheClass']) ? $options['cacheClass'] : 'Doctrine\Common\Cache\XcacheCache';
+            $cacheClass = isset($options['cacheClass']) ? $options['cacheClass'] : 'Doctrine\Common\Cache\ArrayCache';
         }
-
         #Cache Options.
         $cache = new $cacheClass();
-        $config->setMetadataCacheImpl($cache);
+        $this->cfg->setMetadataCacheImpl($cache);
         #Caches for Development..
-        if ('development' == APPLICATION_ENV) {
+        if (defined('COMMAND_LINE')===true) {
             $cachedClass = 'Doctrine\Common\Cache\ArrayCache';
             $cached = new $cachedClass();
-            $config->setQueryCacheImpl($cached);
-            $config->setResultCacheImpl($cached);
-        } else {
-            $config->setQueryCacheImpl($cache);
-            $config->setResultCacheImpl($cache);
+            $this->cfg->setQueryCacheImpl($cached);
+            $this->cfg->setResultCacheImpl($cached);
+        } else {//else if ('development' == APPLICATION_ENV) {}
+            $this->cfg->setQueryCacheImpl($cache);
+            $this->cfg->setResultCacheImpl($cache);
         }
+        #Get data stored for each module
         $autoPaths = $this->getBootstrap()->getContainer()->get('autoload.paths');
+        #Set paths for all module entities, which should all have the same namespace...
 
         #Proxy Configuration
-        $config->setProxyDir($options['orm']['manager']['proxy']['dir']);
-        $config->setProxyNamespace($options['orm']['manager']['proxy']['namespace']);
-        $config->setAutoGenerateProxyClasses($options['orm']['manager']['proxy']['autoGenerateClasses']);
+        $this->cfg->setProxyDir($autoPaths->proxyPath);
+        $this->cfg->setProxyNamespace('Proxies');
+        $this->cfg->setAutoGenerateProxyClasses(false);
 
+        $this->log->debug(get_class($this).'::buildEntityManager('.$cacheClass.')');
         #Set Logging
         $logger = new DoctrineDebugStack;
-        $config->setSqlLogger($logger);
-
+        $this->cfg->setSqlLogger($logger);
+//        $this->log->debug(get_class($this).'::buildEntityManager('.$cacheClass.')');
         #Driver Configuration
         AnnotationRegistry::registerFile("Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php");
+        #TODO Load namespaces from ini?
+//        $this->log->debug('metadataDrivers');
+//        $this->log->debug($metadataDrivers);
         AnnotationRegistry::registerAutoloadNamespace("Gedmo", CORE_PATH . "/private/library");
+        AnnotationRegistry::registerAutoloadNamespace("Wednesday", CORE_PATH . "/private/library");
         AnnotationRegistry::registerAutoloadNamespace("Doctrine\ORM\Mapping\\", CORE_PATH . "/private/library");
-//        AnnotationRegistry::registerAutoloadNamespaces(array("Gedmo\Mapping\Annotation\\","Doctrine\ORM\Mapping\\"));
         $reader = new AnnotationReader();
-        $reader->setAnnotationNamespaceAlias('Gedmo\Mapping\Annotation\\', 'gedmo');
-//        $reader->setIgnoreNotImportedAnnotations(true);
-//        $reader->setEnableParsePhpImports(false);
-        $entityPathes = $autoPaths->entities;
-//        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Tree/Entity');
-//        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Sortable/Entity');
-//        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Loggable/Entity');
-//        array_push($entityPathes, CORE_PATH . '/private/library/Gedmo/Translatable/Entity');
-
+        #Aliases interesting...
+        //$reader->setAnnotationNamespaceAlias('Gedmo\Mapping\Annotation\\', 'gedmo');
+//        $this->log->debug(get_class($this).'::buildEntityManager('.$cacheClass.')');
+        $entityPaths = $autoPaths->entities;
+        #Add paths from ini.
+        foreach ($metadataDrivers['mappingDirs'] as $folder){
+            if(isset($listenerOptions['path'])){
+                array_push($entityPaths, $folder);
+            }
+        }
+        $entityPaths = $autoPaths->entities;
+        #Add paths for Listeners.
+        foreach ($options['extensions']['listener'] as $listenerName => $listenerOptions) {
+            if(isset($listenerOptions['path'])){
+                array_push($entityPaths, $listenerOptions['path']);
+            }
+        }
         $chainDriverImpl = new DoctrineDriverChain();
-        $defaultDriverImpl = AnnotationDriver::create($autoPaths->entities, $reader);
+        $defaultDriverImpl = ORMAnnotationDriver::create($autoPaths->entities, $reader);
         $defaultDriverImpl->getAllClassNames();
-        $translatableDriverImpl = $config->newDefaultAnnotationDriver($entityPathes);
-        $chainDriverImpl->addDriver($defaultDriverImpl, 'Application\Entities\\');
-//        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Tree');
-//        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Sortable');
-//        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Loggable');
-//        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Translatable');
-        $config->setMetadataDriverImpl($chainDriverImpl);
+        $translatableDriverImpl = $this->cfg->newDefaultAnnotationDriver($entityPaths);
+        foreach($metadataDrivers['mappingNamespace'] as $mapping) {
+            $chainDriverImpl->addDriver($defaultDriverImpl, $mapping.'\\');
+        }
 
+        #TODO Add namespaces from ini.
+        foreach ($options['extensions']['listener'] as $listenerName => $listenerOptions) {
+            if(isset($listenerOptions['namespace'])){
+                $chainDriverImpl->addDriver($translatableDriverImpl, $listenerOptions['namespace']);
+            }
+        }
+        $this->cfg->setMetadataDriverImpl($chainDriverImpl);
+//        $this->log->debug(get_class($this).'::buildEntityManager('.$cacheClass.')');
         #setup entity manager
-        $em = \Doctrine\ORM\EntityManager::create(
-                        $connection, $config, $eventManager
+        return EntityManager::create(
+            $this->conn,
+            $this->cfg,
+            $this->evtm
         );
-
-        return $em;
+//        #Now configure doctrine cache
+//        if ('development' == APPLICATION_ENV) {
+//            $cacheClass = isset($options['cacheClass']) ? $options['cacheClass'] : 'Doctrine\Common\Cache\ArrayCache';
+//        } else {
+//            $cacheClass = isset($options['cacheClass']) ? $options['cacheClass'] : 'Doctrine\Common\Cache\XcacheCache';
+//        }
+//
+//        #Cache Options.
+//        $cache = new $cacheClass();
+//        $this->cfg->setMetadataCacheImpl($cache);
+//        #Caches for Development..
+//        if ('development' == APPLICATION_ENV) {
+//            $cachedClass = 'Doctrine\Common\Cache\ArrayCache';
+//            $cached = new $cachedClass();
+//            $this->cfg->setQueryCacheImpl($cached);
+//            $this->cfg->setResultCacheImpl($cached);
+//        } else {
+//            $this->cfg->setQueryCacheImpl($cache);
+//            $this->cfg->setResultCacheImpl($cache);
+//        }
+//        $autoPaths = $this->getBootstrap()->getContainer()->get('autoload.paths');
+//
+//        #Proxy Configuration
+//        $this->cfg->setProxyDir($options['orm']['manager']['proxy']['dir']);
+//        $this->cfg->setProxyNamespace($options['orm']['manager']['proxy']['namespace']);
+//        $this->cfg->setAutoGenerateProxyClasses($options['orm']['manager']['proxy']['autoGenerateClasses']);
+//
+//        #Set Logging
+//        $logger = new DoctrineDebugStack;
+//        $this->cfg->setSqlLogger($logger);
+//
+//        #Driver Configuration
+//        AnnotationRegistry::registerFile("Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php");
+//        AnnotationRegistry::registerAutoloadNamespace("Gedmo", CORE_PATH . "/private/library");
+//        AnnotationRegistry::registerAutoloadNamespace("Doctrine\ORM\Mapping\\", CORE_PATH . "/private/library");
+////        AnnotationRegistry::registerAutoloadNamespaces(array("Gedmo\Mapping\Annotation\\","Doctrine\ORM\Mapping\\"));
+//        $reader = new AnnotationReader();
+////        $reader->setAnnotationNamespaceAlias('Gedmo\Mapping\Annotation\\', 'gedmo');
+////        $reader->setIgnoreNotImportedAnnotations(true);
+////        $reader->setEnableParsePhpImports(false);
+//         #Add paths from ini.
+//        foreach ($metadataDrivers['mappingDirs'] as $folder){
+//            if(isset($listenerOptions['path'])){
+//                array_push($autoPaths->entities, $folder);
+//            }
+//        }
+//        $entityPathes = $autoPaths->entities;
+//        #Add paths for Listeners.
+//        foreach ($options['extensions']['listener'] as $listenerName => $listenerOptions) {
+//            if(isset($listenerOptions['path'])){
+//                array_push($entityPaths, $listenerOptions['path']);
+//            }
+//        }
+//        $chainDriverImpl = new DoctrineDriverChain();
+//        $defaultDriverImpl = AnnotationDriver::create($autoPaths->entities, $reader);
+//        $defaultDriverImpl->getAllClassNames();
+//        $translatableDriverImpl = $this->cfg->newDefaultAnnotationDriver($entityPathes);
+//        $chainDriverImpl->addDriver($defaultDriverImpl, 'Application\Entities\\');
+////        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Tree');
+////        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Sortable');
+////        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Loggable');
+////        $chainDriverImpl->addDriver($translatableDriverImpl, 'Gedmo\Translatable');
+//        $this->cfg->setMetadataDriverImpl($chainDriverImpl);
+//
+//        #setup entity manager
+//        $em = \Doctrine\ORM\EntityManager::create(
+//                        $this->conn, $this->cfg, $this->evtm
+//        );
+//
+//        return $em;
     }
 
     /**
@@ -519,6 +621,9 @@ class Doctrine {
      */
     public function getBootstrap()
     {
+        if(null === $this->_bootstrap) {
+            $this->_bootstrap = Front::getInstance()->getParam('bootstrap');
+        }
         return $this->_bootstrap;
     }
 

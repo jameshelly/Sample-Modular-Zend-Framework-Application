@@ -190,6 +190,8 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
      *
      * @param dfg
      * @return void
+     *
+     */
     protected function _initZFDebug() {
         $logger = $this->getContainer()->get('logger');
         if(APPLICATION_ENV != 'production'){
@@ -209,7 +211,7 @@ class Bootstrap extends \Zend_Application_Bootstrap_Bootstrap
             );
             # Instantiate the doctrine database adapter and setup the plugin.
             if ($this->hasPluginResource('doctrine')) {
-		$this->bootstrap('doctrine');
+                $this->bootstrap('doctrine');
                 $em = $this->getPluginResource('doctrine')->getEntityManager();
                 $options['plugins']['Opentag_ZFDebug_Plugin_Doctrine']['adapter'] = $em;
             }
