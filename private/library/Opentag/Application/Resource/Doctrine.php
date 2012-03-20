@@ -47,7 +47,7 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
     /**
      * @var \Doctrine\ORM\EntityManager
      */
-    protected $em;
+    protected $entm;
     protected $iEntMgr;
 
     /**
@@ -109,7 +109,7 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
         #Use apc for queryCache & configCache {session,default,autheduser,authpipe}
         $this->cfg = new \Doctrine\ORM\Configuration;
         $this->evtm = $this->getEntityManager();
-        $this->em = $this->getEntityManager();
+        $this->entm = $this->getEntityManager();
    }
 
     public function getEventManager($options = false) {
@@ -121,12 +121,38 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
         if ((null === $this->evtm)) {
             $this->evtm = $this->_buildEventManager($this->getOptions());
         }
-        $this->getBootstrap()->getContainer()->set('event.manager', $this->em);
+        $this->getBootstrap()->getContainer()->set('event.manager', $this->entm);
         return $this->evtm;
     }
-
-    public function _buildEventManager($options = false) {
-        return new \Doctrine\Common\EventManager();
+//
+//    public function _buildEventManager($options = false) {
+//        return new \Doctrine\Common\EventManager();
+//    }
+    /**
+     * A method to build the connection options, for a Doctrine
+     * EntityManager/Connection. Sure, we can find a more elegant solution to build
+     * the connection options. A builder class could be applied. Sure you can with
+     * some refactor :)
+     * TODO: refactor to build some other, more elegant, solution to build the conn
+     * ection object.
+     * @param Array $params The options array defined in getOptions
+     * @return \Doctrine\Common\EventManager Instance.
+     */
+    protected function _buildEventManager($name = 'default') {
+        $options = $this->getOptions();
+        $eventManager = new EventManager();
+//        $this->log->debug($options);
+        #TODO Loop through config to find availible listeners.
+        foreach ($options['extensions']['listener'] as $listenerName => $listenerOptions) {
+              $$listenerName = new $listenerOptions['driver']();
+              if(isset($listenerOptions['methods'])===true) {
+                  foreach($listenerOptions['methods'] as $method => $param) {
+                      $$listenerName->$method($param);
+                  }
+              }
+              $eventManager->addEventSubscriber($$listenerName);
+        }
+        return $eventManager;
     }
 
    /**
@@ -143,48 +169,85 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
             $this->log = $this->getBootstrap()->getContainer()->get('logger');
         }
         $this->log->info(get_class($this) . '::getEntityManager');
-        if ((null === $this->em)) {
-            $this->em = $this->_buildEntityManager($this->getOptions());
+        if ((null === $this->entm)) {
+            $this->entm = $this->_buildEntityManager($this->getOptions());
         }
-        $this->getBootstrap()->getContainer()->set('entity.manager', $this->em);
-        return $this->em;
+        $this->getBootstrap()->getContainer()->set('entity.manager', $this->entm);
+        return $this->entm;
     }
 
-    public function getConnection($options = false) {
+
+    /**
+     *
+     * @param type $name
+     * @return type
+     */
+    public function getConnection($name = 'default') {
         #Get logger
-        if (null === $this->log) {
-            $this->log = $this->getBootstrap()->getContainer()->get('logger');
+        if(null === $this->log) {
+            $this->log = $this->getBootstrap()->getResource('Log');//$this->getBootstrap()->getResource('Log');//->getContainer()->get('logger');
         }
-        $this->log->info(get_class($this) . '::getConnection');
-        if ((null === $this->conn)) {
-            $this->conn = $this->_buildConnection();
-        }
-        $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->conn);
-        return $this->conn;
-    }
-
-    protected function _buildConnection() {
-        //die(print_r($options));
         $options = $this->getOptions();
-
-        $connectionOptions = $this->_buildConnectionOptions($options);
-
-        #Setup configuration as seen from the sandbox application
-        $config = $this->cfg;
-        $eventManager = $this->evtm;
-
-        $sluggableListener = new SluggableListener();
-        $eventManager->addEventSubscriber($sluggableListener);
-
-        $translatableListener = new TranslationListener();
-        $translatableListener->setTranslatableLocale('en_gb');
-        $eventManager->addEventSubscriber($translatableListener);
-
-        $treeListener = new TreeListener();
-        $eventManager->addEventSubscriber($treeListener);
-
-        return \Doctrine\DBAL\DriverManager::getConnection($connectionOptions, $config, $eventManager);
+//        $name = (($name != $options['orm']['manager']['connection'])&&($name == 'default'))?$options['orm']['manager']['connection']:$name;
+        $this->log->debug(get_class($this).'::getConnection('.$name.')');
+        if(($name != 'default')&&($name != '')) {
+            return $this->_buildConnection($name);
+        }
+        if ( (null === $this->_conn) ) {
+            $this->_conn = $this->_buildConnection($name);
+        }
+        $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->_conn);
+        return $this->_conn;
     }
+
+    /**
+     *
+     * @return type
+     */
+    protected function _buildConnection($name = 'default') {
+        $options = $this->getOptions();
+        $connectionOptions = $this->_buildConnectionOptions($name);
+        #Setup configuration as seen from the sandbox application
+        if ( (null === $this->evtm) ) {
+            $this->evtm = $this->getEventManager();
+        }
+        return DriverManager::getConnection($connectionOptions, $this->cfg, $this->evtm);
+    }
+//    public function getConnection($options = false) {
+//        #Get logger
+//        if (null === $this->log) {
+//            $this->log = $this->getBootstrap()->getContainer()->get('logger');
+//        }
+//        $this->log->info(get_class($this) . '::getConnection');
+//        if ((null === $this->conn)) {
+//            $this->conn = $this->_buildConnection();
+//        }
+//        $this->getBootstrap()->getContainer()->set('doctrine.connection', $this->conn);
+//        return $this->conn;
+//    }
+//
+//    protected function _buildConnection() {
+//        //die(print_r($options));
+//        $options = $this->getOptions();
+//
+//        $connectionOptions = $this->_buildConnectionOptions($options);
+//
+//        #Setup configuration as seen from the sandbox application
+//        $config = $this->cfg;
+//        $eventManager = $this->evtm;
+//
+//        $sluggableListener = new SluggableListener();
+//        $eventManager->addEventSubscriber($sluggableListener);
+//
+//        $translatableListener = new TranslationListener();
+//        $translatableListener->setTranslatableLocale('en_gb');
+//        $eventManager->addEventSubscriber($translatableListener);
+//
+//        $treeListener = new TreeListener();
+//        $eventManager->addEventSubscriber($treeListener);
+//
+//        return \Doctrine\DBAL\DriverManager::getConnection($connectionOptions, $config, $eventManager);
+//    }
 
     /**
      * A method to build the connection options, for a Doctrine
@@ -279,17 +342,26 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
      * @param Array $options The options array defined on the application.ini file
      * @return Array
      */
-    protected function _buildConnectionOptions(array $options) {
+    protected function _buildConnectionOptions($name = 'default') {
+        $this->log->debug(get_class($this).'::_buildConnectionOptions('.$name.')');
+
+        $options = $this->getOptions();
+        if($name == 'default') {
+            if(isset($options['orm']['manager']['connection'])===true){
+                $name = $options['orm']['manager']['connection'];
+            }
+        }
         $connectionSpec = array(
             'pdo_sqlite' => array('path', 'memory', 'user', 'password'),
-            'pdo_mysql' => array('user', 'password', 'host', 'port', 'dbname', 'unix_socket', 'charset'),
-            'pdo_pgsql' => array('user', 'password', 'host', 'port', 'dbname'),
-            'pdo_oci' => array('user', 'password', 'host', 'port', 'dbname', 'charset')
+            'pdo_mysql'  => array('user', 'password', 'host', 'port', 'dbname', 'unix_socket', 'charset', 'persistent'),
+            'pdo_pgsql'  => array('user', 'password', 'host', 'port', 'dbname', 'persistent'),
+            'pdo_oci'    => array('user', 'password', 'host', 'port', 'dbname', 'charset', 'persistent')
         );
-        $dbalopts = $options['dbal'][$options['orm']['manager']['connection']];
-        $connection = array('driver' => $dbalopts['driver']);
+		$dbalopts = $options['dbal'][$name];
+        $connection = array('driver' => $dbalopts['driver'] );
+        //$this->log->debug(print_r($name,true));
 
-        #Simple array map.
+		#Simple array map.
         foreach ($connectionSpec[$dbalopts['driver']] as $driverOption) {
             if (isset($dbalopts[$driverOption]) && !is_null($driverOption)) {
                 $connection[$driverOption] = $dbalopts[$driverOption];
@@ -298,4 +370,5 @@ class Opentag_Application_Resource_Doctrine extends ResourceAbstract {
 
         return $connection;
     }
+
 }
