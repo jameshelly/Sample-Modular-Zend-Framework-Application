@@ -46,8 +46,8 @@ class Default_Plugin_Example extends Zend_Controller_Plugin_Abstract
                 ->appendHttpEquiv('Content-Language', 'en-GB');
 //        $this->view->headScript()->appendFile($location.$behaviour->name.'.js', 'text/javascript');
         $this->view->headLink()
-                ->appendStylesheet('/assets/css/reset.css', 'screen')
-                ->appendStylesheet('/assets/css/screen.css', 'screen');;
+                ->appendStylesheet('/assets/css/bootstrap.css', 'screen')
+                ->appendStylesheet('/assets/css/theme.css', 'screen');;
 //        $this->view->inlineScript()->appendFile($location.$behaviour->name.'.js', 'text/javascript');
 
         $this->layout->assign('header', $header);

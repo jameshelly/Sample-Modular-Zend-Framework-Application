@@ -6,7 +6,7 @@ use \Application\Forms,
     \Application\Entities,
     \Application\Forms\Default_Form_Login,
     Opentag\Auth\Adapter\Doctrine,
-    Opentag\ControllerInterface as ControllerI,
+    Opentag\ControllerInterface as ControllerInterface,
     Opentag_ZFDebug_Plugin_Doctrine as ZFDebugPlugin,
     Zend_Controller_Action as ControllerAction,
     Zend\Di\Configuration,
@@ -19,7 +19,13 @@ use \Application\Forms,
  * @author
  * @version
  */
-class IndexController extends ControllerAction {
+class IndexController extends ControllerAction implements ControllerInterface {
+
+    /**
+     *
+     * @docblox(inherit)
+     */
+    protected $doctrine;
 
     /**
      * @var Zend_Auth
