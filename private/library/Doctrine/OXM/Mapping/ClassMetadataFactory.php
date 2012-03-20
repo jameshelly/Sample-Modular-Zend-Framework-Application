@@ -151,10 +151,7 @@ class ClassMetadataFactory implements BaseClassMetadataFactory
         }
         
         // Load all metadata
-        if (empty($this->xmlToClassMap)) {
-            // todo:  there should be a better way to access the metadata about a mapped xml node than instantiating all of them
-            $this->getAllMetadata();
-        }
+        $this->getAllMetadata();
 
         return $this->xmlToClassMap;
     }
@@ -320,8 +317,6 @@ class ClassMetadataFactory implements BaseClassMetadataFactory
             if ( ! $class->isMappedSuperclass && in_array($class->getXmlName(), array_keys($this->xmlToClassMap))) {
                 throw MappingException::duplicateXmlNameBinding($className, $class->getXmlName());
             }
-            
-            $this->completeMappingTypeValidation($className, $class);
 
             if ($parent && ! $parent->isMappedSuperclass) {
                 if ($parent->generatorType) {
@@ -344,6 +339,7 @@ class ClassMetadataFactory implements BaseClassMetadataFactory
             }
 
             $this->loadedMetadata[$className] = $class;
+            $this->completeMappingTypeValidation($className, $class);
 
             if ( ! $class->isMappedSuperclass) {
                 $this->xmlToClassMap[$class->getXmlName()] = $className;

@@ -73,11 +73,17 @@ class XmlMarshaller implements Marshaller
     private $schemaVersion = '1.0';
 
     /**
+     * @var string
+     */
+    private $visited = array();
+
+    /**
      * @param ClassMetadataFactory
      */
     public function __construct(ClassMetadataFactory $classMetadataFactory)
     {
         $this->classMetadataFactory = $classMetadataFactory;
+
     }
 
     /**
@@ -209,7 +215,7 @@ class XmlMarshaller implements Marshaller
         $allMappedXmlNodes = $this->classMetadataFactory->getAllXmlNodes();
         $knownMappedNodes = array_keys($allMappedXmlNodes);
 
-        if ($cursor->nodeType !== XMLReader::ELEMENT) {
+        if ($cursor->nodeType !== XMLReader::ELEMENT && $cursor->nodeType !== XMLReader::CDATA) {
             throw MarshallerException::invalidMarshallerState($cursor);
 
         }
@@ -263,7 +269,7 @@ class XmlMarshaller implements Marshaller
                     break;
                 }
 
-                if ($cursor->nodeType !== XMLReader::ELEMENT) {
+                if ($cursor->nodeType !== XMLReader::ELEMENT && $cursor->nodeType !== XMLReader::CDATA) {
                     // skip insignificant elements
                     continue;
                 }
@@ -284,18 +290,21 @@ class XmlMarshaller implements Marshaller
                     } else {
                         // assume text element (dangerous?)
                         $cursor->read();
-                        if ($cursor->nodeType !== XMLReader::TEXT) {
-                            throw MarshallerException::invalidMarshallerState($cursor);
-                        }
 
-                        $type = Type::getType($fieldMapping['type']);
-                        if ($classMetadata->isCollection($fieldName)) {
-                            $collectionElements[$fieldName][] = $type->convertToPHPValue($cursor->value);
-                        } else {
-                            $classMetadata->setFieldValue($mappedObject, $fieldName, $type->convertToPHPValue($cursor->value));
+                        if (!$cursor->isEmptyElement && $cursor->nodeType !== XMLReader::END_ELEMENT) {
+                            if ($cursor->nodeType !== XMLReader::TEXT && $cursor->nodeType !== XMLReader::CDATA) {
+                                throw MarshallerException::invalidMarshallerState($cursor);
+                            }
+
+                            $type = Type::getType($fieldMapping['type']);
+                            if ($classMetadata->isCollection($fieldName)) {
+                                $collectionElements[$fieldName][] = $type->convertToPHPValue($cursor->value);
+                            } else {
+                                $classMetadata->setFieldValue($mappedObject, $fieldName, $type->convertToPHPValue($cursor->value));
+                            }
+
+                            $cursor->read();
                         }
-                        
-                        $cursor->read();
                     }
                 } elseif (in_array($cursor->name, $knownMappedNodes)) {  // look for inherited child directly
                     $childClassMetadata = $this->classMetadataFactory->getMetadataFor($allMappedXmlNodes[$cursor->name]);
@@ -348,6 +357,8 @@ class XmlMarshaller implements Marshaller
     function marshalToString($mappedObject)
     {
         $writer = new WriterHelper($this);
+        // clear the internal visited list
+        $this->visited = array();
 
         // Begin marshalling
         $this->doMarshal($mappedObject, $writer);
@@ -364,6 +375,8 @@ class XmlMarshaller implements Marshaller
     public function marshalToStream($mappedObject, $streamUri)
     {
         $writer = new WriterHelper($this, $streamUri);
+        // clear the internal visited list
+        $this->visited = array();
 
         // Begin marshalling
         $this->doMarshal($mappedObject, $writer);
@@ -392,6 +405,12 @@ class XmlMarshaller implements Marshaller
         if ($classMetadata->hasLifecycleCallbacks(Events::preMarshal)) {
             $classMetadata->invokeLifecycleCallbacks(Events::preMarshal, $mappedObject);
         }
+
+        if (isset($this->visited[spl_object_hash($mappedObject)])) {
+            return;
+        }
+
+        $this->visited[spl_object_hash($mappedObject)] = true;
 
         $writer->startElement($classMetadata->getXmlName());
 
@@ -461,6 +480,7 @@ class XmlMarshaller implements Marshaller
                 }
             }
         }
+
 
         // PostMarshal hook
         if ($classMetadata->hasLifecycleCallbacks(Events::postMarshal)) {

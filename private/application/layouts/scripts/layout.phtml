@@ -10,32 +10,28 @@
 	<body>
         <div class="container-fluid">
             <div class="row-fluid">
-                <h1 class="site-title"><?='';//$this->placeholder('site')->clientname; ?></h1>
-                <?='';//$this->render('includes/header.phtml'); ?>
+                <?=$this->render('page.header.phtml'); ?>
             </div>
             <div class="row-fluid">
                 <div class="span2">
                 <!--Sidebar content-->
-                <?='';//$this->render('includes/sidepanel.phtml'); ?>
+                <?=$this->layout()->sidepanel;//$this->render('page.sidepanel.phtml'); ?>
                 </div>
                 <div class="span10">
                 <article>
-                <h2><?=$this->title;?></h2>
-                <?='';//$this->render('page.header.phtml'); ?>
                 <?=$this->layout()->content; ?>
                 </article>
                 </div>
             </div>
             <div class="row-fluid">
                 <?=$this->render('page.footer.phtml'); ?>
-                <?='';//$this->render('includes/footer.phtml'); ?>
             </div>
             <div id="screen-offset">
-                <?="";//$this->renderPartials('partials/manager/modal.*.phtml'); ?>
+                <?='';//$this->renderPartials('partials/manager/modal.*.phtml'); ?>
                 <?='';//$this->render('includes/scripts.phtml'); ?>
             </div>
         </div>
-        
+
 	</body>
 
 </html>
