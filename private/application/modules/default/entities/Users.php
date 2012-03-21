@@ -1,18 +1,20 @@
 <?php
+
 namespace Application\Entities;
 
 use Gedmo\Mapping\Annotation AS Gedmo,
     Doctrine\ORM\Mapping AS ORM,
     Doctrine\Common\Collections\ArrayCollection,
     Gedmo\Timestampable\Timestampable;
+
 /**
  * Users
  *
  * @ORM\Table(name="users")
  * @ORM\Entity
  */
-class Users implements Timestampable
-{
+class Users implements Timestampable {
+
     /**
      * @var integer $id
      *
@@ -103,7 +105,7 @@ class Users implements Timestampable
      */
     private $lastname;
 
-     /**
+    /**
      *
      * @param type $name
      * @param type $value
@@ -126,8 +128,7 @@ class Users implements Timestampable
      *
      * @param string $password
      */
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         #Auto hash.
         $this->password = $this->generatePassword($password);
     }
@@ -137,8 +138,7 @@ class Users implements Timestampable
      *
      * @return string $password
      */
-    public function getPassword()
-    {
+    public function getPassword() {
         return $this->password;
     }
 
@@ -148,9 +148,8 @@ class Users implements Timestampable
      * @param string $password
      * @return string $password
      */
-    protected function generatePassword($password)
-    {
-	return md5($password.$this->salt);
+    protected function generatePassword($password) {
+        return md5($password . $this->salt);
     }
 
     /**
@@ -159,9 +158,9 @@ class Users implements Timestampable
      * @param string $password
      * @return bool $check
      */
-    public function checkPassword($password)
-    {
-	$check = $this->generatePassword($password);
+    public function checkPassword($password) {
+        $check = $this->generatePassword($password);
         return ($this->password == $check);
     }
+
 }

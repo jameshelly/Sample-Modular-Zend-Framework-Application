@@ -32,7 +32,7 @@ class Settings implements Timestampable
     /**
      * @var string $type
      *
-     * @ORM\Column(type="string", length="128", nullable=true)
+     * @ORM\Column(type="string", length=128, nullable=true)
      */
     private $type;
 
