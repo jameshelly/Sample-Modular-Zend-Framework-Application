@@ -1,78 +1,72 @@
 <?php
 
-namespace Gedmo\Loggable\Document;
+namespace Gedmo\Loggable\Document\MappedSuperclass;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations\MappedSuperclass;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\String;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\Index;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\Date;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\Int;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\Hash;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoODM;
 
 /**
- * Gedmo\Loggable\Document\AbstractLogEntry
+ * Gedmo\Loggable\Document\MappedSuperclass\AbstractLogEntry
  *
- * @MappedSuperclass
+ * @MongoODM\MappedSuperclass
  */
 abstract class AbstractLogEntry
 {
     /**
      * @var integer $id
      *
-     * @Id
+     * @MongoODM\Id
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string $action
      *
-     * @String
+     * @MongoODM\String
      */
-    private $action;
+    protected $action;
 
     /**
      * @var datetime $loggedAt
      *
-     * @Index
-     * @Date
+     * @MongoODM\Index
+     * @MongoODM\Date
      */
-    private $loggedAt;
+    protected $loggedAt;
 
     /**
      * @var string $objectId
      *
-     * @String(nullable=true)
+     * @MongoODM\String(nullable=true)
      */
     protected $objectId;
 
     /**
      * @var string $objectClass
      *
-     * @Index
-     * @String
+     * @MongoODM\Index
+     * @MongoODM\String
      */
     protected $objectClass;
 
     /**
      * @var integer $version
      *
-     * @Int
+     * @MongoODM\Int
      */
-    private $version;
+    protected $version;
 
     /**
      * @var text $data
      *
-     * @Hash(nullable=true)
+     * @MongoODM\Hash(nullable=true)
      */
     protected $data;
 
     /**
      * @var string $data
      *
-     * @Index
-     * @String(nullable=true)
+     * @MongoODM\Index
+     * @MongoODM\String(nullable=true)
      */
     protected $username;
 

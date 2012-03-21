@@ -4,7 +4,6 @@ namespace Gedmo\Tree\Mapping\Driver;
 
 use Gedmo\Mapping\Driver\File,
     Gedmo\Mapping\Driver,
-    Doctrine\Common\Persistence\Mapping\ClassMetadata,
     Gedmo\Exception\InvalidMappingException;
 
 /**
@@ -51,23 +50,7 @@ class Yaml extends File implements Driver
     /**
      * {@inheritDoc}
      */
-    public function validateFullMetadata(ClassMetadata $meta, array $config)
-    {
-        if (isset($config['strategy'])) {
-            if (is_array($meta->identifier) && count($meta->identifier) > 1) {
-                throw new InvalidMappingException("Tree does not support composite identifiers in class - {$meta->name}");
-            }
-            $method = 'validate' . ucfirst($config['strategy']) . 'TreeMetadata';
-            $this->$method($meta, $config);
-        } elseif ($config) {
-            throw new InvalidMappingException("Cannot find Tree type for class: {$meta->name}");
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function readExtendedMetadata(ClassMetadata $meta, array &$config)
+    public function readExtendedMetadata($meta, array &$config)
     {
         $mapping = $this->_getMapping($meta->name);
 
@@ -107,8 +90,8 @@ class Yaml extends File implements Driver
                         }
                         $config['level'] = $field;
                     } elseif (in_array('treeRoot', $fieldMapping['gedmo'])) {
-                        if (!$this->isValidField($meta, $field)) {
-                            throw new InvalidMappingException("Tree root field - [{$field}] type is not valid and must be 'integer' in class - {$meta->name}");
+                        if (!$meta->getFieldMapping($field)) {
+                            throw new InvalidMappingException("Tree root field - [{$field}] type is not valid in class - {$meta->name}");
                         }
                         $config['root'] = $field;
                     }
@@ -127,6 +110,18 @@ class Yaml extends File implements Driver
                 }
             }
         }
+
+        if (!$meta->isMappedSuperclass && $config) {
+            if (isset($config['strategy'])) {
+                if (is_array($meta->identifier) && count($meta->identifier) > 1) {
+                    throw new InvalidMappingException("Tree does not support composite identifiers in class - {$meta->name}");
+                }
+                $method = 'validate' . ucfirst($config['strategy']) . 'TreeMetadata';
+                $this->$method($meta, $config);
+            } else {
+                throw new InvalidMappingException("Cannot find Tree type for class: {$meta->name}");
+            }
+        }
     }
 
     /**
@@ -140,11 +135,11 @@ class Yaml extends File implements Driver
     /**
      * Checks if $field type is valid
      *
-     * @param ClassMetadata $meta
+     * @param object $meta
      * @param string $field
      * @return boolean
      */
-    protected function isValidField(ClassMetadata $meta, $field)
+    protected function isValidField($meta, $field)
     {
         $mapping = $meta->getFieldMapping($field);
         return $mapping && in_array($mapping['type'], $this->validTypes);
@@ -153,12 +148,12 @@ class Yaml extends File implements Driver
     /**
      * Validates metadata for nested type tree
      *
-     * @param ClassMetadata $meta
+     * @param object $meta
      * @param array $config
      * @throws InvalidMappingException
      * @return void
      */
-    private function validateNestedTreeMetadata(ClassMetadata $meta, array $config)
+    private function validateNestedTreeMetadata($meta, array $config)
     {
         $missingFields = array();
         if (!isset($config['parent'])) {
@@ -178,12 +173,12 @@ class Yaml extends File implements Driver
     /**
      * Validates metadata for closure type tree
      *
-     * @param ClassMetadata $meta
+     * @param object $meta
      * @param array $config
      * @throws InvalidMappingException
      * @return void
      */
-    private function validateClosureTreeMetadata(ClassMetadata $meta, array $config)
+    private function validateClosureTreeMetadata($meta, array $config)
     {
         $missingFields = array();
         if (!isset($config['parent'])) {

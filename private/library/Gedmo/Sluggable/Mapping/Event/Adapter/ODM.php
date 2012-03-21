@@ -3,7 +3,6 @@
 namespace Gedmo\Sluggable\Mapping\Event\Adapter;
 
 use Gedmo\Mapping\Event\Adapter\ODM as BaseAdapterODM;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Cursor;
 use Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
 use Gedmo\Tool\Wrapper\AbstractWrapper;
@@ -23,17 +22,15 @@ final class ODM extends BaseAdapterODM implements SluggableAdapter
     /**
      * {@inheritDoc}
      */
-    public function getSimilarSlugs($object, ClassMetadata $meta, array $config, $slug)
+    public function getSimilarSlugs($object, $meta, array $config, $slug)
     {
         $dm = $this->getObjectManager();
+        $wrapped = AbstractWrapper::wrap($object, $dm);
         $qb = $dm->createQueryBuilder($config['useObjectClass']);
-        $identifier = $this->extractIdentifier($dm, $object);
-        if ($identifier) {
+        if (($identifier = $wrapped->getIdentifier()) && !$meta->isIdentifier($config['slug'])) {
             $qb->field($meta->identifier)->notEqual($identifier);
         }
-        $qb->where("function() {
-            return this.{$config['slug']}.indexOf('{$slug}') === 0;
-        }");
+        $qb->field($config['slug'])->equals(new \MongoRegex('/^' . preg_quote($slug, '/') . '/'));
         $q = $qb->getQuery();
         $q->setHydrate(false);
 
@@ -57,9 +54,7 @@ final class ODM extends BaseAdapterODM implements SluggableAdapter
 
         $q = $dm
             ->createQueryBuilder($config['useObjectClass'])
-            ->where("function() {
-                return this.{$config['slug']}.indexOf('{$target}') === 0;
-            }")
+            ->field($config['slug'])->equals(new \MongoRegex('/^' . preg_quote($target, '/') . '/'))
             ->getQuery()
         ;
         $q->setHydrate(false);
@@ -89,7 +84,7 @@ final class ODM extends BaseAdapterODM implements SluggableAdapter
     public function replaceInverseRelative($object, array $config, $target, $replacement)
     {
         $dm = $this->getObjectManager();
-        $wrapped = AbstractWrapper::wrapp($object, $dm);
+        $wrapped = AbstractWrapper::wrap($object, $dm);
         $meta = $dm->getClassMetadata($config['useObjectClass']);
         $q = $dm
             ->createQueryBuilder($config['useObjectClass'])

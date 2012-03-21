@@ -3,7 +3,6 @@
 namespace Gedmo\Sluggable\Handler;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Gedmo\Sluggable\SluggableListener;
 use Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
 
@@ -27,14 +26,6 @@ interface SlugHandlerInterface
      * @param Gedmo\Sluggable\SluggableListener $sluggable
      */
     function __construct(SluggableListener $sluggable);
-
-    /**
-     * Get the options for specific object
-     *
-     * @param object $object
-     * @return array
-     */
-    function getOptions($object);
 
     /**
      * Callback on slug handlers before the decision
@@ -71,11 +62,18 @@ interface SlugHandlerInterface
      * @return void
      */
     function onSlugCompletion(SluggableAdapter $ea, array &$config, $object, &$slug);
+    
+    /**
+     * True if the handler also urlizes the slug on its own
+     * 
+     * @return boolean 
+     */
+    function handlesUrlization();
 
     /**
      * Validate handler options
      *
      * @param array $options
      */
-    static function validate(array $options, ClassMetadata $meta);
+    static function validate(array $options, $meta);
 }

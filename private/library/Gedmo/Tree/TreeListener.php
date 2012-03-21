@@ -70,11 +70,11 @@ class TreeListener extends MappedEventSubscriber
                 $managerName = 'ODM';
             }
             if (!isset($this->strategyInstances[$config['strategy']])) {
-                $class = $this->getNamespace().'\\Strategy\\'.$managerName.'\\'.ucfirst($config['strategy']);
-                if (!class_exists($class)) {
+                $strategyClass = $this->getNamespace().'\\Strategy\\'.$managerName.'\\'.ucfirst($config['strategy']);
+                if (!class_exists($strategyClass)) {
                     throw new \Gedmo\Exception\InvalidArgumentException($managerName." TreeListener does not support tree type: {$config['strategy']}");
                 }
-                $this->strategyInstances[$config['strategy']] = new $class($this);
+                $this->strategyInstances[$config['strategy']] = new $strategyClass($this);
             }
             $this->strategies[$class] = $config['strategy'];
         }
@@ -139,7 +139,7 @@ class TreeListener extends MappedEventSubscriber
         $object = $ea->getObject();
         $meta = $om->getClassMetadata(get_class($object));
 
-        if ($config = $this->getConfiguration($om, $meta->name)) {
+        if ($this->getConfiguration($om, $meta->name)) {
             $this->getStrategy($om, $meta->name)->processPreRemove($om, $object);
         }
     }
@@ -157,7 +157,7 @@ class TreeListener extends MappedEventSubscriber
         $object = $ea->getObject();
         $meta = $om->getClassMetadata(get_class($object));
 
-        if ($config = $this->getConfiguration($om, $meta->name)) {
+        if ($this->getConfiguration($om, $meta->name)) {
             $this->getStrategy($om, $meta->name)->processPrePersist($om, $object);
         }
     }
@@ -176,7 +176,7 @@ class TreeListener extends MappedEventSubscriber
         $object = $ea->getObject();
         $meta = $om->getClassMetadata(get_class($object));
 
-        if ($config = $this->getConfiguration($om, $meta->name)) {
+        if ($this->getConfiguration($om, $meta->name)) {
             $this->getStrategy($om, $meta->name)->processPostPersist($om, $object);
         }
     }
@@ -193,8 +193,7 @@ class TreeListener extends MappedEventSubscriber
         $om = $ea->getObjectManager();
         $meta = $eventArgs->getClassMetadata();
         $this->loadMetadataForObjectClass($om, $meta);
-        if (isset($this->configurations[$meta->name]) && $this->configurations[$meta->name]) {
-            $config = $this->configurations[$meta->name];
+        if (isset(self::$configurations[$this->name][$meta->name]) && self::$configurations[$this->name][$meta->name]) {
             $this->getStrategy($om, $meta->name)->processMetadataLoad($om, $meta);
         }
     }

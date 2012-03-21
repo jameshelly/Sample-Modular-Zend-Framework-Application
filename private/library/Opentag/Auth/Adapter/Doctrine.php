@@ -23,9 +23,9 @@ use Opentag,
  * @version $Revision$
  * @author James A Helly <mrhelly@gmail.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  * @subpackage Doctrine Adapter 
- * @package Opentag
- * @category   Wednesday
- * @copyright  Copyright (c) 2011 Wednesday London. (http://www.wednesday-london.com)
+ * @package OpenTag
+ * @category   OpenTag
+ * @copyright  Copyright (c) 2012 OpenTag
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Doctrine.php 23483 2011-02-01 09:40:01Z jameshelly $
  */
@@ -44,7 +44,7 @@ require_once 'Zend/Auth/Result.php';
  * @category   Wednesday
  * @package    Zend_Auth
  * @subpackage Adapter
- * @copyright  Copyright (c) 2011 Wednesday London. (http://www.wednesday-london.com)
+ * @copyright  Copyright (c) 2012 OpenTag (http://www.wednesday-london.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Doctrine implements \Zend_Auth_Adapter_Interface {

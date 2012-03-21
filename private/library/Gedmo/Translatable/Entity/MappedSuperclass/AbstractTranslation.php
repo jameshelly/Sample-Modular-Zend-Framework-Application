@@ -1,62 +1,59 @@
 <?php
 
-namespace Gedmo\Translatable\Entity;
+namespace Gedmo\Translatable\Entity\MappedSuperclass;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\MappedSuperclass;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
-* Gedmo\Translatable\Entity\AbstractTranslation
-*
-* @MappedSuperclass
-*/
+ * Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation
+ *
+ * @ORM\MappedSuperclass
+ */
 abstract class AbstractTranslation
 {
     /**
      * @var integer $id
      *
-     * @Column(type="integer")
-     * @Id
-     * @GeneratedValue
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string $locale
      *
-     * @Column(type="string", length=8)
+     * @ORM\Column(type="string", length=8)
      */
-    private $locale;
+    protected $locale;
 
     /**
      * @var string $objectClass
      *
-     * @Column(name="object_class", type="string", length=255)
+     * @ORM\Column(name="object_class", type="string", length=255)
      */
-    private $objectClass;
+    protected $objectClass;
 
     /**
      * @var string $field
      *
-     * @Column(type="string", length=32)
+     * @ORM\Column(type="string", length=32)
      */
-    private $field;
+    protected $field;
 
     /**
      * @var string $foreignKey
      *
-     * @Column(name="foreign_key", type="string", length="64")
+     * @ORM\Column(name="foreign_key", type="string", length=64)
      */
-    private $foreignKey;
+    protected $foreignKey;
 
     /**
      * @var text $content
      *
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $content;
+    protected $content;
 
     /**
      * Get id

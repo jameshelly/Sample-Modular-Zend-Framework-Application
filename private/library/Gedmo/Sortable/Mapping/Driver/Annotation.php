@@ -5,8 +5,6 @@ namespace Gedmo\Sortable\Mapping\Driver;
 use Gedmo\Mapping\Driver\AnnotationDriverInterface,
     Gedmo\Exception\InvalidMappingException;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-
 /**
  * This is an annotation mapping driver for Sortable
  * behavioral extension. Used for extraction of extended
@@ -27,7 +25,7 @@ class Annotation implements AnnotationDriverInterface
     const POSITION = 'Gedmo\\Mapping\\Annotation\\SortablePosition';
 
     /**
-     * Annotation to mark field as sorting group 
+     * Annotation to mark field as sorting group
      */
     const GROUP = 'Gedmo\\Mapping\\Annotation\\SortableGroup';
 
@@ -65,19 +63,16 @@ class Annotation implements AnnotationDriverInterface
     /**
      * {@inheritDoc}
      */
-    public function validateFullMetadata(ClassMetadata $meta, array $config)
+    public function readExtendedMetadata($meta, array &$config)
     {
-        if ($config && !isset($config['position'])) {
-            throw new InvalidMappingException("Missing property: 'position' in class - {$meta->name}");
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function readExtendedMetadata(ClassMetadata $meta, array &$config) {
         $class = $meta->getReflectionClass();
-        
+        if (!$class) {
+            // based on recent doctrine 2.3.0-DEV maybe will be fixed in some way
+            // this happens when running annotation driver in combination with
+            // static reflection services. This is not the nicest fix
+            $class = new \ReflectionClass($meta->name);
+        }
+
         // property annotations
         foreach ($class->getProperties() as $property) {
             if ($meta->isMappedSuperclass && !$property->isPrivate() ||
@@ -109,12 +104,18 @@ class Annotation implements AnnotationDriverInterface
                 $config['groups'][] = $field;
             }
         }
+
+        if (!$meta->isMappedSuperclass && $config) {
+            if (!isset($config['position'])) {
+                throw new InvalidMappingException("Missing property: 'position' in class - {$meta->name}");
+            }
+        }
     }
 
     /**
      * Checks if $field type is valid
      *
-     * @param ClassMetadata $meta
+     * @param object $meta
      * @param string $field
      * @return boolean
      */

@@ -8,6 +8,8 @@ use Gedmo\Tree\Strategy;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Proxy\Proxy;
 use Gedmo\Tree\TreeListener;
+use Doctrine\ORM\Version;
+use Gedmo\Tool\Wrapper\AbstractWrapper;
 
 /**
  * This strategy makes tree act like
@@ -61,6 +63,7 @@ class Closure implements Strategy
     {
         $config = $this->listener->getConfiguration($em, $meta->name);
         $closureMetadata = $em->getClassMetadata($config['closure']);
+        $cmf = $em->getMetadataFactory();
 
         if (!$closureMetadata->hasAssociation('ancestor')) {
             // create ancestor mapping
@@ -84,6 +87,12 @@ class Closure implements Strategy
                 'fetch' => ClassMetadataInfo::FETCH_LAZY
             );
             $closureMetadata->mapManyToOne($ancestorMapping);
+            if (Version::compare('2.3.0-dev') <= 0) {
+                $closureMetadata->reflFields['ancestor'] = $cmf
+                    ->getReflectionService()
+                    ->getAccessibleProperty($closureMetadata->name, 'ancestor')
+                ;
+            }
         }
 
         if (!$closureMetadata->hasAssociation('descendant')) {
@@ -108,18 +117,27 @@ class Closure implements Strategy
                 'fetch' => ClassMetadataInfo::FETCH_LAZY
             );
             $closureMetadata->mapManyToOne($descendantMapping);
+            if (Version::compare('2.3.0-dev') <= 0) {
+                $closureMetadata->reflFields['descendant'] = $cmf
+                    ->getReflectionService()
+                    ->getAccessibleProperty($closureMetadata->name, 'descendant')
+                ;
+            }
         }
         // create unique index on ancestor and descendant
         $indexName = substr(strtoupper("IDX_" . md5($closureMetadata->name)), 0, 20);
         $closureMetadata->table['uniqueConstraints'][$indexName] = array(
-            'columns' => array('ancestor', 'descendant')
+            'columns' => array(
+                $this->getJoinColumnFieldName($em->getClassMetadata($config['closure'])->getAssociationMapping('ancestor')),
+                $this->getJoinColumnFieldName($em->getClassMetadata($config['closure'])->getAssociationMapping('descendant'))
+            )
         );
         // this one may not be very usefull
         $indexName = substr(strtoupper("IDX_" . md5($meta->name . 'depth')), 0, 20);
         $closureMetadata->table['indexes'][$indexName] = array(
             'columns' => array('depth')
         );
-        if ($cacheDriver = $em->getMetadataFactory()->getCacheDriver()) {
+        if ($cacheDriver = $cmf->getCacheDriver()) {
             $cacheDriver->save($closureMetadata->name."\$CLASSMETADATA", $closureMetadata, null);
         }
     }
@@ -156,15 +174,21 @@ class Closure implements Strategy
     public function processScheduledDelete($em, $entity)
     {}
 
+    protected function getJoinColumnFieldName($association)
+    {
+        if (count($association['joinColumnFieldNames']) > 1) {
+            throw new RuntimeException('More association on field '.$association['fieldName']);
+        }
+
+        return array_shift($association['joinColumnFieldNames']);
+    }
+
     /**
      * {@inheritdoc}
      */
     public function processPostPersist($em, $entity)
     {
         $uow = $em->getUnitOfWork();
-        if ($uow->hasPendingInsertions()) {
-            return;
-        }
 
         while ($node = array_shift($this->pendingChildNodeInserts)) {
             $meta = $em->getClassMetadata(get_class($node));
@@ -177,11 +201,16 @@ class Closure implements Strategy
             $closureClass = $config['closure'];
             $closureMeta = $em->getClassMetadata($closureClass);
             $closureTable = $closureMeta->getTableName();
+
+            $ancestorColumnName = $this->getJoinColumnFieldName($em->getClassMetadata($config['closure'])->getAssociationMapping('ancestor'));
+            $descendantColumnName = $this->getJoinColumnFieldName($em->getClassMetadata($config['closure'])->getAssociationMapping('descendant'));
+            $depthColumnName = $em->getClassMetadata($config['closure'])->getColumnName('depth');
+
             $entries = array(
                 array(
-                    'ancestor' => $nodeId,
-                    'descendant' => $nodeId,
-                    'depth' => 0
+                    $ancestorColumnName => $nodeId,
+                    $descendantColumnName => $nodeId,
+                    $depthColumnName => 0
                 )
             );
 
@@ -195,9 +224,9 @@ class Closure implements Strategy
 
                 foreach ($ancestors as $ancestor) {
                     $entries[] = array(
-                        'ancestor' => $ancestor['ancestor']['id'],
-                        'descendant' => $nodeId,
-                        'depth' => $ancestor['depth'] + 1
+                        $ancestorColumnName => $ancestor['ancestor']['id'],
+                        $descendantColumnName => $nodeId,
+                        $depthColumnName => $ancestor['depth'] + 1
                     );
                 }
             }
@@ -232,12 +261,13 @@ class Closure implements Strategy
      */
     public function updateNode(EntityManager $em, $node, $oldParent)
     {
-        $meta = $em->getClassMetadata(get_class($node));
+        $wrapped = AbstractWrapper::wrap($node, $em);
+        $meta = $wrapped->getMetadata();
         $config = $this->listener->getConfiguration($em, $meta->name);
         $closureMeta = $em->getClassMetadata($config['closure']);
 
-        $nodeId = $this->extractIdentifier($em, $node);
-        $parent = $meta->getReflectionProperty($config['parent'])->getValue($node);
+        $nodeId = $wrapped->getIdentifier();
+        $parent = $wrapped->getPropertyValue($config['parent']);
         $table = $closureMeta->getTableName();
         $conn = $em->getConnection();
         // ensure integrity
@@ -270,7 +300,8 @@ class Closure implements Strategy
             }
         }
         if ($parent) {
-            $parentId = $this->extractIdentifier($em, $parent);
+            $wrappedParent = AbstractWrapper::wrap($parent, $em);
+            $parentId = $wrappedParent->getIdentifier();
             $query = "SELECT c1.ancestor, c2.descendant, (c1.depth + c2.depth + 1) AS depth";
             $query .= " FROM {$table} c1, {$table} c2";
             $query .= " WHERE c1.descendant = :parentId";
@@ -283,30 +314,5 @@ class Closure implements Strategy
                 }
             }
         }
-    }
-
-    /**
-     * Extracts identifiers from object or proxy
-     *
-     * @param EntityManager $em
-     * @param object $entity
-     * @param bool $single
-     * @return mixed - array or single identifier
-     */
-    private function extractIdentifier(EntityManager $em, $entity, $single = true)
-    {
-        if ($entity instanceof Proxy) {
-            $id = $em->getUnitOfWork()->getEntityIdentifier($entity);
-        } else {
-            $meta = $em->getClassMetadata(get_class($entity));
-            $id = array();
-            foreach ($meta->identifier as $name) {
-                $id[$name] = $meta->getReflectionProperty($name)->getValue($entity);
-            }
-        }
-        if ($single) {
-            $id = current($id);
-        }
-        return $id;
     }
 }

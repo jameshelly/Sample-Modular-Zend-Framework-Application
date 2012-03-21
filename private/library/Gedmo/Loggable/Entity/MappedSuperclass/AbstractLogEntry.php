@@ -1,74 +1,71 @@
 <?php
 
-namespace Gedmo\Loggable\Entity;
+namespace Gedmo\Loggable\Entity\MappedSuperclass;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\MappedSuperclass;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Gedmo\Loggable\Entity\AbstractLog
  *
- * @MappedSuperclass
+ * @ORM\MappedSuperclass
  */
 abstract class AbstractLogEntry
 {
     /**
      * @var integer $id
      *
-     * @Column(type="integer")
-     * @Id
-     * @GeneratedValue
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string $action
      *
-     * @Column(type="string", length=8)
+     * @ORM\Column(type="string", length=8)
      */
-    private $action;
+    protected $action;
 
     /**
      * @var string $loggedAt
      *
-     * @Column(name="logged_at", type="datetime")
+     * @ORM\Column(name="logged_at", type="datetime")
      */
-    private $loggedAt;
+    protected $loggedAt;
 
     /**
      * @var string $objectId
      *
-     * @Column(name="object_id", length=32, nullable=true)
+     * @ORM\Column(name="object_id", length=32, nullable=true)
      */
     protected $objectId;
 
     /**
      * @var string $objectClass
      *
-     * @Column(name="object_class", type="string", length=255)
+     * @ORM\Column(name="object_class", type="string", length=255)
      */
     protected $objectClass;
 
     /**
      * @var integer $version
      *
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
-    private $version;
+    protected $version;
 
     /**
      * @var text $data
      *
-     * @Column(type="array", nullable=true)
+     * @ORM\Column(type="array", nullable=true)
      */
     protected $data;
 
     /**
      * @var text $data
      *
-     * @Column(length=255, nullable=true)
+     * @ORM\Column(length=255, nullable=true)
      */
     protected $username;
 
