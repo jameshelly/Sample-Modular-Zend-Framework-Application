@@ -1,5 +1,6 @@
 <?php
 namespace Opentag\Service;
+
 /*
  * Opentag\Service\Doctrine
  *
@@ -22,6 +23,7 @@ use Doctrine\DBAL\DriverManager,
     Doctrine\DBAL\Logging\DebugStack as DoctrineDebugStack,
     Opentag\Auth\Adapter\Doctrine as AuthAdapterDoctrine,
     Opentag_ZFDebug_Plugin_Doctrine as ZFDebugDoctrine,
+    \Zend_Application_Bootstrap_Bootstrapper as ZendApplicationBootstrapper,
     \Zend_Cache_Manager as CacheManager,
     \Zend_Controller_Front as Front,
     \Zend_Session as Session;
@@ -61,10 +63,7 @@ class Doctrine {
      *
      * @var array
      */
-    protected $_skipOptions = array(
-        'options',
-        'config',
-    );
+    protected $_skipOptions = array( 'options', 'config' );
 
     /**
      * @var  \Opentag\Service\Doctrine
@@ -121,20 +120,18 @@ class Doctrine {
      */
     private $cfg;
 
-
     /**
      * Constructor.
      *
      * @param array $config Doctrine Container configuration
      */
-    public function __construct($options = null)
-    {
+    public function __construct($options = null) {
         if (is_array($options)) {
             $this->setOptions($options);
         } else if ($options instanceof Zend_Config) {
             $this->setOptions($options->toArray());
         }
-        $this->cfg          = $this->getConfig();
+        $this->cfg = $this->getConfig();
     }
 
     /**
@@ -156,7 +153,7 @@ class Doctrine {
         $DocumentOptions = array();
 
         $this->context      = $this->getContext();
-//        $this->cache        = $this->getCacheManager($CacheOptions);
+        $this->cache        = $this->getCacheManager($CacheOptions);
         $this->conn         = $this->getConnection($ConnectionOptions);
         $this->evtm         = $this->getEventManager($EventOptions);
         $this->entm         = $this->getEntityManager($EntityOptions);
@@ -172,8 +169,7 @@ class Doctrine {
      * @param  array $options Configuration for resource
      * @return Zend_Application_Resource_ResourceAbstract
      */
-    public function setOptions(array $options)
-    {
+    public function setOptions(array $options) {
         if (array_key_exists('bootstrap', $options)) {
             $this->setBootstrap($options['bootstrap']);
             unset($options['bootstrap']);
@@ -200,8 +196,7 @@ class Doctrine {
      *
      * @return array
      */
-    public function getOptions()
-    {
+    public function getOptions() {
         return $this->_options;
     }
 
@@ -212,8 +207,7 @@ class Doctrine {
      * @param  mixed $array2
      * @return array
      */
-    public function mergeOptions(array $array1, $array2 = null)
-    {
+    public function mergeOptions(array $array1, $array2 = null) {
         if (is_array($array2)) {
             foreach ($array2 as $key => $val) {
                 if (is_array($array2[$key])) {
@@ -238,9 +232,6 @@ class Doctrine {
         return $this->cfg;//new \Boilerplate\Webservice\Soap
     }
 
-//    public function getConnection() {
-//
-//    }
     /**
      *
      * @param type $name
@@ -265,21 +256,12 @@ class Doctrine {
     }
 
     /**
+     * Init Event Manager
      *
+     * @param type $options
+     * @return type
      */
-    public function getContext($name = 'default') {
-        if(null === $this->log) {
-            $this->log = $this->getBootstrap()->getResource('Log');
-        }
-        return 'default';//new \Boilerplate\Webservice\Soap
-    }
-
-//
-//
-//    public function getEventManager() {
-//
-//    }
-   public function getEventManager($options = false) {
+    public function getEventManager($options = false) {
         #use apc object cache.
         if (null === $this->log) {
             $this->log = $this->getBootstrap()->getContainer()->get('logger');
@@ -292,11 +274,7 @@ class Doctrine {
         return $this->evtm;
     }
 
-//
-//    public function getEntityManager() {
-//
-//    }
-   /**
+    /**
      * Init Doctrine
      *
      * @param N/A
@@ -317,11 +295,18 @@ class Doctrine {
         return $this->entm;
     }
 
-//
-//    public function getEntityManager() {
-//
+//    public function _buildEventManager($options = false) {
+//        return new \Doctrine\Common\EventManager();
+//        // globally used cache driver, in production use APC or memcached
+//        $cache = new Doctrine\Common\Cache\ArrayCache;
+//        // standard annotation reader
+//        $annotationReader = new Doctrine\Common\Annotations\AnnotationReader;
+//        $cachedAnnotationReader = new Doctrine\Common\Annotations\CachedReader(
+//            $annotationReader, // use reader
+//            $cache // and a cache driver
+//        );
 //    }
-   /**
+    /**
      * Init Doctrine
      *
      * @param N/A
@@ -334,13 +319,25 @@ class Doctrine {
         if (null === $this->log) {
             $this->log = $this->getBootstrap()->getContainer()->get('logger');
         }
-         $this->log->info(get_class($this) . '::getEntityManager');
-        if ((null === $this->entm)) {
-            $this->entm = $this->_buildEntityManager($this->getOptions());
+         $this->log->info(get_class($this) . '::getCacheManager');
+        if ((null === $this->cache)) {
+            $this->cache = $this->_buildEntityManager($this->getOptions());
         }
-        $this->getBootstrap()->getContainer()->set('entity.manager', $this->entm);
-        return $this->entm;
+        $this->getBootstrap()->getContainer()->set('cache.manager', $this->cache);
+        return $this->cache;
    }
+
+    /**
+     * Get Current Context
+     * @param type $name
+     * @return type
+     */
+    public function getContext($name = 'default') {
+        if(null === $this->log) {
+            $this->log = $this->getBootstrap()->getResource('Log');
+        }
+        return 'default';//new \Boilerplate\Webservice\Soap
+    }
 
     /**
      *
@@ -360,9 +357,6 @@ class Doctrine {
         return DriverManager::getConnection($connectionOptions, $this->cfg, $this->evtm);
     }
 
-//    public function _buildEventManager($options = false) {
-//        return new \Doctrine\Common\EventManager();
-//    }
     /**
      * A method to build the connection options, for a Doctrine
      * EntityManager/Connection. Sure, we can find a more elegant solution to build
@@ -608,8 +602,7 @@ class Doctrine {
      * @param  Zend_Application_Bootstrap_Bootstrapper $bootstrap
      * @return Zend_Application_Resource_Resource
      */
-    public function setBootstrap(\Zend_Application_Bootstrap_Bootstrapper $bootstrap)
-    {
+    public function setBootstrap(ZendApplicationBootstrapper $bootstrap){
         $this->_bootstrap = $bootstrap;
         return $this;
     }
@@ -619,8 +612,7 @@ class Doctrine {
      *
      * @return null|Zend_Application_Bootstrap_Bootstrapper
      */
-    public function getBootstrap()
-    {
+    public function getBootstrap() {
         if(null === $this->_bootstrap) {
             $this->_bootstrap = Front::getInstance()->getParam('bootstrap');
         }
